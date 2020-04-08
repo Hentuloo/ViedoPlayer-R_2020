@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, memo } from 'react';
 import styled from 'styled-components';
 import gsap from 'gsap';
 
@@ -10,10 +10,18 @@ export const TooltipTime = styled.div`
   background-color: ${({ theme }) => theme.color.black[1]};
   color: ${({ theme }) => theme.color.white[0]};
   transform: translate(10px, 0px);
+  opacity: 0;
+  pointer-events: none;
 `;
 export const Wrapper = styled.div`
   position: relative;
   min-height: 3px;
+  cursor: pointer;
+  &:hover {
+    ${TooltipTime} {
+      opacity: 1;
+    }
+  }
 `;
 export const BarWrapper = styled.div`
   position: relative;
@@ -22,6 +30,7 @@ export const BarWrapper = styled.div`
   height: 100%;
   overflow: hidden;
   background-color: ${({ theme }) => theme.color.black[1]};
+  pointer-events: none;
 `;
 export const Bar = styled.div`
   position: absolute;
@@ -36,34 +45,80 @@ export const Bar = styled.div`
 export interface ProgressBarProps {
   currentTime: number;
   duration: number;
+  setNewTime: (time: number) => void;
 }
 
 const ProgressBar: React.SFC<ProgressBarProps> = ({
   currentTime,
   duration,
+  setNewTime,
   ...props
 }) => {
-  const ref = useRef(null);
+  const barRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
+
+  const getBarTime = (offsetX: number): number | string => {
+    if (!wrapperRef.current) return 0;
+    const barWidth = wrapperRef.current.clientWidth;
+
+    const percent = (offsetX / barWidth) * 100;
+    const time = ((duration * percent) / 100).toFixed(2);
+
+    return time;
+  };
 
   useEffect(() => {
-    if (!ref || currentTime === 0) return;
-    const progressPrecent = 100 - (currentTime / duration) * 100;
+    if (!barRef || currentTime === 0) return;
+    const progressPercent = 100 - (currentTime / duration) * 100;
 
-    gsap.to(ref.current, {
+    gsap.to(barRef.current, {
       duration: 0.3,
-      x: `-${progressPrecent}%`,
+      x: `-${progressPercent}%`,
     });
   }, [currentTime]);
 
-  return (
-    <Wrapper {...props}>
-      <BarWrapper>
-        <Bar ref={ref} />
-      </BarWrapper>
+  useEffect(() => {
+    const wrapper = wrapperRef.current;
+    const tolltip = tooltipRef.current;
+    if (!wrapper || !tolltip || !duration) return;
 
-      <TooltipTime>3:35</TooltipTime>
+    const handleBarMove = ({ offsetX }: MouseEvent) => {
+      //move
+      gsap.set(tolltip, { x: offsetX - tolltip.clientWidth / 2 });
+      //set time
+      const time = getBarTime(offsetX);
+      tolltip.innerText = time.toString().replace('.', ':');
+    };
+
+    wrapper.addEventListener('mousemove', handleBarMove);
+
+    return () => {
+      if (!wrapper) return;
+      wrapper.removeEventListener('mousemove', handleBarMove);
+    };
+  }, [duration]);
+
+  const handleSetNewTime = (e: React.MouseEvent) => {
+    if (!tooltipRef.current) return;
+    setNewTime(Number(getBarTime(e.nativeEvent.offsetX)));
+  };
+
+  return (
+    <Wrapper ref={wrapperRef} {...props} onClick={handleSetNewTime}>
+      <BarWrapper>
+        <Bar ref={barRef} />
+      </BarWrapper>
+      <TooltipTime ref={tooltipRef}>0:00</TooltipTime>
     </Wrapper>
   );
 };
+
+export const MemomizedProgressBar = memo(
+  ProgressBar,
+  (prev, next) =>
+    prev.currentTime === next.currentTime &&
+    prev.duration === next.duration,
+);
 
 export default ProgressBar;

@@ -3,7 +3,7 @@ import useVideo from 'hooks/useVideo';
 import styled from 'styled-components';
 
 import { MemomizedPlayButton } from './PlayButton';
-import ProgressBar from './ProgressBar';
+import { MemomizedProgressBar } from './ProgressBar';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -29,25 +29,30 @@ export const StyledPlayButton = styled(MemomizedPlayButton)`
 export interface VideoProps {}
 
 const Video: React.SFC<VideoProps> = () => {
-  const [video, state, controls, ref] = useVideo(
+  const [video, state, controls] = useVideo(
     <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
   );
 
   const handleTogglePause = () => {
     state.paused ? controls.play() : controls.pause();
   };
-  console.log(state);
+
+  const handleSetVideoTime = (time: number) => {
+    controls.seek(time);
+  };
+
   return (
     <Wrapper>
-      <VideoWrapper>{video}</VideoWrapper>
+      <VideoWrapper onClick={handleTogglePause}>{video}</VideoWrapper>
       <Controllers>
         <StyledPlayButton
           status={state.paused}
           toggle={handleTogglePause}
         />
-        <ProgressBar
+        <MemomizedProgressBar
           currentTime={state.time}
           duration={state.duration}
+          setNewTime={handleSetVideoTime}
         />
       </Controllers>
     </Wrapper>
