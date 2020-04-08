@@ -1,4 +1,4 @@
-export default {
+const theme = {
   color: {
     brand: ['rgb(255, 146, 23)'],
     white: ['rgb(255, 255, 255)'],
@@ -29,3 +29,5 @@ export default {
   fw: [400],
   ff: [`'Roboto', sans-serif`],
 };
+
+export default theme;
