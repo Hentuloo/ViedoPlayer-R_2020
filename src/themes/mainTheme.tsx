@@ -1,8 +1,8 @@
 const theme = {
   color: {
-    brand: ['rgb(255, 146, 23)'],
+    brand: ['rgb(255, 146, 23)', 'rgb(255, 157, 47)'],
     white: ['rgb(255, 255, 255)'],
-    black: ['#2D2D2D'],
+    black: ['#2D2D2D', 'rgba(74, 66, 66, 0.5)'],
     gray: ['rgb(119, 119, 119)'],
   },
   mediaQuery: {
