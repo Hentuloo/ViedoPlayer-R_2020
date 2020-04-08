@@ -17,6 +17,7 @@ export interface HTMLMediaState {
   muted: boolean;
   time: number;
   volume: number;
+  error: boolean;
 }
 
 export interface HTMLMediaControls {
@@ -54,6 +55,7 @@ const createHTMLMediaHook = (tag: 'audio' | 'video') => {
       paused: true,
       muted: false,
       volume: 1,
+      error: false,
     });
     const ref = useRef<HTMLAudioElement | null>(null);
 
@@ -67,6 +69,7 @@ const createHTMLMediaHook = (tag: 'audio' | 'video') => {
       };
     };
 
+    const onError = () => setState({ error: true });
     const onPlay = () => setState({ paused: false });
     const onPause = () => setState({ paused: true });
     const onVolumeChange = () => {
@@ -243,6 +246,11 @@ const createHTMLMediaHook = (tag: 'audio' | 'video') => {
       if (props.autoPlay && el.paused) {
         controls.play();
       }
+      el.addEventListener('error', onError);
+
+      return () => {
+        el.removeEventListener('error', onError);
+      };
     }, [props.src]);
 
     return [element, state, controls, ref];

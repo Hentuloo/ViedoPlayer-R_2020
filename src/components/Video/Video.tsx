@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import useVideo from 'hooks/useVideo';
 import styled from 'styled-components';
 
 import { MemomizedPlayButton } from './PlayButton';
 import { MemomizedProgressBar } from './ProgressBar';
+import ErrorRespnse from './ErrorResponse';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -30,7 +31,7 @@ export interface VideoProps {}
 
 const Video: React.SFC<VideoProps> = () => {
   const [video, state, controls] = useVideo(
-    <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
+    <VideoElement src="http://techslideds.com/demos/sample-videos/small.mp4" />,
   );
 
   const handleTogglePause = () => {
@@ -40,6 +41,8 @@ const Video: React.SFC<VideoProps> = () => {
   const handleSetVideoTime = (time: number) => {
     controls.seek(time);
   };
+
+  if (state.error) return <ErrorRespnse />;
 
   return (
     <Wrapper>
