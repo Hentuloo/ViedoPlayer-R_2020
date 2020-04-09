@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useVideo from 'hooks/useVideo';
 import styled from 'styled-components';
 
 import { MemomizedPlayButton } from './PlayButton';
 import { MemomizedProgressBar } from './ProgressBar';
 import ErrorRespnse from './ErrorResponse';
+import Labels from 'components/LabelsPanel/LabelsPanel';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -27,11 +28,13 @@ export const StyledPlayButton = styled(MemomizedPlayButton)`
   padding: 6px 4px 6px 0px;
 `;
 
-export interface VideoProps {}
+export interface VideoProps {
+  editableLabels?: boolean;
+}
 
-const Video: React.SFC<VideoProps> = () => {
+const Video: React.SFC<VideoProps> = ({ editableLabels = true }) => {
   const [video, state, controls] = useVideo(
-    <VideoElement src="http://techslideds.com/demos/sample-videos/small.mp4" />,
+    <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
   );
 
   const handleTogglePause = () => {
@@ -58,6 +61,7 @@ const Video: React.SFC<VideoProps> = () => {
           setNewTime={handleSetVideoTime}
         />
       </Controllers>
+      <Labels editable={editableLabels} />
     </Wrapper>
   );
 };

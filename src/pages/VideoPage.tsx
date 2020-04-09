@@ -1,6 +1,6 @@
 import React from 'react';
 import styled from 'styled-components';
-import VideoWthLabels from 'components/VideoWithLabels';
+import VideoWthLabels from 'components/Video/Video';
 
 const Wrapper = styled.div`
   color: ${({ theme }) => theme.color.brand[0]};

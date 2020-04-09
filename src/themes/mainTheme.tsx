@@ -4,6 +4,7 @@ const theme = {
     white: ['rgb(255, 255, 255)'],
     black: ['#2D2D2D', 'rgba(74, 66, 66, 0.5)'],
     gray: ['rgb(119, 119, 119)'],
+    red: ['rgb(193, 36, 36)', 'rgb(211, 86, 86)'],
   },
   mediaQuery: {
     xs: '@media (min-width: 0px)',

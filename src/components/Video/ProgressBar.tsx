@@ -38,7 +38,7 @@ export const Bar = styled.div`
   height: 100%;
   left: 0%;
   top: 0%;
-  background-color: ${({ theme }) => theme.color.brand[1]};
+  background-color: ${({ theme }) => theme.color.red[0]};
   transform: translate(-100%, 0px);
 `;
 
