@@ -3,11 +3,11 @@ import styled, { css } from 'styled-components';
 
 import LabelContent from '../styles/LabelContent';
 import { EditableLabelProps } from './types';
-export const Controllers = styled.div`
-  position: absolute;
-  right: 0%;
-  top: 0%;
-  color: ${({ theme }) => theme.color.white[0]};
+import { useDraggable } from 'hooks/useDraggable';
+
+import Controllers from './Controllers';
+
+const StyledController = styled(Controllers)`
   opacity: 0;
 `;
 
@@ -20,28 +20,17 @@ export const Wrapper = styled.div<{ editMode?: boolean }>`
   pointer-events: all;
 
   &:hover {
-    ${Controllers} {
+    ${StyledController} {
       opacity: 1;
-      ${({ editMode }) =>
-        editMode &&
-        css`
-          opacity: 0;
-          z-index: -1;
-        `};
     }
   }
 `;
 
-const StyledLabelContent = styled(LabelContent)<{
-  editMode?: boolean;
-}>`
+const StyledLabelContent = styled(LabelContent)`
   cursor: grabbing;
-  ${({ editMode }) =>
-    editMode &&
-    css`
-      opacity: 0;
-      z-index: -1;
-    `};
+  span {
+    pointer-events: none;
+  }
 `;
 export const Textarea = styled.textarea<{ editMode?: boolean }>`
   border: none;
@@ -61,18 +50,12 @@ export const Textarea = styled.textarea<{ editMode?: boolean }>`
     `};
 `;
 
-export const EditIcon = styled.button`
-  border: none;
-  background-color: transparent;
-  color: ${({ theme }) => theme.color.white[0]};
-  cursor: pointer;
-`;
-
 const Label: React.FC<EditableLabelProps> = ({
   label: { content },
   defaultEditMode,
   ...props
 }) => {
+  const [ref, draggableIsActive, setDragableActive] = useDraggable();
   const [editMode, setEditMode] = useState(defaultEditMode || false);
 
   const handleClick = (e: React.MouseEvent) => {
@@ -82,10 +65,11 @@ const Label: React.FC<EditableLabelProps> = ({
 
   const changeEditMode = (flag?: boolean) => {
     setEditMode(flag || !editMode);
+    setDragableActive(!flag);
   };
 
   return (
-    <Wrapper editMode={editMode} {...props}>
+    <Wrapper ref={ref} editMode={editMode} {...props}>
       <Textarea
         onClick={handleClick}
         editMode={editMode}
@@ -93,15 +77,15 @@ const Label: React.FC<EditableLabelProps> = ({
       >
         {content}
       </Textarea>
-      <StyledLabelContent editMode={editMode}>
-        <span>{content}</span>
-      </StyledLabelContent>
-      <Controllers>
-        <EditIcon onClick={() => changeEditMode(true)}>
-          <span className="sr-only">Edit</span>
-          <span className="fa fa-pencil" aria-hidden="true"></span>
-        </EditIcon>
-      </Controllers>
+      {!editMode && (
+        <StyledLabelContent>
+          <span>{content}</span>
+        </StyledLabelContent>
+      )}
+      <StyledController
+        editMode={editMode}
+        changeEditMode={changeEditMode}
+      />
     </Wrapper>
   );
 };
