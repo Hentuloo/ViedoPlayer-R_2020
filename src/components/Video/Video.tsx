@@ -10,6 +10,7 @@ import Labels from 'components/LabelsPanel/LabelsPanel';
 export const Wrapper = styled.div`
   position: relative;
   display: grid;
+  user-select: none;
 `;
 export const VideoWrapper = styled.div``;
 export const VideoElement = styled.video`

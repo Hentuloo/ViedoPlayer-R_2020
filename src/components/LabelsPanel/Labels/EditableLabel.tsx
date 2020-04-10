@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
 import LabelContent from '../styles/LabelContent';
 import { EditableLabelProps } from './types';
-import { useDraggable } from 'hooks/useDraggable';
+import { useDraggable } from 'hooks/useDraggable/useDraggable';
 
 import Controllers from './Controllers';
 
@@ -18,6 +18,11 @@ export const Wrapper = styled.div<{ editMode?: boolean }>`
   max-height: 25%;
   background-color: ${({ theme }) => theme.color.black[0]};
   pointer-events: all;
+  cursor: grab;
+
+  &:active {
+    cursor: grabbing;
+  }
 
   &:hover {
     ${StyledController} {
@@ -27,10 +32,8 @@ export const Wrapper = styled.div<{ editMode?: boolean }>`
 `;
 
 const StyledLabelContent = styled(LabelContent)`
-  cursor: grabbing;
-  span {
-    pointer-events: none;
-  }
+  pointer-events: none;
+  user-select: none;
 `;
 export const Textarea = styled.textarea<{ editMode?: boolean }>`
   border: none;
@@ -55,18 +58,25 @@ const Label: React.FC<EditableLabelProps> = ({
   defaultEditMode,
   ...props
 }) => {
-  const [ref, draggableIsActive, setDragableActive] = useDraggable();
+  const [ref, _, setDragableActive, overlapElement] = useDraggable({
+    defaultActive: true,
+    detectOnlySourceNode: true,
+  });
   const [editMode, setEditMode] = useState(defaultEditMode || false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
-    console.log('sd');
   };
 
   const changeEditMode = (flag?: boolean) => {
     setEditMode(flag || !editMode);
     setDragableActive(!flag);
   };
+  useEffect(() => {
+    if (!ref.current) return;
+    //@ts-ignore
+    overlapElement.current = ref.current.parentNode || null;
+  }, []);
 
   return (
     <Wrapper ref={ref} editMode={editMode} {...props}>
