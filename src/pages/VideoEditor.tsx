@@ -1,7 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
-import Video from 'components/Video/Video';
+
 import NavigationTemplate from 'templates/NavigationTemplate';
+import VideoWithEditor from 'components/VideoWithEditor/VideoWithEditor';
 
 const Wrapper = styled.div`
   display: grid;
@@ -10,15 +11,15 @@ const Wrapper = styled.div`
   color: ${({ theme }) => theme.color.brand[0]};
 `;
 
-function VideoPage() {
+function VideoEditor() {
   return (
     <NavigationTemplate>
       <Wrapper>
-        <header>Tu można oglądać film z zakładkami</header>
-        <Video />
+        <header>Tu można dodawać zakładki do filmu</header>
+        <VideoWithEditor />
       </Wrapper>
     </NavigationTemplate>
   );
 }
 
-export default VideoPage;
+export default VideoEditor;

@@ -5,6 +5,8 @@ import LabelContent from '../styles/LabelContent';
 import { LabelProps } from './types';
 
 export const Wrapper = styled.div`
+  min-width: 140px;
+  min-height: 40px;
   position: relative;
   display: inline-block;
   max-width: 35%;

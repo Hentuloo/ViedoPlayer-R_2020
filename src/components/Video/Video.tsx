@@ -33,7 +33,7 @@ export interface VideoProps {
   editableLabels?: boolean;
 }
 
-const Video: React.SFC<VideoProps> = ({ editableLabels = true }) => {
+const Video: React.SFC<VideoProps> = ({ editableLabels = false }) => {
   const [video, state, controls] = useVideo(
     <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
   );
