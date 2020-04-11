@@ -1,22 +1,20 @@
-import { map, filter, tap } from 'rxjs/operators';
+import { map, tap } from 'rxjs/operators';
 import { OperatorFunction } from 'rxjs';
 
-export const getRectWithOffsets = (ev: React.MouseEvent) => {
+export interface OffsetFromMouseEventRespnse {
+  offsetX: number;
+  offsetY: number;
+}
+export const offsetsFromMouseEvent = (
+  ev: React.MouseEvent,
+): OffsetFromMouseEventRespnse => {
   const { clientX, clientY } = ev;
   const target = ev.target as HTMLDivElement;
-  const {
-    left,
-    top,
-    width,
-    height,
-    ...rest
-  }: DOMRect = target.getBoundingClientRect();
+
+  const { left, top }: DOMRect = target.getBoundingClientRect();
   return {
     offsetX: clientX - left,
     offsetY: clientY - top,
-    width,
-    height,
-    ...rest,
   };
 };
 
@@ -81,14 +79,4 @@ export const preventElementGoingOutParent = (
       return { ...newPosition, parentWidth, parentHeight };
     },
   );
-};
-
-export const detectOnlySourceNodeFilter = (
-  flag: boolean,
-  sourceNode: Node,
-) => {
-  return filter((ev: React.MouseEvent) => {
-    if (flag) return ev.target === sourceNode;
-    return true;
-  });
 };

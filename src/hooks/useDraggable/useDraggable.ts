@@ -1,85 +1,111 @@
-import { useEffect, useRef } from 'react';
-import { fromEvent } from 'rxjs';
+import { useEffect, useRef, useCallback } from 'react';
+import { fromEvent, Observable } from 'rxjs';
 import { map, filter, switchMap, takeUntil } from 'rxjs/operators';
 import {
   preventElementGoingOutParent,
   getLayers,
-  getRectWithOffsets,
-  detectOnlySourceNodeFilter,
+  offsetsFromMouseEvent,
 } from './utils';
+import gsap from 'gsap';
 
-export type DraggableAPI = [
-  React.RefObject<HTMLDivElement>,
-  React.RefObject<boolean>,
-  (flag?: boolean) => void,
-  React.RefObject<HTMLDivElement>,
-];
+type MouseMove = React.MouseEvent<Element, MouseEvent>;
+type Stream = Observable<MouseMove>;
 
-export interface DraggableOptions {
+export type DraggableStreams = {
+  mousedown: Stream;
+  mousemove: Stream;
+  mouseleave: Stream;
+  mouseup: Stream;
+};
+
+export interface DraggableAPI {
+  draggableRef: React.RefObject<any>;
+  parentRef: React.RefObject<any>;
+  dropSide: React.RefObject<any>;
+  flag: React.RefObject<boolean>;
+  setFlag: (flag?: boolean) => void;
+  draggableStreams: (el: HTMLElement) => DraggableStreams;
+  resetPosition: () => void;
+}
+
+export interface DraggableOpt {
   defaultActive?: boolean;
   detectOnlySourceNode?: boolean;
 }
 
-export const useDraggable = ({
-  defaultActive = true,
-  detectOnlySourceNode = false,
-}: DraggableOptions): DraggableAPI => {
-  const ref = useRef<HTMLDivElement>(null);
-  const overlapElement = useRef<HTMLDivElement>(null);
+export const useDraggable = (options: DraggableOpt): DraggableAPI => {
+  const {
+    defaultActive = true,
+    detectOnlySourceNode = false,
+  } = options;
+
+  const ref = useRef<HTMLElement>(null);
+  const overlapElement = useRef<HTMLElement>(null);
+  const dropSide = useRef<HTMLElement>(null);
   const isActive = useRef<boolean>(defaultActive);
+
+  const draggableStreams = (el: HTMLElement) => {
+    const mousedown$ = fromEvent<React.MouseEvent>(el, 'mousedown');
+    const mousemove$ = fromEvent<React.MouseEvent>(el, 'mousemove');
+    const mouseleave$ = fromEvent<React.MouseEvent>(el, 'mouseleave');
+    const mouseup$ = fromEvent<React.MouseEvent>(el, 'mouseup');
+    return {
+      mousedown: mousedown$ || null,
+      mousemove: mousemove$ || null,
+      mouseleave: mouseleave$ || null,
+      mouseup: mouseup$ || null,
+    };
+  };
 
   const setActive = (flag?: boolean) => {
     isActive.current = flag || !isActive.current;
   };
 
   useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
+    const target = ref.current;
+    if (!target) return;
 
-    const mousedown$ = fromEvent<React.MouseEvent>(el, 'mousedown');
-    const mousemove$ = fromEvent<React.MouseEvent>(el, 'mousemove');
-    const mouseleave$ = fromEvent<React.MouseEvent>(el, 'mouseleave');
-    const mouseup$ = fromEvent<React.MouseEvent>(el, 'mouseup');
+    const {
+      mousedown,
+      mousemove,
+      mouseleave,
+      mouseup,
+    } = draggableStreams(target);
 
-    const draggable = mousedown$.pipe(
-      detectOnlySourceNodeFilter(detectOnlySourceNode || false, el),
-      filter(() => isActive.current === true),
-      switchMap((e) => {
-        e.stopPropagation();
-        //@ts-ignore
-        const overlapParent: HTMLElement = overlapElement.current;
-        const {
-          offsetX,
-          offsetY,
-          width,
-          height,
-        } = getRectWithOffsets(e);
+    const passWhenDraggableIsActive = (isActive: boolean) =>
+      filter<MouseMove>(() => isActive === true);
 
-        return mousemove$.pipe(
-          detectOnlySourceNodeFilter(
-            detectOnlySourceNode || false,
-            el,
+    const passWhenTargetIsSource = () =>
+      filter((ev: MouseMove) =>
+        detectOnlySourceNode ? ev.target === target : true,
+      );
+
+    const draggable = mousedown.pipe(
+      passWhenDraggableIsActive(isActive.current),
+      passWhenTargetIsSource(),
+      map((e) => offsetsFromMouseEvent(e)),
+      switchMap((start) =>
+        mousemove.pipe(
+          passWhenTargetIsSource(),
+          map((e) => getLayers(e)),
+          map(({ x, y }) => ({
+            width: target.clientWidth,
+            height: target.clientHeight,
+            left: x - start.offsetX,
+            top: y - start.offsetY,
+          })),
+          preventElementGoingOutParent(
+            overlapElement.current as HTMLElement,
           ),
-          map((e) => {
-            e.stopPropagation();
-            const { x, y } = getLayers(e);
-            return {
-              width,
-              height,
-              left: x - offsetX,
-              top: y - offsetY,
-            };
-          }),
-          takeUntil(mouseleave$),
-          takeUntil(mouseup$),
+          takeUntil(mouseleave),
+          takeUntil(mouseup),
           takeUntil(fromEvent(document, 'scroll')),
-          preventElementGoingOutParent(overlapParent),
-        );
-      }),
+        ),
+      ),
     );
 
     const sub = draggable.subscribe(({ left, top }) => {
-      el.style.transform = `translate(${left}px, ${top}px)`;
+      gsap.set(target, { x: left, y: top });
     });
 
     return () => {
@@ -87,5 +113,22 @@ export const useDraggable = ({
     };
   }, []);
 
-  return [ref, isActive, setActive, overlapElement];
+  const resetPosition = useCallback(() => {
+    const target = ref.current;
+    if (!target) return;
+    const tl = gsap.timeline();
+    tl.to(target, { duration: 0.2, opacity: 0, scale: 0.7 })
+      .set(target, { x: 0, y: 0 })
+      .to(target, { duration: 0.2, opacity: 1, scale: 1 });
+  }, [ref.current]);
+
+  return {
+    draggableRef: ref,
+    flag: isActive,
+    setFlag: setActive,
+    parentRef: overlapElement,
+    dropSide,
+    draggableStreams: draggableStreams,
+    resetPosition,
+  };
 };

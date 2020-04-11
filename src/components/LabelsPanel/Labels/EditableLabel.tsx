@@ -18,6 +18,7 @@ export const Wrapper = styled.div<{ editMode?: boolean }>`
   max-height: 25%;
   background-color: ${({ theme }) => theme.color.black[0]};
   pointer-events: all;
+  user-select: none;
   cursor: grab;
 
   &:active {
@@ -58,7 +59,7 @@ const Label: React.FC<EditableLabelProps> = ({
   defaultEditMode,
   ...props
 }) => {
-  const [ref, _, setDragableActive, overlapElement] = useDraggable({
+  const { draggableRef, setFlag, parentRef } = useDraggable({
     defaultActive: true,
     detectOnlySourceNode: true,
   });
@@ -70,23 +71,22 @@ const Label: React.FC<EditableLabelProps> = ({
 
   const changeEditMode = (flag?: boolean) => {
     setEditMode(flag || !editMode);
-    setDragableActive(!flag);
+    setFlag(!flag);
   };
   useEffect(() => {
-    if (!ref.current) return;
+    if (!draggableRef.current) return;
     //@ts-ignore
-    overlapElement.current = ref.current.parentNode || null;
+    parentRef.current = draggableRef.current.parentNode;
   }, []);
 
   return (
-    <Wrapper ref={ref} editMode={editMode} {...props}>
+    <Wrapper ref={draggableRef} editMode={editMode} {...props}>
       <Textarea
         onClick={handleClick}
         editMode={editMode}
         name="video-label"
-      >
-        {content}
-      </Textarea>
+        defaultValue={content}
+      ></Textarea>
       {!editMode && (
         <StyledLabelContent>
           <span>{content}</span>
