@@ -3,7 +3,7 @@ export interface MouseCord {
   clientY: number;
 }
 
-export const detectMouseIsOnElement = (
+export const mouseIsOnElement = (
   { clientX, clientY }: MouseCord,
   element: HTMLElement,
 ) => {

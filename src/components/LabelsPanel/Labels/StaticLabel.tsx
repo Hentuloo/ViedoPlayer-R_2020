@@ -3,24 +3,19 @@ import styled from 'styled-components';
 
 import LabelContent from '../styles/LabelContent';
 import { LabelProps } from './types';
+import LabelWrapper from '../styles/LabelWrapper';
 
 export const Wrapper = styled.div`
-  min-width: 140px;
-  min-height: 40px;
-  position: relative;
-  display: inline-block;
-  max-width: 35%;
-  max-height: 25%;
-  background-color: ${({ theme }) => theme.color.black[0]};
+  ${LabelWrapper}
   pointer-events: all;
 `;
 
 const Label: React.FC<LabelProps> = ({
-  label: { content },
+  label: { content, cord },
   ...props
 }) => {
   return (
-    <Wrapper {...props}>
+    <Wrapper {...props} {...cord}>
       <LabelContent>
         <span>{content}</span>
       </LabelContent>

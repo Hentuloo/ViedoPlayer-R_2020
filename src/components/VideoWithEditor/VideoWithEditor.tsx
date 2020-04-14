@@ -1,12 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useRef, useReducer } from 'react';
 import styled from 'styled-components';
 
 import Video from 'components/Video/Video';
-import ExtrasBar from './ExtrasBar';
+import ToolBar from './ToolBar/ToolBar';
 import Timelines from './Timelines';
 
-import { useDraggable } from 'hooks/useDraggable/useDraggable';
-import { detectMouseIsOnElement } from '../../config/utils';
+import { ChangeCordsPayload } from 'components/LabelsPanel/Labels/types';
+import labelReducer, { actionTypes } from './LabelsReducer';
 
 const StyledVideo = styled(Video)``;
 const VideoWrapper = styled.div``;
@@ -20,33 +20,27 @@ const Wrapper = styled.div`
 export interface IVideoWithEditorProps {}
 
 const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
-  const {
-    draggableRef,
-    draggableStreams,
-    resetPosition,
-  } = useDraggable({});
+  const [labels, dispatch] = useReducer(labelReducer, []);
   const videoWrapperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    const videoWrapper = videoWrapperRef.current;
-    const target = draggableRef.current;
-    if (!videoWrapper || !target) return;
-
-    draggableStreams(target).mouseup.subscribe((ev) => {
-      const inVideoWrapper = detectMouseIsOnElement(ev, videoWrapper);
-      resetPosition();
-      if (inVideoWrapper) {
-        alert('ADD label!');
-      }
-    });
-  }, []);
+  const addLabel = (x: number, y: number) => {
+    dispatch({ type: actionTypes.ADD, payload: { x, y } });
+  };
+  const changeLabelCord = (cord: ChangeCordsPayload) => {
+    dispatch({ type: actionTypes.CHANGE_CORDS, payload: cord });
+  };
 
   return (
     <Wrapper>
       <VideoWrapper ref={videoWrapperRef}>
-        <StyledVideo editableLabels={true} />
+        <StyledVideo
+          labels={labels}
+          labelsEvents={{
+            changeCord: changeLabelCord,
+          }}
+        />
       </VideoWrapper>
-      <ExtrasBar ref={draggableRef} />
+      <ToolBar wrapper={videoWrapperRef} addLabel={addLabel} />
       <Timelines />
     </Wrapper>
   );

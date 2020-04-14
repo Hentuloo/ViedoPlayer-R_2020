@@ -1,5 +1,13 @@
 import { map, tap } from 'rxjs/operators';
 import { OperatorFunction } from 'rxjs';
+import gsap from 'gsap';
+
+export const resetSourcePosition = (el: HTMLElement) => {
+  const tl = gsap.timeline();
+  tl.to(el, { duration: 0.2, opacity: 0, scale: 0.7 })
+    .set(el, { x: 0, y: 0 })
+    .to(el, { duration: 0.2, opacity: 1, scale: 1 });
+};
 
 export interface OffsetFromMouseEventRespnse {
   offsetX: number;
@@ -52,7 +60,7 @@ export interface CordAfterOverlapMap extends InnerElementCord {
 }
 
 export const preventElementGoingOutParent = (
-  overlapEl: HTMLElement,
+  overlapEl?: HTMLElement,
 ): OperatorFunction<InnerElementCord, CordAfterOverlapMap> => {
   if (!overlapEl) return tap((e) => e);
   const {
@@ -79,4 +87,19 @@ export const preventElementGoingOutParent = (
       return { ...newPosition, parentWidth, parentHeight };
     },
   );
+};
+export const getComputedTranslateXY = (obj: HTMLElement) => {
+  const cord = { x: 0, y: 0 };
+  const style = getComputedStyle(obj);
+  const transform = style.transform || style.webkitTransform;
+
+  let mat = transform.match(/^matrix3d\((.+)\)$/);
+
+  mat = transform.match(/^matrix\((.+)\)$/);
+  if (mat) {
+    cord.x = parseFloat(mat[1].split(', ')[4]);
+    cord.y = parseFloat(mat[1].split(', ')[5]);
+  }
+
+  return { ...cord };
 };

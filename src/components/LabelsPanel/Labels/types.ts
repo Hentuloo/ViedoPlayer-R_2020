@@ -1,7 +1,22 @@
-export interface LabelInterface {
-  id: number;
+export interface LabelCords {
   cord: { left: number; top: number; width: number; height: number };
+}
+export interface LabelContent {
   content: string;
+}
+export interface NewLabelInterface extends LabelCords, LabelContent {}
+export interface LabelInterface extends NewLabelInterface {
+  id: number;
+}
+
+export interface ChangeCordsPayload {
+  id: number;
+  x: number;
+  y: number;
+}
+
+export interface LabelsEvents {
+  changeCord: (cords: ChangeCordsPayload) => void;
 }
 
 export interface LabelProps {
@@ -9,5 +24,5 @@ export interface LabelProps {
 }
 
 export interface EditableLabelProps extends LabelProps {
-  defaultEditMode?: boolean;
+  events: LabelsEvents;
 }

@@ -6,6 +6,10 @@ import { MemomizedPlayButton } from './PlayButton';
 import { MemomizedProgressBar } from './ProgressBar';
 import ErrorRespnse from './ErrorResponse';
 import Labels from 'components/LabelsPanel/LabelsPanel';
+import {
+  LabelInterface,
+  LabelsEvents,
+} from 'components/LabelsPanel/Labels/types';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -29,11 +33,13 @@ export const StyledPlayButton = styled(MemomizedPlayButton)`
 `;
 
 export interface VideoProps {
-  editableLabels?: boolean;
+  labels?: LabelInterface[];
+  labelsEvents?: LabelsEvents;
 }
 
 const Video: React.SFC<VideoProps> = ({
-  editableLabels = false,
+  labels,
+  labelsEvents,
   ...props
 }) => {
   const [video, state, controls] = useVideo(
@@ -64,7 +70,7 @@ const Video: React.SFC<VideoProps> = ({
           setNewTime={handleSetVideoTime}
         />
       </Controllers>
-      <Labels editable={editableLabels} />
+      <Labels labels={labels} labelsEvents={labelsEvents} />
     </Wrapper>
   );
 };

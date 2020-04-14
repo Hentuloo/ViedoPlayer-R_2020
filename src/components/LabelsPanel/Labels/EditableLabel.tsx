@@ -6,23 +6,27 @@ import { EditableLabelProps } from './types';
 import { useDraggable } from 'hooks/useDraggable/useDraggable';
 
 import Controllers from './Controllers';
+import LabelWrapper, {
+  LabelWrapperCord,
+} from '../styles/LabelWrapper';
+
+interface WrapperProps extends LabelWrapperCord {
+  editMode?: boolean;
+}
 
 const StyledController = styled(Controllers)`
   opacity: 0;
 `;
 
-export const Wrapper = styled.div<{ editMode?: boolean }>`
-  position: relative;
-  display: inline-block;
-  max-width: 35%;
-  max-height: 25%;
-  background-color: ${({ theme }) => theme.color.black[0]};
+export const Wrapper = styled.div<WrapperProps>`
+  ${LabelWrapper}
   pointer-events: all;
   user-select: none;
   cursor: grab;
 
   &:active {
     cursor: grabbing;
+    z-index: 10;
   }
 
   &:hover {
@@ -55,15 +59,19 @@ export const Textarea = styled.textarea<{ editMode?: boolean }>`
 `;
 
 const Label: React.FC<EditableLabelProps> = ({
-  label: { content },
-  defaultEditMode,
+  label: { content, cord, id },
+  events: { changeCord },
   ...props
 }) => {
-  const { draggableRef, setFlag, parentRef } = useDraggable({
-    defaultActive: true,
-    detectOnlySourceNode: true,
-  });
-  const [editMode, setEditMode] = useState(defaultEditMode || false);
+  const { draggableRef, setFlag, setOverlapElement } = useDraggable(
+    {
+      defaultActive: true,
+      detectOnlySourceNode: true,
+      withOverlapElement: true,
+    },
+    (x, y) => changeCord({ id, x, y }),
+  );
+  const [editMode, setEditMode] = useState(false);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -73,14 +81,19 @@ const Label: React.FC<EditableLabelProps> = ({
     setEditMode(flag || !editMode);
     setFlag(!flag);
   };
+
   useEffect(() => {
     if (!draggableRef.current) return;
-    //@ts-ignore
-    parentRef.current = draggableRef.current.parentNode;
+    setOverlapElement(draggableRef.current.parentNode);
   }, []);
 
   return (
-    <Wrapper ref={draggableRef} editMode={editMode} {...props}>
+    <Wrapper
+      ref={draggableRef}
+      editMode={editMode}
+      {...props}
+      {...cord}
+    >
       <Textarea
         onClick={handleClick}
         editMode={editMode}

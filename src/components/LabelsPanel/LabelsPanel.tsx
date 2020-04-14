@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 import EditableLabel from './Labels/EditableLabel';
 import StaticLabel from './Labels/StaticLabel';
+import { LabelInterface, LabelsEvents } from './Labels/types';
 export const Wrapper = styled.div`
   position: relative;
 `;
@@ -15,24 +16,24 @@ export const LabelsWrapper = styled.div`
   pointer-events: none;
 `;
 
-const labels = [
-  {
-    id: 1,
-    cord: { left: 100, top: 40, width: 60, height: 80 },
-    content: 'Hello label!',
-  },
-];
-
 export interface LabelsProps {
-  editable?: boolean;
+  labelsEvents?: LabelsEvents;
+  labels?: LabelInterface[];
 }
 
-const Labels: React.SFC<LabelsProps> = ({ editable = false }) => {
+const Labels: React.SFC<LabelsProps> = ({
+  labelsEvents,
+  labels = [],
+}) => {
   return (
     <LabelsWrapper>
       {labels.map((label) =>
-        editable ? (
-          <EditableLabel key={label.id} label={label} />
+        labelsEvents ? (
+          <EditableLabel
+            key={label.id}
+            events={labelsEvents}
+            label={label}
+          />
         ) : (
           <StaticLabel key={label.id} label={label} />
         ),

@@ -15,7 +15,16 @@ function VideoPage() {
     <NavigationTemplate>
       <Wrapper>
         <header>Tu można oglądać film z zakładkami</header>
-        <Video />
+        <Video
+          labels={[
+            {
+              id: 1,
+              cord: { left: 100, top: 40, width: 180, height: 80 },
+              content: 'Your example label',
+              // timeline: { from: 0.2, to: 0.3 },
+            },
+          ]}
+        />
       </Wrapper>
     </NavigationTemplate>
   );
