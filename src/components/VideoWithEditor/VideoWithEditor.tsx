@@ -2,8 +2,8 @@ import React, { useRef, useReducer } from 'react';
 import styled from 'styled-components';
 
 import Video from 'components/Video/Video';
-import ToolBar from './ToolBar/ToolBar';
-import Timelines from './Timelines';
+import ToolBar from '../ToolBar/ToolBar';
+import Timelines from '../Timelines';
 
 import { LabelNewCords } from 'components/LabelsPanel/types';
 import labelReducer, { actionTypes } from './LabelsReducer';

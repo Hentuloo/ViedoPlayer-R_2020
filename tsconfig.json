@@ -20,6 +20,7 @@
   "include": [
     "src",
     "typings/styled-cmp.d.ts",
-    "typings/react-app-env.d.ts"
+    "typings/react-app-env.d.ts",
+    "typings/HTMLElementEvent.d.ts"
   ]
 }

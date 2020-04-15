@@ -1,4 +1,4 @@
-import { defaultLabel } from './ToolBar/config';
+import { defaultLabel } from './config';
 
 import {
   LabelInterface,

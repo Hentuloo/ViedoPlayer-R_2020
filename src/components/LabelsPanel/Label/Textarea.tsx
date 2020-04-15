@@ -26,9 +26,7 @@ export const TextareaElement = styled.textarea<TextareaI>`
       pointer-events: auto;
     `};
 `;
-type HTMLElementEvent<T extends HTMLElement> = Event & {
-  target: T;
-};
+
 type MouseEvent = HTMLElementEvent<HTMLTextAreaElement>;
 
 export interface TextAreaProps {
