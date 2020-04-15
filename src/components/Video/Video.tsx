@@ -9,7 +9,7 @@ import Labels from 'components/LabelsPanel/LabelsPanel';
 import {
   LabelInterface,
   LabelsEvents,
-} from 'components/LabelsPanel/Labels/types';
+} from 'components/LabelsPanel/types';
 
 export const Wrapper = styled.div`
   position: relative;

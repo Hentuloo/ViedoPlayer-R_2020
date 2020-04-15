@@ -5,7 +5,10 @@ import { take, switchMap, repeat } from 'rxjs/operators';
 import { useDraggable } from 'hooks/useDraggable/useDraggable';
 
 import { mouseIsOnElement } from 'config/utils';
-import { getLabeRectInsideWrapper } from './utils';
+import {
+  getCordsInsideOverlapElement,
+  NewElementDefaultSize,
+} from './utils';
 import {
   mousedown$,
   mouseup$,
@@ -17,6 +20,7 @@ export type NewItemCallback = (x: number, y: number) => void;
 export const useTool = (
   wrapperRef: React.RefObject<HTMLElement>,
   addCallback: NewItemCallback,
+  size: NewElementDefaultSize,
 ) => {
   const { draggableRef, resetPosition } = useDraggable();
 
@@ -50,9 +54,11 @@ export const useTool = (
         const isToolInside = mouseIsOnElement(cord, videoWrapper);
         if (!isToolInside) return;
 
-        const { left, top } = getLabeRectInsideWrapper(
+        const { offsetWidth, offsetHeight } = videoWrapper;
+        const { left, top } = getCordsInsideOverlapElement(
           cord,
-          videoWrapper,
+          { width: offsetWidth, height: offsetHeight },
+          size,
         );
 
         addCallback(left, top);

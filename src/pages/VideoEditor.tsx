@@ -6,7 +6,7 @@ import VideoWithEditor from 'components/VideoWithEditor/VideoWithEditor';
 
 const Wrapper = styled.div`
   display: grid;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0px auto;
   color: ${({ theme }) => theme.color.brand[0]};
 `;

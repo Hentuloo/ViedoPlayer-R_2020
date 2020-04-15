@@ -5,8 +5,9 @@ import Video from 'components/Video/Video';
 import ToolBar from './ToolBar/ToolBar';
 import Timelines from './Timelines';
 
-import { ChangeCordsPayload } from 'components/LabelsPanel/Labels/types';
+import { LabelNewCords } from 'components/LabelsPanel/types';
 import labelReducer, { actionTypes } from './LabelsReducer';
+import { getCordsPrecentsInsideWrapper } from 'config/utils';
 
 const StyledVideo = styled(Video)``;
 const VideoWrapper = styled.div``;
@@ -26,8 +27,17 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
   const addLabel = (x: number, y: number) => {
     dispatch({ type: actionTypes.ADD, payload: { x, y } });
   };
-  const changeLabelCord = (cord: ChangeCordsPayload) => {
-    dispatch({ type: actionTypes.CHANGE_CORDS, payload: cord });
+  const changeLabelCord = (id: number, cord: LabelNewCords) => {
+    const precents = getCordsPrecentsInsideWrapper(
+      cord,
+      videoWrapperRef,
+    );
+    if (precents) {
+      dispatch({
+        type: actionTypes.CHANGE_CORDS,
+        payload: { id, ...precents },
+      });
+    }
   };
 
   return (

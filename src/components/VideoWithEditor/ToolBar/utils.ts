@@ -1,43 +1,44 @@
-import { progressBarHeight } from 'components/Video/config';
-import { defaultLabel } from '../config';
-
 export interface MouseCord {
   clientX: number;
   clientY: number;
 }
-
-export const getLabeRectInsideWrapper = (
+export interface NewElementDefaultSize {
+  width: number;
+  height: number;
+}
+export interface ElementSize {
+  width: number;
+  height: number;
+}
+export const getCordsInsideOverlapElement = (
   { clientX, clientY }: MouseCord,
-  element: HTMLElement,
+  { width, height }: ElementSize,
+  {
+    width: elementWidthPercent,
+    height: elementHeightPercent,
+  }: NewElementDefaultSize,
 ) => {
-  const {
-    left,
-    top,
-    width,
-    height,
-  } = element.getBoundingClientRect();
-  const xInsideElement = clientX - left;
-  const yInsideElement = clientY - top;
-  const labelDefaultWidth = width * (defaultLabel.cord.width / 100);
-  const labelDefaultHeight =
-    height * (defaultLabel.cord.height / 100);
+  const xPerecentage = (clientX / width) * 100;
+  const yPercentage = (clientY / height) * 100;
 
-  const cords = { left: xInsideElement, top: yInsideElement };
-  const leftEdge = xInsideElement < labelDefaultWidth;
-  const rightEdge = xInsideElement > width - labelDefaultWidth;
-  const topEdge = yInsideElement < labelDefaultHeight;
-  const bottomEdge =
-    yInsideElement > height - labelDefaultHeight - progressBarHeight;
+  const cords = {
+    left: xPerecentage - elementWidthPercent / 2,
+    top: yPercentage - elementHeightPercent / 2,
+  };
+  const leftEdge = xPerecentage < elementWidthPercent;
+  const rightEdge = xPerecentage > 100 - elementWidthPercent;
+  const topEdge = yPercentage < elementHeightPercent;
+  const bottomEdge = yPercentage > 100 - elementHeightPercent;
 
   if (leftEdge) {
     cords.left = 0;
   } else if (rightEdge) {
-    cords.left = width - labelDefaultWidth;
+    cords.left = 100 - elementWidthPercent;
   }
   if (topEdge) {
     cords.top = 0;
   } else if (bottomEdge) {
-    cords.top = height - labelDefaultHeight + progressBarHeight;
+    cords.top = 100 - elementHeightPercent;
   }
 
   return cords;

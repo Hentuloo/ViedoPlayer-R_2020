@@ -34,7 +34,7 @@ export const useDraggable = (
 
   const overlapElement = useRef<HTMLElement>();
   const [isOverlapElementSet, setOverlapElementFlag] = useState<
-    Boolean
+    boolean
   >(false);
 
   const setActive = (flag?: boolean) => {
@@ -58,13 +58,13 @@ export const useDraggable = (
       el: element,
       overlapElement: overlapElement.current,
       detectOnlySourceNode,
-      isActive: isActive.current,
+      isActive: isActive,
     });
 
     const draggableSub = draggable.subscribe(({ left, top }) => {
       gsap.set(element, { x: left, y: top });
     });
-    let dropSubscribe =
+    const dropSubscribe =
       draggableCallback &&
       drop.subscribe(() => {
         const { x, y } = getComputedTranslateXY(element);

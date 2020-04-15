@@ -9,20 +9,20 @@ export interface LabelInterface extends NewLabelInterface {
   id: number;
 }
 
-export interface ChangeCordsPayload {
-  id: number;
+export interface LabelNewCords {
   x: number;
   y: number;
 }
 
 export interface LabelsEvents {
-  changeCord: (cords: ChangeCordsPayload) => void;
+  changeCord: (id: number, cords: LabelNewCords) => void;
 }
 
-export interface LabelProps {
+export interface LabelElementProps {
   label: LabelInterface;
+  parentRef: React.RefObject<HTMLElement>;
 }
 
-export interface EditableLabelProps extends LabelProps {
+export interface EditabLabelElementProps extends LabelElementProps {
   events: LabelsEvents;
 }

@@ -5,7 +5,7 @@ import NavigationTemplate from 'templates/NavigationTemplate';
 
 const Wrapper = styled.div`
   display: grid;
-  max-width: 800px;
+  max-width: 1200px;
   margin: 0px auto;
   color: ${({ theme }) => theme.color.brand[0]};
 `;
@@ -19,7 +19,7 @@ function VideoPage() {
           labels={[
             {
               id: 1,
-              cord: { left: 100, top: 40, width: 180, height: 80 },
+              cord: { left: 50, top: 10, width: 40, height: 15 },
               content: 'Your example label',
               // timeline: { from: 0.2, to: 0.3 },
             },

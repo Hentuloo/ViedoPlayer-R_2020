@@ -28,7 +28,8 @@ export const offsetsFromMouseEvent = (
 
 export const getLayers = (evt: React.MouseEvent) => {
   let el = evt.target as HTMLElement;
-  let layers = { x: 0, y: 0 };
+  const { scrollTop, scrollLeft } = document.documentElement;
+  let layers = { x: -scrollLeft, y: -scrollTop };
 
   while (el && !isNaN(el.offsetLeft) && !isNaN(el.offsetTop)) {
     layers = {

@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import { useTool, NewItemCallback } from './useTool';
+import { defaultLabel } from './config';
 
 const Wrapper = styled.aside``;
 const ButtonWrapper = styled.div`
@@ -27,7 +28,10 @@ export interface ToolBarProps {
 }
 
 const ToolBar = ({ addLabel, wrapper, ...props }: ToolBarProps) => {
-  const [labelRef] = useTool(wrapper, addLabel);
+  const [labelRef] = useTool(wrapper, addLabel, {
+    width: defaultLabel.cord.width,
+    height: defaultLabel.cord.height,
+  });
 
   return (
     <Wrapper {...props}>

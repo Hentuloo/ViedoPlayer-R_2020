@@ -1,9 +1,9 @@
-import { defaultLabel } from './config';
+import { defaultLabel } from './ToolBar/config';
 
 import {
   LabelInterface,
-  ChangeCordsPayload,
-} from 'components/LabelsPanel/Labels/types';
+  LabelNewCords,
+} from 'components/LabelsPanel/types';
 
 export enum actionTypes {
   ADD,
@@ -16,9 +16,13 @@ interface AddLabelAction {
   payload: { x: number; y: number };
 }
 
+interface ChangeCordsPayloadWithId extends LabelNewCords {
+  id: number;
+}
+
 interface ChangeCordsLabelAction {
   type: actionTypes.CHANGE_CORDS;
-  payload: ChangeCordsPayload;
+  payload: ChangeCordsPayloadWithId;
 }
 
 type Action = AddLabelAction | ChangeCordsLabelAction;
@@ -40,7 +44,8 @@ const reducer = (state: State, action: Action) => {
     ];
   }
   if (action.type === actionTypes.CHANGE_CORDS) {
-    return state.map((label) => {
+    const copyOfArray = state.slice();
+    return copyOfArray.map((label) => {
       if (label.id !== action.payload.id) return label;
       return {
         ...label,

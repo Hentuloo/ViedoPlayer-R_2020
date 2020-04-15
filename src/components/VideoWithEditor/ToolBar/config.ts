@@ -1,9 +1,9 @@
 export const defaultLabel = {
   cord: {
-    width: 30,
-    height: 40,
+    width: 27,
+    height: 15,
     x: 0,
     y: 0,
   },
-  content: 'eit your first label',
+  content: 'Your first label',
 };

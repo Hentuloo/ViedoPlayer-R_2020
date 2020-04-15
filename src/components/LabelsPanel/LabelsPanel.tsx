@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 
-import EditableLabel from './Labels/EditableLabel';
-import StaticLabel from './Labels/StaticLabel';
-import { LabelInterface, LabelsEvents } from './Labels/types';
+import EditableLabel from './Label/EditableLabel';
+import StaticLabel from './Label/StaticLabel';
+import { LabelInterface, LabelsEvents } from './types';
 export const Wrapper = styled.div`
   position: relative;
 `;
@@ -25,17 +25,23 @@ const Labels: React.SFC<LabelsProps> = ({
   labelsEvents,
   labels = [],
 }) => {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   return (
-    <LabelsWrapper>
+    <LabelsWrapper ref={wrapperRef}>
       {labels.map((label) =>
         labelsEvents ? (
           <EditableLabel
             key={label.id}
             events={labelsEvents}
             label={label}
+            parentRef={wrapperRef}
           />
         ) : (
-          <StaticLabel key={label.id} label={label} />
+          <StaticLabel
+            key={label.id}
+            label={label}
+            parentRef={wrapperRef}
+          />
         ),
       )}
     </LabelsWrapper>

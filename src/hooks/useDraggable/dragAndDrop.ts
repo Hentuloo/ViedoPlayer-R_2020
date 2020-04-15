@@ -6,7 +6,6 @@ import {
   takeUntil,
   repeat,
   take,
-  tap,
 } from 'rxjs/operators';
 import {
   preventElementGoingOutParent,
@@ -35,7 +34,7 @@ export type DraggableStreams = {
 export interface DragAndDropInterface {
   el: HTMLElement;
   overlapElement?: HTMLElement | undefined;
-  isActive: boolean;
+  isActive: { current: boolean };
   detectOnlySourceNode: boolean;
 }
 
@@ -45,8 +44,8 @@ export const dragAndDrop = ({
   overlapElement,
   detectOnlySourceNode,
 }: DragAndDropInterface) => {
-  const passWhenDraggableIsActive = (isActive: boolean) =>
-    filter<MouseMove>(() => isActive === true);
+  const passWhenDraggableIsActive = () =>
+    filter<MouseMove>(() => isActive.current === true);
 
   const passWhenTargetIsSource = () =>
     filter((ev: MouseMove) =>
@@ -54,7 +53,7 @@ export const dragAndDrop = ({
     );
 
   const drag = mousedown$(el).pipe(
-    passWhenDraggableIsActive(isActive),
+    passWhenDraggableIsActive(),
     passWhenTargetIsSource(),
   );
 

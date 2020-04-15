@@ -1,14 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
-import LabelContent from '../styles/LabelContent';
-import { EditableLabelProps } from './types';
+import LabelContent from './styles/LabelContent';
+import { EditabLabelElementProps } from '../types';
 import { useDraggable } from 'hooks/useDraggable/useDraggable';
 
 import Controllers from './Controllers';
 import LabelWrapper, {
   LabelWrapperCord,
-} from '../styles/LabelWrapper';
+} from './styles/LabelWrapper';
+import { useLabelPrecentagePosition } from './useLabelPrecentagePosition';
+import { mergeRefs } from 'config/utils';
+import Textarea from './Textarea';
 
 interface WrapperProps extends LabelWrapperCord {
   editMode?: boolean;
@@ -16,6 +19,7 @@ interface WrapperProps extends LabelWrapperCord {
 
 const StyledController = styled(Controllers)`
   opacity: 0;
+  z-index: 10;
 `;
 
 export const Wrapper = styled.div<WrapperProps>`
@@ -40,66 +44,55 @@ const StyledLabelContent = styled(LabelContent)`
   pointer-events: none;
   user-select: none;
 `;
-export const Textarea = styled.textarea<{ editMode?: boolean }>`
-  border: none;
-  background-color: transparent;
-  color: ${({ theme }) => theme.color.white[0]};
-  resize: none;
-  z-index: -1;
-  opacity: 0;
-  pointer-events: none;
-  ${({ editMode }) =>
-    editMode &&
-    css`
-      z-index: 5;
-      opacity: 1;
-      resize: auto;
-      pointer-events: auto;
-    `};
-`;
 
-const Label: React.FC<EditableLabelProps> = ({
+const Label: React.FC<EditabLabelElementProps> = ({
   label: { content, cord, id },
   events: { changeCord },
+  parentRef,
   ...props
 }) => {
-  const { draggableRef, setFlag, setOverlapElement } = useDraggable(
+  const changeCordCallback = (x: number, y: number) =>
+    changeCord(id, { x, y });
+
+  const {
+    draggableRef,
+    setFlag: setDraggableFlag,
+    setOverlapElement,
+  } = useDraggable(
     {
       defaultActive: true,
       detectOnlySourceNode: true,
       withOverlapElement: true,
     },
-    (x, y) => changeCord({ id, x, y }),
+    changeCordCallback,
   );
+  const ref = useLabelPrecentagePosition(cord, parentRef.current);
   const [editMode, setEditMode] = useState(false);
 
-  const handleClick = (e: React.MouseEvent) => {
-    e.preventDefault();
-  };
-
   const changeEditMode = (flag?: boolean) => {
-    setEditMode(flag || !editMode);
-    setFlag(!flag);
+    const currentFlag = flag !== undefined ? flag : !editMode;
+    setEditMode(currentFlag);
+    setDraggableFlag(!flag);
+    if (!currentFlag) {
+      alert('update text area text');
+    }
   };
 
   useEffect(() => {
-    if (!draggableRef.current) return;
-    setOverlapElement(draggableRef.current.parentNode);
+    parentRef.current && setOverlapElement(parentRef.current);
   }, []);
 
   return (
     <Wrapper
-      ref={draggableRef}
+      ref={mergeRefs(ref, draggableRef)}
       editMode={editMode}
       {...props}
-      {...cord}
+      size={{
+        width: cord.width,
+        height: cord.height,
+      }}
     >
-      <Textarea
-        onClick={handleClick}
-        editMode={editMode}
-        name="video-label"
-        defaultValue={content}
-      ></Textarea>
+      <Textarea editMode={editMode} content={content} />
       {!editMode && (
         <StyledLabelContent>
           <span>{content}</span>
