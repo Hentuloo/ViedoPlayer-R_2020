@@ -8,9 +8,12 @@ import Timelines from '../Timelines';
 import { LabelNewCords } from 'components/LabelsPanel/types';
 import labelReducer, { actionTypes } from './LabelsReducer';
 import { getCordsPrecentsInsideWrapper } from 'config/utils';
+import { progressBarHeight } from 'components/Video/config';
 
 const StyledVideo = styled(Video)``;
-const VideoWrapper = styled.div``;
+const VideoWrapper = styled.div`
+  align-self: flex-start;
+`;
 const Wrapper = styled.div`
   display: grid;
   ${({ theme }) => theme.mediaQuery.md} {
@@ -28,10 +31,14 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     dispatch({ type: actionTypes.ADD, payload: { x, y } });
   };
   const changeLabelCord = (id: number, cord: LabelNewCords) => {
-    const precents = getCordsPrecentsInsideWrapper(
-      cord,
-      videoWrapperRef,
-    );
+    const wrapper = videoWrapperRef.current;
+    if (!wrapper) return;
+    const { offsetWidth, offsetHeight } = wrapper;
+
+    const precents = getCordsPrecentsInsideWrapper(cord, {
+      offsetWidth,
+      offsetHeight: offsetHeight - progressBarHeight,
+    });
     if (precents) {
       dispatch({
         type: actionTypes.CHANGE_CORDS,
@@ -46,7 +53,9 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     const { offsetWidth, offsetHeight } = wrapper;
     //transform to percents by parent wrapper
     let width = Number(((w / offsetWidth) * 100).toFixed(2));
-    let height = Number(((h / offsetHeight) * 100).toFixed(2));
+    let height = Number(
+      ((h / offsetHeight - progressBarHeight) * 100).toFixed(2),
+    );
     //set max size
     width = width >= 50 ? 50 : width;
     height = height >= 50 ? 50 : height;

@@ -38,10 +38,11 @@ export const mergeRefs = <T>(...refs: Array<Ref<T>>) => (ref: T) => {
 
 export const getCordsPrecentsInsideWrapper = (
   cords: { x: number; y: number },
-  wrapper: React.RefObject<HTMLElement>,
+  {
+    offsetWidth,
+    offsetHeight,
+  }: { offsetWidth: number; offsetHeight: number },
 ) => {
-  if (!wrapper.current) return;
-  const { offsetWidth, offsetHeight } = wrapper.current;
   const x = (cords.x / offsetWidth) * 100;
   const y = (cords.y / offsetHeight) * 100;
   return { x, y };

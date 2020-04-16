@@ -60,7 +60,7 @@ const reducer = (state: State, action: Action) => {
 
       //prevent when element is out of parent (after resize)
       const newX = x + width >= 100 ? 100 - width : x;
-      const newY = y + height >= 100 ? 100 - height - y : y;
+      const newY = y + height >= 100 ? 100 - height : y;
 
       return {
         ...label,

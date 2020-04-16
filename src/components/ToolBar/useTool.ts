@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { merge, fromEvent, NextObserver } from 'rxjs';
+import { merge, fromEvent } from 'rxjs';
 import { take, switchMap, repeat } from 'rxjs/operators';
 
 import { useDraggable } from 'hooks/useDraggable/useDraggable';
@@ -53,10 +53,9 @@ export const useTool = <E extends HTMLElement>(
       const isToolInside = mouseIsOnElement(cord, videoWrapper);
       if (!isToolInside) return;
 
-      const { offsetWidth, offsetHeight } = videoWrapper;
       const { left, top } = getCordsInsideOverlapElement(
         cord,
-        { width: offsetWidth, height: offsetHeight },
+        videoWrapper,
         size,
       );
 

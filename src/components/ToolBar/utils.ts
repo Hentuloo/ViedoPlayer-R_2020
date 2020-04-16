@@ -12,14 +12,16 @@ export interface ElementSize {
 }
 export const getCordsInsideOverlapElement = (
   { clientX, clientY }: MouseCord,
-  { width, height }: ElementSize,
+  target: HTMLElement,
   {
     width: elementWidthPercent,
     height: elementHeightPercent,
   }: NewElementDefaultSize,
 ) => {
-  const xPerecentage = (clientX / width) * 100;
-  const yPercentage = (clientY / height) * 100;
+  const { width, height, top, left } = target.getBoundingClientRect();
+
+  const xPerecentage = ((clientX - left) / width) * 100;
+  const yPercentage = ((clientY - top) / height) * 100;
 
   const cords = {
     left: xPerecentage - elementWidthPercent / 2,
