@@ -55,13 +55,19 @@ const reducer = (state: State, action: Action) => {
     const copyOfArray = state.slice();
     return copyOfArray.map((label) => {
       if (label.id !== action.payload.id) return label;
+      const { width, height } = label.cord;
       const { x, y } = action.payload;
+
+      //prevent when element is out of parent (after resize)
+      const newX = x + width >= 100 ? 100 - width : x;
+      const newY = y + height >= 100 ? 100 - height - y : y;
+
       return {
         ...label,
         cord: {
           ...label.cord,
-          left: x,
-          top: y,
+          left: newX,
+          top: newY,
         },
       };
     });
@@ -71,6 +77,7 @@ const reducer = (state: State, action: Action) => {
     return copyOfArray.map((label) => {
       if (label.id !== action.payload.id) return label;
       const { width, height } = action.payload;
+
       return {
         ...label,
         cord: {

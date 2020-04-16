@@ -100,8 +100,8 @@ export const getComputedTranslateXY = (obj: HTMLElement) => {
 
   mat = transform.match(/^matrix\((.+)\)$/);
   if (mat) {
-    cord.x = parseFloat(mat[1].split(', ')[4]);
-    cord.y = parseFloat(mat[1].split(', ')[5]);
+    cord.x = Number(parseFloat(mat[1].split(', ')[4]).toFixed(2));
+    cord.y = Number(parseFloat(mat[1].split(', ')[5]).toFixed(2));
   }
 
   return { ...cord };

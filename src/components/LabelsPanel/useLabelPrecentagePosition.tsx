@@ -15,6 +15,21 @@ export const useLabelPrecentagePosition = <
   const cords = useRef({ left, top });
   const ref = useRef<T>(null);
 
+  const updatePosition = () => {
+    if (!ref.current || !parentRef) return;
+
+    const { offsetWidth, offsetHeight } = parentRef;
+    const { left, top } = cords.current;
+
+    const x = (offsetWidth * left) / 100;
+    const y = (offsetHeight * top) / 100;
+
+    gsap.set(ref.current, {
+      x,
+      y,
+    });
+  };
+
   useEffect(() => {
     cords.current = {
       left,
@@ -25,24 +40,11 @@ export const useLabelPrecentagePosition = <
   useEffect(() => {
     if (!ref.current || !parentRef) return;
 
-    const updatePosition = () => {
-      if (!ref.current || !parentRef) return;
-      const { offsetWidth, offsetHeight } = parentRef;
-
-      const x = (offsetWidth * cords.current.left) / 100;
-      const y = (offsetHeight * cords.current.top) / 100;
-
-      gsap.set(ref.current, {
-        x,
-        y,
-      });
-    };
-
     updatePosition();
 
     window.addEventListener('resize', updatePosition);
     return () => window.removeEventListener('resize', updatePosition);
-  }, [parentRef]);
+  }, [parentRef, left]);
 
   return ref;
 };

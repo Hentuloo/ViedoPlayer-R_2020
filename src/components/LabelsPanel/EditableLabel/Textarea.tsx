@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import Context from './Context';
 import { useResizeCallback } from 'hooks/useResizeCallback';
@@ -27,9 +27,11 @@ export const TextareaElement = styled.textarea<TextareaI>`
     `};
 `;
 
-export interface TextAreaProps {}
+export interface TextAreaProps {
+  parentRef: React.RefObject<HTMLDivElement>;
+}
 
-const TextArea: React.SFC<TextAreaProps> = () => {
+const TextArea: React.SFC<TextAreaProps> = ({ parentRef }) => {
   const {
     handleChangeLabelSize,
     editModeFlag,
@@ -38,6 +40,24 @@ const TextArea: React.SFC<TextAreaProps> = () => {
   const ref = useResizeCallback<HTMLTextAreaElement>(
     handleChangeLabelSize,
   );
+
+  useEffect(() => {
+    const el = ref.current;
+    const parent = parentRef.current;
+    if (!el || !parent) return;
+
+    const setMaxSize = () => {
+      const { offsetWidth, offsetHeight } = parent as HTMLElement;
+      el.style.width = 'auto';
+      el.style.height = 'auto';
+      el.style.maxWidth = `${(offsetWidth / 2).toFixed(2)}px `;
+      el.style.maxHeight = `${(offsetHeight / 2).toFixed(2)}px`;
+    };
+    setMaxSize();
+
+    window.addEventListener('resize', setMaxSize);
+    return () => window.removeEventListener('resize', setMaxSize);
+  }, []);
 
   return (
     <TextareaElement

@@ -89,7 +89,7 @@ const EditableLabelWrapper: React.SFC<EditableWrapperProps> = ({
         height: cord.height,
       }}
     >
-      <Textarea />
+      <Textarea parentRef={parentRef} />
       {!editModeFlag && (
         <StyledLabelContent>
           <span>{content}</span>

@@ -44,8 +44,13 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     const wrapper = videoWrapperRef.current;
     if (!wrapper) return;
     const { offsetWidth, offsetHeight } = wrapper;
-    const width = Number(((w / offsetWidth) * 100).toFixed(2));
-    const height = Number(((h / offsetHeight) * 100).toFixed(2));
+    //transform to percents by parent wrapper
+    let width = Number(((w / offsetWidth) * 100).toFixed(2));
+    let height = Number(((h / offsetHeight) * 100).toFixed(2));
+    //set max size
+    width = width >= 50 ? 50 : width;
+    height = height >= 50 ? 50 : height;
+
     dispatch({
       type: actionTypes.CHANGE_SIZE,
       payload: { id, width, height },
