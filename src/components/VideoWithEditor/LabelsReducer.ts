@@ -5,6 +5,7 @@ export enum actionTypes {
   ADD,
   CHANGE_CORDS,
   CHANGE_SIZE,
+  CHANGE_CONTENT,
 }
 
 interface ChangeSizeAction {
@@ -21,12 +22,19 @@ interface ChangeCordsLabelAction {
   type: actionTypes.CHANGE_CORDS;
   payload: { id: number; x: number; y: number };
 }
+interface ChangeContentLabelAction {
+  type: actionTypes.CHANGE_CONTENT;
+  payload: { id: number; content: string };
+}
 
 type Action =
   | AddLabelAction
   | ChangeCordsLabelAction
-  | ChangeSizeAction;
+  | ChangeSizeAction
+  | ChangeContentLabelAction;
+
 type State = LabelInterface[];
+
 const reducer = (state: State, action: Action) => {
   if (action.type === actionTypes.ADD) {
     const { x, y } = action.payload;
@@ -70,6 +78,16 @@ const reducer = (state: State, action: Action) => {
           width,
           height,
         },
+      };
+    });
+  }
+  if (action.type === actionTypes.CHANGE_CONTENT) {
+    const copyOfArray = state.slice();
+    return copyOfArray.map((label) => {
+      if (label.id !== action.payload.id) return label;
+      return {
+        ...label,
+        content: action.payload.content,
       };
     });
   }

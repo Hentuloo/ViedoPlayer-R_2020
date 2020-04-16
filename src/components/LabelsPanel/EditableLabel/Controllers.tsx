@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled from 'styled-components';
+import Context from './Context';
 
 export const Wrapper = styled.div`
   position: absolute;
@@ -19,27 +20,33 @@ export const CloseEdit = styled(IconButton)``;
 export const EditIcon = styled(IconButton)``;
 
 export interface ControllersProps {
-  changeEditMode: (flag?: boolean) => void;
-  editMode: boolean;
+  changeDraggalbeFlag: (flag?: boolean | undefined) => void;
 }
 
 const Controllers: React.SFC<ControllersProps> = ({
-  changeEditMode,
-  editMode,
+  changeDraggalbeFlag,
+
   ...props
 }) => {
+  const { handleChangeEditMode, editModeFlag } = useContext(Context);
+
+  const handleChangeMode = (flag: boolean) => {
+    changeDraggalbeFlag(!flag);
+    handleChangeEditMode(flag);
+  };
+
   return (
     <Wrapper {...props}>
-      {editMode ? (
+      {editModeFlag ? (
         <CloseEdit
-          onClick={() => changeEditMode(false)}
+          onClick={() => handleChangeMode(false)}
           title="Close edit mode"
         >
           <span className="sr-only">Close edit mode</span>
           <span className="fa fa-close" aria-hidden="true"></span>
         </CloseEdit>
       ) : (
-        <EditIcon onClick={() => changeEditMode(true)} title="Edit">
+        <EditIcon onClick={() => handleChangeMode(true)} title="Edit">
           <span className="sr-only">Edit</span>
           <span className="fa fa-pencil" aria-hidden="true"></span>
         </EditIcon>

@@ -21,11 +21,12 @@ export interface LabelsEvents {
     width: number,
     height: number,
   ) => void;
+  changeContent: (id: number, content: string) => void;
 }
 
 export interface LabelElementProps {
   label: LabelInterface;
-  parentRef: React.RefObject<HTMLElement>;
+  parentRef: React.RefObject<HTMLDivElement>;
 }
 
 export interface EditabLabelElementProps extends LabelElementProps {

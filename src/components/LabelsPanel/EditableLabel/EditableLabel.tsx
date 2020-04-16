@@ -1,117 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import styled from 'styled-components';
-import { useDraggable } from 'hooks/useDraggable/useDraggable';
-import { useLabelPrecentagePosition } from '../useLabelPrecentagePosition';
-
-import Controllers from './Controllers';
-import LabelContent from '../styles/LabelContent';
-import LabelWrapper, {
-  LabelWrapperCord,
-} from '../styles/LabelWrapper';
-import Textarea from './Textarea';
-import { mergeRefs } from 'config/utils';
+import React, { useState } from 'react';
 import { EditabLabelElementProps } from '../types';
-
-interface WrapperProps extends LabelWrapperCord {
-  editMode?: boolean;
-}
-
-const StyledController = styled(Controllers)`
-  opacity: 0;
-  z-index: 10;
-`;
-
-export const Wrapper = styled.div<WrapperProps>`
-  ${LabelWrapper}
-  pointer-events: all;
-  user-select: none;
-  cursor: grab;
-
-  &:active {
-    cursor: grabbing;
-    z-index: 10;
-  }
-
-  &:hover {
-    ${StyledController} {
-      opacity: 1;
-    }
-  }
-`;
-
-const StyledLabelContent = styled(LabelContent)`
-  pointer-events: none;
-  user-select: none;
-`;
+import Context from './Context';
+import EditableLabelWrapper from './EditableWrapper';
 
 const Label: React.FC<EditabLabelElementProps> = ({
-  label: { content, cord, id },
-  events: { changeCord, changeLabelSize },
+  label,
+  events: { changeCord, changeLabelSize, changeContent },
   parentRef,
   ...props
 }) => {
-  const changeCordCallback = (x: number, y: number) =>
-    changeCord(id, { x, y });
-
-  const {
-    draggableRef,
-    setFlag: setDraggableFlag,
-    setOverlapElement,
-  } = useDraggable<HTMLDivElement>(
-    {
-      defaultActive: true,
-      detectOnlySourceNode: true,
-      withOverlapElement: true,
-    },
-    changeCordCallback,
-  );
-
-  const ref = useLabelPrecentagePosition<HTMLDivElement>(
-    cord,
-    parentRef.current,
-  );
   const [editMode, setEditMode] = useState(false);
 
-  const changeEditMode = (flag?: boolean) => {
-    const currentFlag = flag !== undefined ? flag : !editMode;
-    setEditMode(currentFlag);
-    setDraggableFlag(!flag);
-    if (!currentFlag) {
-      alert('update text area text');
-    }
+  const handleChangeLabelCord = (x: number, y: number) =>
+    changeCord(label.id, { x, y });
+
+  const handleChangeEditMode = (flag: boolean) => {
+    setEditMode(flag);
   };
-  const handleChangeSize = (width: number, height: number) =>
-    changeLabelSize(id, width, height);
 
-  useEffect(() => {
-    parentRef.current && setOverlapElement(parentRef.current);
-  }, []);
+  const handleChangeLabelSize = (width: number, height: number) =>
+    changeLabelSize(label.id, width, height);
 
+  const handleChangeContent = (content: string) =>
+    changeContent(label.id, content);
+
+  const contextValue = {
+    label,
+    editModeFlag: editMode,
+    handleChangeEditMode,
+    handleChangeLabelSize,
+    handleChangeLabelCord,
+    handleChangeContent,
+  };
   return (
-    <Wrapper
-      ref={mergeRefs(ref, draggableRef)}
-      editMode={editMode}
-      {...props}
-      size={{
-        width: cord.width,
-        height: cord.height,
-      }}
-    >
-      <Textarea
-        editMode={editMode}
-        content={content}
-        onChangeSize={handleChangeSize}
-      />
-      {!editMode && (
-        <StyledLabelContent>
-          <span>{content}</span>
-        </StyledLabelContent>
-      )}
-      <StyledController
-        editMode={editMode}
-        changeEditMode={changeEditMode}
-      />
-    </Wrapper>
+    <Context.Provider value={contextValue}>
+      <EditableLabelWrapper parentRef={parentRef} {...props} />
+    </Context.Provider>
   );
 };
 

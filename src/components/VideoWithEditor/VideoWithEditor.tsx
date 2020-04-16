@@ -52,6 +52,13 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     });
   };
 
+  const changeContent = (id: number, content: string) => {
+    dispatch({
+      type: actionTypes.CHANGE_CONTENT,
+      payload: { id, content },
+    });
+  };
+
   return (
     <Wrapper>
       <VideoWrapper ref={videoWrapperRef}>
@@ -60,6 +67,7 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
           labelsEvents={{
             changeCord: changeLabelCord,
             changeLabelSize,
+            changeContent,
           }}
         />
       </VideoWrapper>

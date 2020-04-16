@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import styled, { css } from 'styled-components';
+import Context from './Context';
 import { useResizeCallback } from 'hooks/useResizeCallback';
 
 interface TextareaI {
@@ -26,24 +27,22 @@ export const TextareaElement = styled.textarea<TextareaI>`
     `};
 `;
 
-type MouseEvent = HTMLElementEvent<HTMLTextAreaElement>;
+export interface TextAreaProps {}
 
-export interface TextAreaProps {
-  editMode: boolean;
-  content: string;
-  onChangeSize: (w: number, h: number) => void;
-}
+const TextArea: React.SFC<TextAreaProps> = () => {
+  const {
+    handleChangeLabelSize,
+    editModeFlag,
+    label: { content },
+  } = useContext(Context);
+  const ref = useResizeCallback<HTMLTextAreaElement>(
+    handleChangeLabelSize,
+  );
 
-const TextArea: React.SFC<TextAreaProps> = ({
-  editMode,
-  content,
-  onChangeSize,
-}) => {
-  const ref = useResizeCallback<HTMLTextAreaElement>(onChangeSize);
   return (
     <TextareaElement
       ref={ref}
-      editMode={editMode}
+      editMode={editModeFlag}
       name="video-label"
       defaultValue={content}
     ></TextareaElement>
