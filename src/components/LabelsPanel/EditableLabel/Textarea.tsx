@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import styled, { css } from 'styled-components';
 import Context from './Context';
 import { useResizeCallback } from 'hooks/useResizeCallback';
@@ -34,12 +34,14 @@ export interface TextAreaProps {
 const TextArea: React.SFC<TextAreaProps> = ({ parentRef }) => {
   const {
     handleChangeLabelSize,
+    handleChangeContent,
     editModeFlag,
     label: { content },
   } = useContext(Context);
   const ref = useResizeCallback<HTMLTextAreaElement>(
     handleChangeLabelSize,
   );
+  const [value, setValue] = useState<string>(content);
 
   useEffect(() => {
     const el = ref.current;
@@ -59,12 +61,23 @@ const TextArea: React.SFC<TextAreaProps> = ({ parentRef }) => {
     return () => window.removeEventListener('resize', setMaxSize);
   }, []);
 
+  const handleChangeInput = ({
+    target: { value },
+  }: React.ChangeEvent<HTMLTextAreaElement>) => setValue(value);
+
+  useEffect(() => {
+    if (!editModeFlag && content !== value) {
+      handleChangeContent(value);
+    }
+  }, [editModeFlag]);
+
   return (
     <TextareaElement
       ref={ref}
       editMode={editModeFlag}
       name="video-label"
-      defaultValue={content}
+      onChange={handleChangeInput}
+      value={value}
     ></TextareaElement>
   );
 };

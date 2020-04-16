@@ -7,6 +7,7 @@ export interface ContextInterface {
   handleChangeEditMode: (flag: boolean) => void;
   handleChangeLabelSize: (width: number, height: number) => void;
   handleChangeLabelCord: (x: number, y: number) => void;
+  handleChangeContent: (value: string) => void;
 }
 
 export default createContext({} as ContextInterface);
