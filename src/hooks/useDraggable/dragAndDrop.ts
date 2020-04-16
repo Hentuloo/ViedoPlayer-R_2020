@@ -1,4 +1,4 @@
-import { fromEvent, Observable, merge } from 'rxjs';
+import { fromEvent, merge } from 'rxjs';
 import {
   map,
   filter,
@@ -21,36 +21,30 @@ import {
 } from './mouseEvents';
 export * from './mouseEvents';
 
-type MouseMove = React.MouseEvent<Element, MouseEvent>;
-type Stream = Observable<MouseMove>;
-
-export type DraggableStreams = {
-  mousedown: Stream;
-  mousemove: Stream;
-  mouseleave: Stream;
-  mouseup: Stream;
-};
-
-export interface DragAndDropInterface {
-  el: HTMLElement;
-  overlapElement?: HTMLElement | undefined;
+export interface DragAndDropInterface<E, O> {
+  el: E;
+  overlapElement?: O | undefined;
   isActive: { current: boolean };
   detectOnlySourceNode: boolean;
 }
 
-export const dragAndDrop = ({
+export const dragAndDrop = <
+  E extends HTMLElement = HTMLElement,
+  O extends HTMLElement = HTMLElement
+>({
   el,
   isActive,
   overlapElement,
   detectOnlySourceNode,
-}: DragAndDropInterface) => {
+}: DragAndDropInterface<E, O>) => {
   const passWhenDraggableIsActive = () =>
-    filter<MouseMove>(() => isActive.current === true);
+    filter(() => isActive.current === true);
 
   const passWhenTargetIsSource = () =>
-    filter((ev: MouseMove) =>
-      detectOnlySourceNode ? ev.target === el : true,
-    );
+    filter((ev) => {
+      const { target } = ev as MouseEvent;
+      return detectOnlySourceNode ? target === el : true;
+    });
 
   const drag = mousedown$(el).pipe(
     passWhenDraggableIsActive(),
@@ -83,7 +77,7 @@ export const dragAndDrop = ({
     );
 
   const draggable = drag.pipe(
-    map((event) => offsetsFromMouseEvent(event)),
+    map((event: any) => offsetsFromMouseEvent(event)),
     switchMap((start) => move(start)),
     takeUntil(drop),
     repeat(),

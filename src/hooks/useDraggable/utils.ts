@@ -1,6 +1,7 @@
 import { map, tap } from 'rxjs/operators';
 import { OperatorFunction } from 'rxjs';
 import gsap from 'gsap';
+import { MouseEvent } from 'react';
 
 export const resetSourcePosition = (el: HTMLElement) => {
   const tl = gsap.timeline();
@@ -14,7 +15,7 @@ export interface OffsetFromMouseEventRespnse {
   offsetY: number;
 }
 export const offsetsFromMouseEvent = (
-  ev: React.MouseEvent,
+  ev: MouseEvent<HTMLElementEvent<HTMLElement>>,
 ): OffsetFromMouseEventRespnse => {
   const { clientX, clientY } = ev;
   const target = ev.target as HTMLDivElement;
@@ -26,8 +27,9 @@ export const offsetsFromMouseEvent = (
   };
 };
 
-export const getLayers = (evt: React.MouseEvent) => {
-  let el = evt.target as HTMLElement;
+export const getLayers = (event: any) => {
+  const { target, clientX, clientY } = event as MouseEvent;
+  let el = target as HTMLElement;
   const { scrollTop, scrollLeft } = document.documentElement;
   let layers = { x: -scrollLeft, y: -scrollTop };
 
@@ -41,8 +43,8 @@ export const getLayers = (evt: React.MouseEvent) => {
     el = el.offsetParent;
   }
   layers = {
-    x: evt.clientX - layers.x,
-    y: evt.clientY - layers.y,
+    x: clientX - layers.x,
+    y: clientY - layers.y,
   };
 
   return layers;

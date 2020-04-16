@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { merge, fromEvent } from 'rxjs';
+import { merge, fromEvent, NextObserver } from 'rxjs';
 import { take, switchMap, repeat } from 'rxjs/operators';
 
 import { useDraggable } from 'hooks/useDraggable/useDraggable';
@@ -17,16 +17,16 @@ import {
 
 export type NewItemCallback = (x: number, y: number) => void;
 
-export const useTool = (
+export const useTool = <E extends HTMLElement>(
   wrapperRef: React.RefObject<HTMLElement>,
   addCallback: NewItemCallback,
   size: NewElementDefaultSize,
 ) => {
-  const { draggableRef, resetPosition } = useDraggable();
+  const { draggableRef, resetPosition } = useDraggable<E>();
 
   useEffect(() => {
     const videoWrapper = wrapperRef.current;
-    const tool = draggableRef.current as HTMLElement;
+    const tool = draggableRef.current;
     if (!videoWrapper || !tool || !addCallback) return;
 
     const drag$ = mousedown$(tool);
@@ -46,24 +46,22 @@ export const useTool = (
       resetPosition();
     });
 
-    const addToolToVideo$ = drop$.subscribe(
-      //@ts-ignore
-      ({ clientX, clientY }) => {
-        const cord = { clientX, clientY };
+    const addToolToVideo$ = drop$.subscribe((event) => {
+      const { clientX, clientY } = event as MouseEvent;
+      const cord = { clientX, clientY };
 
-        const isToolInside = mouseIsOnElement(cord, videoWrapper);
-        if (!isToolInside) return;
+      const isToolInside = mouseIsOnElement(cord, videoWrapper);
+      if (!isToolInside) return;
 
-        const { offsetWidth, offsetHeight } = videoWrapper;
-        const { left, top } = getCordsInsideOverlapElement(
-          cord,
-          { width: offsetWidth, height: offsetHeight },
-          size,
-        );
+      const { offsetWidth, offsetHeight } = videoWrapper;
+      const { left, top } = getCordsInsideOverlapElement(
+        cord,
+        { width: offsetWidth, height: offsetHeight },
+        size,
+      );
 
-        addCallback(left, top);
-      },
-    );
+      addCallback(left, top);
+    });
 
     return () => {
       resetToolPosition$.unsubscribe();
@@ -71,5 +69,5 @@ export const useTool = (
     };
   }, []);
 
-  return [draggableRef];
+  return draggableRef;
 };

@@ -58,7 +58,7 @@ const Label: React.FC<EditabLabelElementProps> = ({
     draggableRef,
     setFlag: setDraggableFlag,
     setOverlapElement,
-  } = useDraggable(
+  } = useDraggable<HTMLDivElement>(
     {
       defaultActive: true,
       detectOnlySourceNode: true,
@@ -66,7 +66,10 @@ const Label: React.FC<EditabLabelElementProps> = ({
     },
     changeCordCallback,
   );
-  const ref = useLabelPrecentagePosition(cord, parentRef.current);
+  const ref = useLabelPrecentagePosition<HTMLDivElement>(
+    cord,
+    parentRef.current,
+  );
   const [editMode, setEditMode] = useState(false);
 
   const changeEditMode = (flag?: boolean) => {

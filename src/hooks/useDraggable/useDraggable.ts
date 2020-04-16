@@ -3,11 +3,11 @@ import { getComputedTranslateXY } from './utils';
 import gsap from 'gsap';
 import { dragAndDrop } from './dragAndDrop';
 
-export interface DraggableAPI {
-  draggableRef: React.RefObject<any>;
+export interface DraggableAPI<T, O> {
+  draggableRef: React.RefObject<T>;
   flag: React.RefObject<boolean>;
   setFlag: (flag?: boolean) => void;
-  setOverlapElement: (newElement: HTMLElement) => void;
+  setOverlapElement: (newElement: O) => void;
   resetPosition: () => void;
 }
 
@@ -19,20 +19,23 @@ export interface DraggableOpt {
 
 export type DraggableCallback = (x: number, y: number) => void;
 
-export const useDraggable = (
+export const useDraggable = <
+  T extends HTMLElement,
+  O extends HTMLElement = HTMLElement
+>(
   options: DraggableOpt = {},
   draggableCallback?: DraggableCallback,
-): DraggableAPI => {
+): DraggableAPI<T, O> => {
   const {
     defaultActive = true,
     detectOnlySourceNode = false,
     withOverlapElement = false,
   } = options;
 
-  const ref = useRef<HTMLElement>(null);
+  const ref = useRef<T>(null);
   const isActive = useRef<boolean>(defaultActive);
 
-  const overlapElement = useRef<HTMLElement>();
+  const overlapElement = useRef<O>();
   const [isOverlapElementSet, setOverlapElementFlag] = useState<
     boolean
   >(false);
@@ -41,9 +44,10 @@ export const useDraggable = (
     isActive.current = flag || !isActive.current;
   };
 
-  const setOverlapElement = (newElement: HTMLElement) => {
+  const setOverlapElement = (newElement: O) => {
     if (!isOverlapElementSet) {
       setOverlapElementFlag(true);
+      //@ts-ignore
       overlapElement.current = newElement;
     }
   };

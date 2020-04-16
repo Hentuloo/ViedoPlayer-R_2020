@@ -12,7 +12,7 @@ export interface ToolBarProps {
 }
 
 const ToolBar = ({ addLabel, wrapper, ...props }: ToolBarProps) => {
-  const [labelRef] = useTool(wrapper, addLabel, {
+  const labelRef = useTool<HTMLButtonElement>(wrapper, addLabel, {
     width: defaultLabel.cord.width,
     height: defaultLabel.cord.height,
   });
