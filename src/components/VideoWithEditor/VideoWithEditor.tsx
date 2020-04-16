@@ -3,7 +3,7 @@ import styled from 'styled-components';
 
 import Video from 'components/Video/Video';
 import ToolBar from '../ToolBar/ToolBar';
-import Timelines from '../Timelines';
+import Timelines from '../Timelines/Timelines';
 
 import { LabelNewCords } from 'components/LabelsPanel/types';
 import labelReducer, { actionTypes } from './LabelsReducer';
@@ -84,10 +84,16 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
             changeLabelSize,
             changeContent,
           }}
-        />
+        >
+          {(duration, currentTime) => (
+            <Timelines
+              duration={duration}
+              currentTime={currentTime}
+            />
+          )}
+        </StyledVideo>
       </VideoWrapper>
       <ToolBar wrapper={videoWrapperRef} addLabel={addLabel} />
-      <Timelines />
     </Wrapper>
   );
 };

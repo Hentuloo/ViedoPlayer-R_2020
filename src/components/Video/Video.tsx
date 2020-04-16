@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactElement } from 'react';
 import useVideo from 'hooks/useVideo';
 import styled from 'styled-components';
 
@@ -35,43 +35,51 @@ export const StyledPlayButton = styled(MemomizedPlayButton)`
 export interface VideoProps {
   labels?: LabelInterface[];
   labelsEvents?: LabelsEvents;
+  children?: (duration: number, currentTime: number) => ReactElement;
 }
 
 const Video: React.SFC<VideoProps> = ({
   labels,
   labelsEvents,
+  children,
   ...props
 }) => {
   const [video, state, controls] = useVideo(
     <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
   );
+  const { paused, error, time, duration } = state;
 
   const handleTogglePause = () => {
-    state.paused ? controls.play() : controls.pause();
+    paused ? controls.play() : controls.pause();
   };
 
   const handleSetVideoTime = (time: number) => {
     controls.seek(time);
   };
 
-  if (state.error) return <ErrorRespnse />;
+  if (error) return <ErrorRespnse />;
 
   return (
-    <Wrapper {...props}>
-      <VideoWrapper onClick={handleTogglePause}>{video}</VideoWrapper>
-      <Controllers>
-        <StyledPlayButton
-          status={state.paused}
-          toggle={handleTogglePause}
-        />
-        <MemomizedProgressBar
-          currentTime={state.time}
-          duration={state.duration}
-          setNewTime={handleSetVideoTime}
-        />
-      </Controllers>
-      <Labels labels={labels} labelsEvents={labelsEvents} />
-    </Wrapper>
+    <>
+      <Wrapper {...props}>
+        <VideoWrapper onClick={handleTogglePause}>
+          {video}
+        </VideoWrapper>
+        <Controllers>
+          <StyledPlayButton
+            status={paused}
+            toggle={handleTogglePause}
+          />
+          <MemomizedProgressBar
+            currentTime={time}
+            duration={duration}
+            setNewTime={handleSetVideoTime}
+          />
+        </Controllers>
+        <Labels labels={labels} labelsEvents={labelsEvents} />
+      </Wrapper>
+      {children && children(duration, time)}
+    </>
   );
 };
 
