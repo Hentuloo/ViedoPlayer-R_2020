@@ -1,11 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import LabelContent from './styles/LabelContent';
+import LabelContent from '../styles/LabelContent';
 import { LabelElementProps } from '../types';
-import LabelWrapper from './styles/LabelWrapper';
+import LabelWrapper from '../styles/LabelWrapper';
 
-import { useLabelPrecentagePosition } from './useLabelPrecentagePosition';
+import { useLabelPrecentagePosition } from '../useLabelPrecentagePosition';
 
 export const Wrapper = styled.div`
   ${LabelWrapper}

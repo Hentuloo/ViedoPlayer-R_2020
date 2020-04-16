@@ -1,8 +1,8 @@
 import React, { useRef } from 'react';
 import styled from 'styled-components';
 
-import EditableLabel from './Label/EditableLabel';
-import StaticLabel from './Label/StaticLabel';
+import EditableLabel from './EditableLabel/EditableLabel';
+import StaticLabel from './StaticLabel/StaticLabel';
 import { LabelInterface, LabelsEvents } from './types';
 export const Wrapper = styled.div`
   position: relative;

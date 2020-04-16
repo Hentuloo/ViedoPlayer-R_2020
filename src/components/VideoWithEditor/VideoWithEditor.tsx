@@ -40,6 +40,18 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     }
   };
 
+  const changeLabelSize = (id: number, w: number, h: number) => {
+    const wrapper = videoWrapperRef.current;
+    if (!wrapper) return;
+    const { offsetWidth, offsetHeight } = wrapper;
+    const width = Number(((w / offsetWidth) * 100).toFixed(2));
+    const height = Number(((h / offsetHeight) * 100).toFixed(2));
+    dispatch({
+      type: actionTypes.CHANGE_SIZE,
+      payload: { id, width, height },
+    });
+  };
+
   return (
     <Wrapper>
       <VideoWrapper ref={videoWrapperRef}>
@@ -47,6 +59,7 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
           labels={labels}
           labelsEvents={{
             changeCord: changeLabelCord,
+            changeLabelSize,
           }}
         />
       </VideoWrapper>

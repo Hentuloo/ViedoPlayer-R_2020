@@ -16,6 +16,11 @@ export interface LabelNewCords {
 
 export interface LabelsEvents {
   changeCord: (id: number, cords: LabelNewCords) => void;
+  changeLabelSize: (
+    id: number,
+    width: number,
+    height: number,
+  ) => void;
 }
 
 export interface LabelElementProps {

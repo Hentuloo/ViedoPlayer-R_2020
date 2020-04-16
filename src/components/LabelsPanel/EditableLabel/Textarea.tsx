@@ -1,7 +1,6 @@
-import React, { useRef, useEffect } from 'react';
+import React from 'react';
 import styled, { css } from 'styled-components';
-import { fromEvent } from 'rxjs';
-import { map, switchMap, filter } from 'rxjs/operators';
+import { useResizeCallback } from 'hooks/useResizeCallback';
 
 interface TextareaI {
   editMode?: boolean;
@@ -32,39 +31,15 @@ type MouseEvent = HTMLElementEvent<HTMLTextAreaElement>;
 export interface TextAreaProps {
   editMode: boolean;
   content: string;
+  onChangeSize: (w: number, h: number) => void;
 }
 
 const TextArea: React.SFC<TextAreaProps> = ({
   editMode,
   content,
+  onChangeSize,
 }) => {
-  const ref = useRef<HTMLTextAreaElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-    const donw$ = fromEvent<MouseEvent>(el, 'mousedown');
-    const up$ = fromEvent<MouseEvent>(el, 'mouseup');
-
-    const resize$ = donw$.pipe(
-      map(({ target }) => [target.offsetWidth, target.offsetHeight]),
-      switchMap(([width, height]) =>
-        up$.pipe(
-          filter(
-            ({ target: { offsetWidth, offsetHeight } }) =>
-              offsetWidth !== width || offsetHeight !== height,
-          ),
-        ),
-      ),
-    );
-
-    const resizeSub = resize$.subscribe(() => alert('resize'));
-
-    return () => {
-      resizeSub.unsubscribe();
-    };
-  }, []);
-
+  const ref = useResizeCallback<HTMLTextAreaElement>(onChangeSize);
   return (
     <TextareaElement
       ref={ref}

@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
-
-import LabelContent from './styles/LabelContent';
-import { EditabLabelElementProps } from '../types';
 import { useDraggable } from 'hooks/useDraggable/useDraggable';
+import { useLabelPrecentagePosition } from '../useLabelPrecentagePosition';
 
 import Controllers from './Controllers';
+import LabelContent from '../styles/LabelContent';
 import LabelWrapper, {
   LabelWrapperCord,
-} from './styles/LabelWrapper';
-import { useLabelPrecentagePosition } from './useLabelPrecentagePosition';
-import { mergeRefs } from 'config/utils';
+} from '../styles/LabelWrapper';
 import Textarea from './Textarea';
+import { mergeRefs } from 'config/utils';
+import { EditabLabelElementProps } from '../types';
 
 interface WrapperProps extends LabelWrapperCord {
   editMode?: boolean;
@@ -47,7 +46,7 @@ const StyledLabelContent = styled(LabelContent)`
 
 const Label: React.FC<EditabLabelElementProps> = ({
   label: { content, cord, id },
-  events: { changeCord },
+  events: { changeCord, changeLabelSize },
   parentRef,
   ...props
 }) => {
@@ -66,6 +65,7 @@ const Label: React.FC<EditabLabelElementProps> = ({
     },
     changeCordCallback,
   );
+
   const ref = useLabelPrecentagePosition<HTMLDivElement>(
     cord,
     parentRef.current,
@@ -80,6 +80,8 @@ const Label: React.FC<EditabLabelElementProps> = ({
       alert('update text area text');
     }
   };
+  const handleChangeSize = (width: number, height: number) =>
+    changeLabelSize(id, width, height);
 
   useEffect(() => {
     parentRef.current && setOverlapElement(parentRef.current);
@@ -95,7 +97,11 @@ const Label: React.FC<EditabLabelElementProps> = ({
         height: cord.height,
       }}
     >
-      <Textarea editMode={editMode} content={content} />
+      <Textarea
+        editMode={editMode}
+        content={content}
+        onChangeSize={handleChangeSize}
+      />
       {!editMode && (
         <StyledLabelContent>
           <span>{content}</span>
