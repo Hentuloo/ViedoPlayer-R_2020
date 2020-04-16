@@ -54,8 +54,9 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     //transform to percents by parent wrapper
     let width = Number(((w / offsetWidth) * 100).toFixed(2));
     let height = Number(
-      ((h / offsetHeight - progressBarHeight) * 100).toFixed(2),
+      ((h / (offsetHeight - progressBarHeight)) * 100).toFixed(2),
     );
+
     //set max size
     width = width >= 50 ? 50 : width;
     height = height >= 50 ? 50 : height;

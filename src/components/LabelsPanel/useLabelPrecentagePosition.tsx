@@ -44,7 +44,7 @@ export const useLabelPrecentagePosition = <
 
     window.addEventListener('resize', updatePosition);
     return () => window.removeEventListener('resize', updatePosition);
-  }, [parentRef, left]);
+  }, [parentRef, left, top]);
 
   return ref;
 };

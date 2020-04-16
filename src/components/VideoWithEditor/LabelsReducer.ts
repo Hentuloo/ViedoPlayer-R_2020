@@ -59,9 +59,8 @@ const reducer = (state: State, action: Action) => {
       const { x, y } = action.payload;
 
       //prevent when element is out of parent (after resize)
-      const newX = x + width >= 100 ? 100 - width : x;
-      const newY = y + height >= 100 ? 100 - height : y;
-
+      const newX = x + width > 100 ? 100 - width : x;
+      const newY = y + height > 100 ? 100 - height : y;
       return {
         ...label,
         cord: {
