@@ -11,9 +11,7 @@ import { getCordsPrecentsInsideWrapper } from 'config/utils';
 import { progressBarHeight } from 'components/Video/config';
 
 const StyledVideo = styled(Video)``;
-const VideoWrapper = styled.div`
-  align-self: flex-start;
-`;
+const VideoWrapper = styled.div``;
 const Wrapper = styled.div`
   display: grid;
   ${({ theme }) => theme.mediaQuery.md} {
@@ -76,22 +74,22 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
 
   return (
     <Wrapper>
-      <VideoWrapper ref={videoWrapperRef}>
+      <VideoWrapper>
         <StyledVideo
+          ref={videoWrapperRef}
           labels={labels}
           labelsEvents={{
             changeCord: changeLabelCord,
             changeLabelSize,
             changeContent,
           }}
-        >
-          {(duration, currentTime) => (
+          render={(duration, currentTime) => (
             <Timelines
               duration={duration}
               currentTime={currentTime}
             />
           )}
-        </StyledVideo>
+        />
       </VideoWrapper>
       <ToolBar wrapper={videoWrapperRef} addLabel={addLabel} />
     </Wrapper>

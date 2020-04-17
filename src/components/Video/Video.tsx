@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react';
+import React, { ReactElement, forwardRef, Ref } from 'react';
 import useVideo from 'hooks/useVideo';
 import styled from 'styled-components';
 
@@ -13,7 +13,6 @@ import {
 
 export const Wrapper = styled.div`
   position: relative;
-  display: grid;
 `;
 export const VideoWrapper = styled.div`
   position: relative;
@@ -37,35 +36,35 @@ export const StyledPlayButton = styled(MemomizedPlayButton)`
 export interface VideoProps {
   labels?: LabelInterface[];
   labelsEvents?: LabelsEvents;
-  children?: (duration: number, currentTime: number) => ReactElement;
+  render?: (duration: number, currentTime: number) => ReactElement;
 }
 
-const Video: React.SFC<VideoProps> = ({
-  labels,
-  labelsEvents,
-  children,
-  ...props
-}) => {
-  const [video, state, controls] = useVideo(
-    <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
-  );
-  const { paused, error, time, duration } = state;
+const Video = forwardRef(
+  (
+    { labels, labelsEvents, render, ...props }: VideoProps,
+    ref: Ref<HTMLDivElement>,
+  ) => {
+    const [video, state, controls] = useVideo(
+      <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
+    );
+    const { paused, error, time, duration } = state;
 
-  const handleTogglePause = () => {
-    paused ? controls.play() : controls.pause();
-  };
+    const handleTogglePause = () => {
+      paused ? controls.play() : controls.pause();
+    };
 
-  const handleSetVideoTime = (time: number) => {
-    controls.seek(time);
-  };
+    const handleSetVideoTime = (time: number) => {
+      controls.seek(time);
+    };
 
-  if (error) return <ErrorRespnse />;
+    if (error) return <ErrorRespnse />;
 
-  return (
-    <>
-      <Wrapper {...props}>
-        <VideoWrapper onClick={handleTogglePause}>
-          {video}
+    return (
+      <>
+        <Wrapper ref={ref} {...props}>
+          <VideoWrapper onClick={handleTogglePause}>
+            {video}
+          </VideoWrapper>
           <Controllers>
             <StyledPlayButton
               status={paused}
@@ -77,12 +76,12 @@ const Video: React.SFC<VideoProps> = ({
               setNewTime={handleSetVideoTime}
             />
           </Controllers>
-        </VideoWrapper>
-        <Labels labels={labels} labelsEvents={labelsEvents} />
-        {children && children(duration, time)}
-      </Wrapper>
-    </>
-  );
-};
+          <Labels labels={labels} labelsEvents={labelsEvents} />
+        </Wrapper>
+        {render && render(duration, time)}
+      </>
+    );
+  },
+);
 
 export default Video;
