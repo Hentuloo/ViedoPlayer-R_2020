@@ -13,10 +13,15 @@ export const TextareaElement = styled.textarea<TextareaI>`
   border: none;
   background-color: transparent;
   color: ${({ theme }) => theme.color.white[0]};
-  resize: none;
+
   z-index: -1;
   opacity: 0;
   pointer-events: none;
+  ${({ editMode }) =>
+    !editMode &&
+    css`
+      resize: none;
+    `};
   ${({ editMode }) =>
     editMode &&
     css`

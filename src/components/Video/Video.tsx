@@ -31,6 +31,7 @@ export const Controllers = styled.div`
 `;
 export const StyledPlayButton = styled(MemomizedPlayButton)`
   padding: 6px 4px 6px 0px;
+  overflow: hidden;
 `;
 
 export interface VideoProps {
