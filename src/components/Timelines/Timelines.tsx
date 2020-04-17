@@ -8,6 +8,7 @@ const Wrapper = styled.div`
   grid-template-columns: 55px 1fr;
   grid-row-gap: 10px;
   padding-top: 5px;
+  user-select: none;
 `;
 
 export interface TimelinesProps {

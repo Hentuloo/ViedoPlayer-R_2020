@@ -62,6 +62,8 @@ export const dragAndDrop = <
     take(1),
     repeat(),
   );
+  mouseup$(el).subscribe(() => console.log('koniec'));
+  mouseleave$(el).subscribe(() => console.log('koniec2'));
 
   const move = (start: OffsetFromMouseEventRespnse) =>
     mousemove$(el).pipe(
