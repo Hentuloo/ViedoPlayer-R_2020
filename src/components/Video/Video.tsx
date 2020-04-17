@@ -15,7 +15,9 @@ export const Wrapper = styled.div`
   position: relative;
   display: grid;
 `;
-export const VideoWrapper = styled.div``;
+export const VideoWrapper = styled.div`
+  position: relative;
+`;
 export const VideoElement = styled.video`
   display: block;
   width: 100%;
@@ -64,21 +66,21 @@ const Video: React.SFC<VideoProps> = ({
       <Wrapper {...props}>
         <VideoWrapper onClick={handleTogglePause}>
           {video}
+          <Controllers>
+            <StyledPlayButton
+              status={paused}
+              toggle={handleTogglePause}
+            />
+            <MemomizedProgressBar
+              currentTime={time}
+              duration={duration}
+              setNewTime={handleSetVideoTime}
+            />
+          </Controllers>
         </VideoWrapper>
-        <Controllers>
-          <StyledPlayButton
-            status={paused}
-            toggle={handleTogglePause}
-          />
-          <MemomizedProgressBar
-            currentTime={time}
-            duration={duration}
-            setNewTime={handleSetVideoTime}
-          />
-        </Controllers>
         <Labels labels={labels} labelsEvents={labelsEvents} />
+        {children && children(duration, time)}
       </Wrapper>
-      {children && children(duration, time)}
     </>
   );
 };

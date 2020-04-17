@@ -32,6 +32,7 @@ const Timeline: React.SFC<TimelineProps> = ({
   return (
     <Wrapper>
       <Title>{content}</Title>
+
       <Bar from={from} to={to} duration={duration}></Bar>
     </Wrapper>
   );
