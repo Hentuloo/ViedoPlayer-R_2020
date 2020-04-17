@@ -70,6 +70,7 @@ const EditableLabelWrapper: React.SFC<EditableWrapperProps> = ({
     const sub = draggable(el, {
       overlapElement: parent,
       active: !editModeFlag,
+      sourceNode: true,
       onDrop: () => {
         const { x, y } = getComputedTranslateXY(el);
         handleChangeLabelCord(x, y);

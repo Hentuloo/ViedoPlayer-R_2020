@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import gsap from 'gsap';
+import draggable from 'components/draggable/draggable';
 
 interface WrapperProps {
   fromRight: boolean;
@@ -17,9 +18,9 @@ const RedBar = styled.div`
 const StyledCursor = styled.div`
   position: absolute;
   height: 100%;
-  width: 20px;
+  width: 40px;
   cursor: e-resize;
-  right: -10px;
+  right: -20px;
   z-index: 5;
 
   &::after {
@@ -50,7 +51,7 @@ const Wrapper = styled.div<WrapperProps>`
       transform: translate(20%, 0px);
       ${StyledCursor} {
         rigth: auto;
-        left: -10px;
+        left: -20px;
       }
     `}
 `;
@@ -70,8 +71,9 @@ const Cursor: React.SFC<CursorProps> = ({
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-
+    const sub = draggable(wrapper, { axisY: false });
     gsap.set(wrapper, { x: `${precents}%` });
+    return () => sub.unsubscribe();
   }, []);
 
   return (
