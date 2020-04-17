@@ -76,18 +76,14 @@ export const preventElementGoingOutParent = (
       const { left, top, width, height } = position;
       const newPosition = { ...position };
       if (left < 0) {
-        console.log('position!!');
         newPosition.left = 0;
       } else if (left > parentWidth - width) {
-        console.log('position!!');
         newPosition.left = parentWidth - width;
       }
 
       if (top < 0) {
-        console.log('position!!');
         newPosition.top = 0;
       } else if (top > parentHeight - height) {
-        console.log('position!!');
         newPosition.top = parentHeight - height;
       }
 
