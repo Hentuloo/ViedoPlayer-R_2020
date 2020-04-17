@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { merge, fromEvent } from 'rxjs';
 import { take, switchMap, repeat } from 'rxjs/operators';
 
@@ -14,6 +14,8 @@ import {
   mouseup$,
   mouseleave$,
 } from 'hooks/useDraggable/dragAndDrop';
+import Draggable from 'components/Draggable/Draggable';
+import gsap from 'gsap';
 
 export type NewItemCallback = (x: number, y: number) => void;
 
@@ -22,51 +24,49 @@ export const useTool = <E extends HTMLElement>(
   addCallback: NewItemCallback,
   size: NewElementDefaultSize,
 ) => {
-  const { draggableRef, resetPosition } = useDraggable<E>();
+  const ref = useRef<E>(null);
+
+  // const { draggableRef, resetPosition } = useDraggable<E>();
 
   useEffect(() => {
     const videoWrapper = wrapperRef.current;
-    const tool = draggableRef.current;
+    const tool = ref.current;
     if (!videoWrapper || !tool || !addCallback) return;
 
-    const drag$ = mousedown$(tool);
-    const drop$ = drag$.pipe(
-      switchMap(() =>
-        merge(
-          mouseup$(tool),
-          mouseleave$(tool),
-          fromEvent(document, 'scroll'),
-        ),
-      ),
-      take(1),
-      repeat(),
-    );
+    const resetAnimation = () => {
+      const tl = gsap.timeline();
+      tl.to(tool, { duration: 0.2, opacity: 0, scale: 0.7 })
+        .set(tool, { x: 0, y: 0 })
+        .to(tool, { duration: 0.2, opacity: 1, scale: 1 });
+    };
 
-    const resetToolPosition$ = drop$.subscribe(() => {
-      resetPosition();
-    });
-
-    const addToolToVideo$ = drop$.subscribe((event) => {
-      const { clientX, clientY } = event as MouseEvent;
-      const cord = { clientX, clientY };
-
-      const isToolInside = mouseIsOnElement(cord, videoWrapper);
+    const addToolWhenDropedOnVideo = ({
+      clientY,
+      clientX,
+    }: MouseEvent) => {
+      const isToolInside = mouseIsOnElement(
+        { clientY, clientX },
+        videoWrapper,
+      );
       if (!isToolInside) return;
 
       const { left, top } = getCordsInsideOverlapElement(
-        cord,
+        { clientY, clientX },
         videoWrapper,
         size,
       );
 
       addCallback(left, top);
-    });
-
-    return () => {
-      resetToolPosition$.unsubscribe();
-      addToolToVideo$.unsubscribe();
     };
+
+    const unSub = Draggable(tool, {
+      onDrop: (e) => {
+        resetAnimation();
+        addToolWhenDropedOnVideo(e);
+      },
+    });
+    return () => unSub.unsubscribe();
   }, []);
 
-  return draggableRef;
+  return ref;
 };
