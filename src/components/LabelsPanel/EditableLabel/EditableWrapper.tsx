@@ -1,6 +1,5 @@
 import React, { useEffect, useContext } from 'react';
 import styled from 'styled-components';
-import { useDraggable } from 'hooks/useDraggable/useDraggable';
 import { useLabelPrecentagePosition } from '../useLabelPrecentagePosition';
 
 import Controllers from './Controllers';
@@ -9,8 +8,9 @@ import LabelWrapper, {
   LabelWrapperCord,
 } from '../styles/LabelWrapper';
 import Textarea from './Textarea';
-import { mergeRefs } from 'config/utils';
+import { getComputedTranslateXY } from 'config/utils';
 import Context from './Context';
+import draggable from 'components/draggable/draggable';
 
 interface WrapperProps extends LabelWrapperCord {
   editMode?: boolean;
@@ -57,31 +57,31 @@ const EditableLabelWrapper: React.SFC<EditableWrapperProps> = ({
     editModeFlag,
     handleChangeLabelCord,
   } = useContext(Context);
-
-  const {
-    draggableRef,
-    setFlag: setDraggableFlag,
-    setOverlapElement,
-  } = useDraggable<HTMLDivElement>(
-    {
-      defaultActive: true,
-      detectOnlySourceNode: true,
-      withOverlapElement: true,
-    },
-    handleChangeLabelCord,
-  );
-
   const ref = useLabelPrecentagePosition<HTMLDivElement>(
     cord,
     parentRef.current,
   );
+
   useEffect(() => {
-    parentRef.current && setOverlapElement(parentRef.current);
-  }, []);
+    const el = ref.current;
+    const parent = parentRef.current;
+    if (!el || !parent) return;
+
+    const sub = draggable(el, {
+      overlapElement: parent,
+      active: !editModeFlag,
+      onDrop: () => {
+        const { x, y } = getComputedTranslateXY(el);
+        handleChangeLabelCord(x, y);
+      },
+    });
+
+    return () => sub.unsubscribe();
+  }, [editModeFlag]);
 
   return (
     <Wrapper
-      ref={mergeRefs(ref, draggableRef)}
+      ref={ref}
       editMode={editModeFlag}
       {...props}
       size={{
@@ -95,7 +95,7 @@ const EditableLabelWrapper: React.SFC<EditableWrapperProps> = ({
           <span>{content}</span>
         </StyledLabelContent>
       )}
-      <StyledController changeDraggalbeFlag={setDraggableFlag} />
+      <StyledController />
     </Wrapper>
   );
 };

@@ -19,19 +19,12 @@ const IconButton = styled.button`
 export const CloseEdit = styled(IconButton)``;
 export const EditIcon = styled(IconButton)``;
 
-export interface ControllersProps {
-  changeDraggalbeFlag: (flag?: boolean | undefined) => void;
-}
+export interface ControllersProps {}
 
-const Controllers: React.SFC<ControllersProps> = ({
-  changeDraggalbeFlag,
-
-  ...props
-}) => {
+const Controllers: React.SFC<ControllersProps> = ({ ...props }) => {
   const { handleChangeEditMode, editModeFlag } = useContext(Context);
 
   const handleChangeMode = (flag: boolean) => {
-    changeDraggalbeFlag(!flag);
     handleChangeEditMode(flag);
   };
 

@@ -32,7 +32,7 @@ export interface DraggableOptions {
   overlapElement?: HTMLElement;
 }
 
-const Draggable = (
+const draggable = (
   element: HTMLElement,
   options: DraggableOptions = {},
 ) => {
@@ -145,4 +145,4 @@ const Draggable = (
   };
 };
 
-export default Draggable;
+export default draggable;

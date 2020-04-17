@@ -6,7 +6,7 @@ import {
   NewElementDefaultSize,
 } from './utils';
 
-import Draggable from 'components/Draggable/Draggable';
+import draggable from 'components/draggable/draggable';
 import gsap from 'gsap';
 
 export type NewItemCallback = (x: number, y: number) => void;
@@ -51,7 +51,7 @@ export const useTool = <E extends HTMLElement>(
       addCallback(left, top);
     };
 
-    const unSub = Draggable(tool, {
+    const unSub = draggable(tool, {
       onDrop: (e) => {
         resetAnimation();
         addToolWhenDropedOnVideo(e);
