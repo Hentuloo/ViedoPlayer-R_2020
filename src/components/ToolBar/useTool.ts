@@ -1,19 +1,11 @@
 import { useEffect, useRef } from 'react';
-import { merge, fromEvent } from 'rxjs';
-import { take, switchMap, repeat } from 'rxjs/operators';
-
-import { useDraggable } from 'hooks/useDraggable/useDraggable';
 
 import { mouseIsOnElement } from 'config/utils';
 import {
   getCordsInsideOverlapElement,
   NewElementDefaultSize,
 } from './utils';
-import {
-  mousedown$,
-  mouseup$,
-  mouseleave$,
-} from 'hooks/useDraggable/dragAndDrop';
+
 import Draggable from 'components/Draggable/Draggable';
 import gsap from 'gsap';
 
