@@ -24,6 +24,8 @@ export interface DraggableOptions {
   active?: boolean;
   activeCurrent?: React.RefObject<boolean>;
   sourceNode?: boolean;
+  axisX?: boolean;
+  axisY?: boolean;
   onNext?: (props: DraggableMoveResponse) => void;
   onDrop?: (e: MouseEvent) => void;
   onDrag?: (e: MouseEvent) => void;
@@ -43,6 +45,8 @@ const draggable = (
     onNext,
     onDrop,
     onDrag,
+    axisX = true,
+    axisY = true,
     subscribe,
     overlapElement,
   } = options;
@@ -120,11 +124,19 @@ const draggable = (
     const sub = draggable.subscribe(subscribe);
     subs.push(sub);
   } else {
-    const sub = draggable.subscribe((props) => {
-      const { left, top } = props;
-      gsap.set(element, { x: left, y: top });
-      onNext && onNext(props);
-    });
+    const sub = draggable.subscribe(
+      (props) => {
+        const { left, top } = props;
+
+        gsap.set(element, {
+          x: axisX ? left : '=',
+          y: axisY ? top : '=',
+        });
+        onNext && onNext(props);
+      },
+      () => {},
+      () => console.log('Complete'),
+    );
     subs.push(sub);
   }
   if (onDrop) {
