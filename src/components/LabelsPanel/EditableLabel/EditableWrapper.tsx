@@ -19,6 +19,7 @@ interface WrapperProps extends LabelWrapperCord {
 const StyledController = styled(Controllers)`
   opacity: 1;
   z-index: 10;
+  font-size: 1em;
   ${({ theme }) => theme.mediaQuery.md} {
     opacity: 0;
   }

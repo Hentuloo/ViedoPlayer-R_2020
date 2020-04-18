@@ -1,5 +1,5 @@
 import { useRef, useEffect } from 'react';
-import { fromEvent } from 'rxjs';
+import { fromEvent, merge } from 'rxjs';
 import { map, switchMap, filter } from 'rxjs/operators';
 
 export const useResizeCallback = <
@@ -12,8 +12,14 @@ export const useResizeCallback = <
     const el = ref.current;
     if (!el) return;
 
-    const donw$ = fromEvent<HTMLElementEvent<T>>(el, 'mousedown');
-    const up$ = fromEvent<HTMLElementEvent<T>>(el, 'mouseup');
+    const donw$ = merge(
+      fromEvent<HTMLElementEvent<T>>(el, 'mousedown'),
+      fromEvent<HTMLElementEvent<T>>(el, 'touchstart'),
+    );
+    const up$ = merge(
+      fromEvent<HTMLElementEvent<T>>(el, 'mouseup'),
+      fromEvent<HTMLElementEvent<T>>(el, 'touchend'),
+    );
 
     const getElementOffsets = (event: any) => {
       const { offsetWidth, offsetHeight } = event.target as T;

@@ -1,5 +1,3 @@
-import { Ref } from 'react';
-
 export interface MouseCord {
   clientX: number;
   clientY: number;

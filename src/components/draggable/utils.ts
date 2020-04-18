@@ -6,10 +6,10 @@ import {
 } from './types';
 
 export const draggableStartsOfssets = (
-  ev: MouseEvent,
+  event: any,
 ): DraggableStartOffsets => {
-  const { clientX, clientY } = ev;
-  const target = ev.target as HTMLElement;
+  const { clientX, clientY } = event;
+  const target = event.target as HTMLElement;
 
   const { left, top }: DOMRect = target.getBoundingClientRect();
   return {
@@ -18,8 +18,10 @@ export const draggableStartsOfssets = (
   };
 };
 
-export const getElementLayers = (event: any) => {
-  const { target, clientX, clientY } = event as MouseEvent;
+export const getElementLayers = (ev: any) => {
+  const event = ev.clientX ? ev : ev.touches[0];
+  const { clientX, clientY, target } = event as MouseEvent;
+
   let el = target as HTMLElement;
   const { scrollTop, scrollLeft } = document.documentElement;
   let layers = { x: -scrollLeft, y: -scrollTop };
@@ -56,23 +58,21 @@ export const preventElementGoingOutParent = (
   overlapEl?: HTMLElement,
 ) => {
   if (!overlapEl) return map((props: DraggableMoveResponse) => props);
-  const {
-    offsetWidth: parentWidth,
-    offsetHeight: parentHeight,
-  } = overlapEl;
+
   return map((props: DraggableMoveResponse) => {
+    const { offsetWidth, offsetHeight } = overlapEl;
     const { left, top, width, height } = props;
     const newPosition = { ...props };
     if (left < 0) {
       newPosition.left = 0;
-    } else if (left > parentWidth - width) {
-      newPosition.left = parentWidth - width;
+    } else if (left > offsetWidth - width) {
+      newPosition.left = offsetWidth - width;
     }
 
     if (top < 0) {
       newPosition.top = 0;
-    } else if (top > parentHeight - height) {
-      newPosition.top = parentHeight - height;
+    } else if (top > offsetHeight - height) {
+      newPosition.top = offsetHeight - height;
     }
 
     return { ...newPosition };

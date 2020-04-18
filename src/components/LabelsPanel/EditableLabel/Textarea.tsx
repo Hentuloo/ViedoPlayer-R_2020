@@ -12,15 +12,19 @@ export const TextareaElement = styled.textarea<TextareaI>`
   align-self: stretch;
   border: none;
   background-color: transparent;
+  background-color: ${({ theme }) => theme.color.black[0]};
   color: ${({ theme }) => theme.color.white[0]};
   z-index: -1;
   opacity: 0;
   pointer-events: none;
+  font-size: 1em;
+  padding-top: 0.7em;
 
-  ${({ theme }) => theme.mediaQuery.md} {
-    resize: none;
-  }
-
+  ${({ editMode }) =>
+    !editMode &&
+    css`
+      resize: none;
+    `};
   ${({ editMode }) =>
     editMode &&
     css`

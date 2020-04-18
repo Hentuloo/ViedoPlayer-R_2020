@@ -14,6 +14,10 @@ const IconButton = styled.button`
   background-color: transparent;
   color: ${({ theme }) => theme.color.white[0]};
   cursor: pointer;
+  font-size: 1.2em;
+  ${({ theme }) => theme.mediaQuery.md} {
+    font-size: 0.9em;
+  }
 `;
 
 export const CloseEdit = styled(IconButton)``;

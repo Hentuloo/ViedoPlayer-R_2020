@@ -42,6 +42,7 @@ export const getCordsInsideOverlapElement = (
   } else if (bottomEdge) {
     cords.top = 100 - elementHeightPercent;
   }
+  console.log(elementWidthPercent);
 
   return cords;
 };

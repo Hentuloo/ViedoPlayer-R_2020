@@ -18,9 +18,9 @@ const RedBar = styled.div`
 const StyledCursor = styled.div`
   position: absolute;
   height: 100%;
-  width: 40px;
+  width: 50px;
   cursor: e-resize;
-  right: -20px;
+  right: -25px;
   z-index: 5;
 
   &::after {
@@ -51,7 +51,7 @@ const Wrapper = styled.div<WrapperProps>`
       transform: translate(20%, 0px);
       ${StyledCursor} {
         rigth: auto;
-        left: -20px;
+        left: -25px;
       }
     `}
 `;
@@ -71,7 +71,12 @@ const Cursor: React.SFC<CursorProps> = ({
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
-    const sub = draggable(wrapper, { axisY: false });
+    const sub = draggable(wrapper, {
+      axisY: false,
+      onDrop: ({ clientX, clientY, srcElement }) => {
+        console.log(srcElement);
+      },
+    });
     gsap.set(wrapper, { x: `${precents}%` });
     return () => sub.unsubscribe();
   }, []);
