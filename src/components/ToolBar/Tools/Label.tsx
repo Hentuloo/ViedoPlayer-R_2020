@@ -2,9 +2,11 @@ import React, { forwardRef, Ref } from 'react';
 import styled from 'styled-components';
 
 const Wrapper = styled.div`
+  position: relative;
   width: 80%;
   margin: 0px auto;
   background-color: ${({ theme }) => theme.color.black[1]};
+  z-index: 10;
 `;
 const Button = styled.button`
   width: 100%;

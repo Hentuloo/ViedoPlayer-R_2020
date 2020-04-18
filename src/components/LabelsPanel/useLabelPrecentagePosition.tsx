@@ -20,10 +20,8 @@ export const useLabelPrecentagePosition = <
 
     const { offsetWidth, offsetHeight } = parentRef;
     const { left, top } = cords.current;
-
     const x = (offsetWidth * left) / 100;
     const y = (offsetHeight * top) / 100;
-
     gsap.set(ref.current, {
       x,
       y,

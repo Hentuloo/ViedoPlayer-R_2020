@@ -50,9 +50,7 @@ const draggable = (
     subscribe,
     overlapElement,
   } = options;
-  const { mousedown$, mousemove$, mouseleave$, mouseup$ } = combined(
-    element,
-  );
+  const { down$, move$, leave$, up$ } = combined(element);
 
   if (active && activeCurrent) {
     Error('Choose one active method');
@@ -73,27 +71,23 @@ const draggable = (
     });
 
   //mouse-click
-  const drag = mousedown$.pipe(
+  const drag = down$.pipe(
     passWhenDraggableIsActive(),
     passWhenTargetIsSource(),
   );
 
   //mouse-up/mouse-leave/document-scroll
-  const cancel = merge(
-    mouseup$,
-    mouseleave$,
-    fromEvent(document, 'scroll'),
-  );
+  const cancel = merge(up$, leave$, fromEvent(document, 'scroll'));
 
   //mouse-click then mouse-up/mouse-leave/document-scroll
-  const drop = mousedown$.pipe(
+  const drop = down$.pipe(
     switchMap(() => cancel),
     take(1),
     repeat(),
   );
 
   //mouse-move
-  const move = mousemove$.pipe(passWhenTargetIsSource());
+  const move = move$.pipe(passWhenTargetIsSource());
 
   const draggableMove = (
     start: DraggableStartOffsets,
@@ -124,19 +118,15 @@ const draggable = (
     const sub = draggable.subscribe(subscribe);
     subs.push(sub);
   } else {
-    const sub = draggable.subscribe(
-      (props) => {
-        const { left, top } = props;
+    const sub = draggable.subscribe((props) => {
+      const { left, top } = props;
 
-        gsap.set(element, {
-          x: axisX ? left : '=',
-          y: axisY ? top : '=',
-        });
-        onNext && onNext(props);
-      },
-      () => {},
-      () => console.log('Complete'),
-    );
+      gsap.set(element, {
+        x: axisX ? left : '=',
+        y: axisY ? top : '=',
+      });
+      onNext && onNext(props);
+    });
     subs.push(sub);
   }
   if (onDrop) {

@@ -17,8 +17,11 @@ interface WrapperProps extends LabelWrapperCord {
 }
 
 const StyledController = styled(Controllers)`
-  opacity: 0;
+  opacity: 1;
   z-index: 10;
+  ${({ theme }) => theme.mediaQuery.md} {
+    opacity: 0;
+  }
 `;
 
 export const Wrapper = styled.div<WrapperProps>`
@@ -42,6 +45,7 @@ export const Wrapper = styled.div<WrapperProps>`
 const StyledLabelContent = styled(LabelContent)`
   pointer-events: none;
   user-select: none;
+  z-index: -1;
 `;
 
 export interface EditableWrapperProps {

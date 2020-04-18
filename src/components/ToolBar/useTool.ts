@@ -40,6 +40,7 @@ export const useTool = <E extends HTMLElement>(
         { clientY, clientX },
         videoWrapper,
       );
+
       if (!isToolInside) return;
 
       const { left, top } = getCordsInsideOverlapElement(

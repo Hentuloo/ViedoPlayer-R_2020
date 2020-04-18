@@ -1,4 +1,4 @@
-import React, { Ref } from 'react';
+import { Ref } from 'react';
 
 export interface MouseCord {
   clientX: number;
@@ -15,15 +15,12 @@ export const mouseIsOnElement = (
     width,
     height,
   } = element.getBoundingClientRect();
-  if (
+  return (
     clientX > left &&
     clientX < left + width &&
     clientY > top &&
     clientY < top + height
-  ) {
-    return true;
-  }
-  return false;
+  );
 };
 
 export const mergeRefs = <T>(...refs: Array<Ref<T>>) => (ref: T) => {
