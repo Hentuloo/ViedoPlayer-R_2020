@@ -4,7 +4,13 @@ export interface LabelCords {
 export interface LabelContent {
   content: string;
 }
-export interface NewLabelInterface extends LabelCords, LabelContent {}
+export interface LabelTime {
+  time: {
+    from: number;
+    to: number;
+  };
+}
+export type NewLabelInterface = LabelCords & LabelContent & LabelTime;
 export interface LabelInterface extends NewLabelInterface {
   id: number;
 }

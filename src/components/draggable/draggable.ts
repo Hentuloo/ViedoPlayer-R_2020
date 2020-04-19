@@ -17,6 +17,7 @@ import {
 import {
   DraggableStartOffsets,
   DraggableMoveResponse,
+  DraggableEvent,
 } from './types';
 import gsap from 'gsap';
 
@@ -27,8 +28,8 @@ export interface DraggableOptions {
   axisX?: boolean;
   axisY?: boolean;
   onNext?: (props: DraggableMoveResponse) => void;
-  onDrop?: (e: MouseEvent) => void;
-  onDrag?: (e: MouseEvent) => void;
+  onDrop?: (e: DraggableEvent) => void;
+  onDrag?: (e: DraggableEvent) => void;
   clearDrag?: () => void;
   subscribe?: (props: DraggableMoveResponse) => void;
   overlapElement?: HTMLElement;
@@ -65,7 +66,7 @@ const draggable = (
 
   const passWhenTargetIsSource = () =>
     filter((ev) => {
-      const { target } = ev as MouseEvent;
+      const { target } = ev as DraggableEvent;
       if (!target) return false;
       return sourceNode ? target === element : true;
     });
@@ -103,7 +104,7 @@ const draggable = (
     );
 
   const draggable = drag.pipe(
-    map((event) => draggableStartsOfssets(event as MouseEvent)),
+    map((event) => draggableStartsOfssets(event as DraggableEvent)),
     switchMap((start) =>
       draggableMove(start as DraggableStartOffsets),
     ),
@@ -130,11 +131,11 @@ const draggable = (
     subs.push(sub);
   }
   if (onDrop) {
-    const sub = drop.subscribe((e) => onDrop(e as MouseEvent));
+    const sub = drop.subscribe((e) => onDrop(e as DraggableEvent));
     subs.push(sub);
   }
   if (onDrag) {
-    const sub = drag.subscribe((e) => onDrag(e as MouseEvent));
+    const sub = drag.subscribe((e) => onDrag(e as DraggableEvent));
     subs.push(sub);
   }
 

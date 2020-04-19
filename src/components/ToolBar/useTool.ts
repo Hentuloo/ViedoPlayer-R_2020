@@ -8,6 +8,7 @@ import {
 
 import draggable from 'components/draggable/draggable';
 import gsap from 'gsap';
+import { DraggableEvent } from 'components/draggable/types';
 
 export type NewItemCallback = (x: number, y: number) => void;
 
@@ -35,7 +36,7 @@ export const useTool = <E extends HTMLElement>(
     const addToolWhenDropedOnVideo = ({
       clientY,
       clientX,
-    }: MouseEvent) => {
+    }: DraggableEvent) => {
       const isToolInside = mouseIsOnElement(
         { clientY, clientX },
         videoWrapper,

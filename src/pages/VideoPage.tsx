@@ -21,7 +21,7 @@ function VideoPage() {
               id: 1,
               cord: { left: 50, top: 10, width: 40, height: 15 },
               content: 'Your example label',
-              // timeline: { from: 0.2, to: 0.3 },
+              time: { from: 0.2, to: 0.3 },
             },
           ]}
         />

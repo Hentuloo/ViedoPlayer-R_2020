@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 import Bar from './Bar';
+import { OnChangeCursorTime } from './types';
 
 const Wrapper = styled.div`
   position: relative;
@@ -21,6 +22,7 @@ export interface TimelineProps {
   from: number;
   to: number;
   duration: number;
+  onChange: OnChangeCursorTime;
 }
 
 const Timeline: React.SFC<TimelineProps> = ({
@@ -28,12 +30,17 @@ const Timeline: React.SFC<TimelineProps> = ({
   from,
   to,
   duration,
+  onChange,
 }) => {
   return (
     <Wrapper>
       <Title>{content}</Title>
-
-      <Bar from={from} to={to} duration={duration}></Bar>
+      <Bar
+        onChange={onChange}
+        from={from}
+        to={to}
+        duration={duration}
+      ></Bar>
     </Wrapper>
   );
 };

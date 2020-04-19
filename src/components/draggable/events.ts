@@ -17,8 +17,10 @@ export const touchup$ = createMouseEventStream('touchend');
 const standardizeEvents = map((ev: any) => {
   if (ev.clientX) return ev;
   ev.type === 'touchmove' && ev.preventDefault();
-
-  return ev.touches[0] || ev.changedTouches[0];
+  const touch = ev.touches[0] || ev.changedTouches[0];
+  ev.clientX = touch.clientX;
+  ev.clientY = touch.clientY;
+  return ev;
 });
 
 export const down$ = (el: any) =>

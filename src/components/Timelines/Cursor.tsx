@@ -7,7 +7,7 @@ interface WrapperProps {
   fromRight: boolean;
 }
 
-const RedBar = styled.div`
+const GrayBar = styled.div`
   position: absolute;
   width: 100%;
   height: 100%;
@@ -18,10 +18,11 @@ const RedBar = styled.div`
 const StyledCursor = styled.div`
   position: absolute;
   height: 100%;
-  width: 50px;
+  width: 70px;
   cursor: e-resize;
-  right: -25px;
+  right: -35px;
   z-index: 5;
+  pointer-events: auto;
 
   &::after {
     content: '';
@@ -42,6 +43,10 @@ const Wrapper = styled.div<WrapperProps>`
   background-color: green;
   right: 100%;
   transform: translate(10%, 0px);
+  pointer-events: none;
+  &:active {
+    z-index: 11;
+  }
 
   ${({ fromRight }) =>
     fromRight &&
@@ -51,7 +56,7 @@ const Wrapper = styled.div<WrapperProps>`
       transform: translate(20%, 0px);
       ${StyledCursor} {
         rigth: auto;
-        left: -25px;
+        left: -35px;
       }
     `}
 `;
@@ -60,10 +65,13 @@ export interface CursorProps {
   parentRef: React.RefObject<HTMLElement>;
   precents: number;
   fromRight?: boolean;
+
+  onChange: (precents: number, fromRight?: boolean) => void;
 }
 
 const Cursor: React.SFC<CursorProps> = ({
   fromRight = false,
+  onChange,
   precents,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
@@ -71,20 +79,43 @@ const Cursor: React.SFC<CursorProps> = ({
   useEffect(() => {
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
+
+    const left = (wrapper.offsetWidth * precents) / 100;
+    gsap.set(wrapper, { x: left });
+  }, [precents]);
+
+  useEffect(() => {
+    //Set draggable and on-change callback
+    const wrapper = wrapperRef.current;
+    if (!wrapper) return;
+
     const sub = draggable(wrapper, {
       axisY: false,
-      onDrop: ({ clientX, clientY, srcElement }) => {
-        console.log(srcElement);
+      subscribe: ({ left, width }) => {
+        const precents = Number(((left / width) * 100).toFixed(2));
+        if (precents < 0 || precents > 99.6) return;
+
+        gsap.set(wrapper, { x: left });
+      },
+      onDrop: () => {
+        const { left } = wrapper.getBoundingClientRect();
+
+        const dividend = ((left - 50) / wrapper.offsetWidth) * 100;
+        const precent = Number(
+          Math.abs(Math.floor(dividend)).toFixed(0),
+        );
+
+        onChange(fromRight ? precent : 100 - precent, fromRight);
       },
     });
-    gsap.set(wrapper, { x: `${precents}%` });
+
     return () => sub.unsubscribe();
   }, []);
 
   return (
     <Wrapper ref={wrapperRef} fromRight={fromRight}>
       <StyledCursor></StyledCursor>
-      <RedBar></RedBar>
+      <GrayBar></GrayBar>
     </Wrapper>
   );
 };

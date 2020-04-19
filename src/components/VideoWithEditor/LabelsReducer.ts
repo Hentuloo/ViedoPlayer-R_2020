@@ -6,6 +6,7 @@ export enum actionTypes {
   CHANGE_CORDS,
   CHANGE_SIZE,
   CHANGE_CONTENT,
+  CHANGE_TIME,
 }
 
 interface ChangeSizeAction {
@@ -18,6 +19,16 @@ interface AddLabelAction {
   payload: { x: number; y: number };
 }
 
+interface ChangeTimeAction {
+  type: actionTypes.CHANGE_TIME;
+  payload: {
+    id: number;
+    time: {
+      from?: number;
+      to?: number;
+    };
+  };
+}
 interface ChangeCordsLabelAction {
   type: actionTypes.CHANGE_CORDS;
   payload: { id: number; x: number; y: number };
@@ -31,7 +42,8 @@ type Action =
   | AddLabelAction
   | ChangeCordsLabelAction
   | ChangeSizeAction
-  | ChangeContentLabelAction;
+  | ChangeContentLabelAction
+  | ChangeTimeAction;
 
 type State = LabelInterface[];
 
@@ -48,6 +60,10 @@ const reducer = (state: State, action: Action) => {
           top: y,
         },
         id: state.length,
+        time: {
+          from: 0.2,
+          to: 2,
+        },
       },
     ];
   }
@@ -75,7 +91,7 @@ const reducer = (state: State, action: Action) => {
     const copyOfArray = state.slice();
     return copyOfArray.map((label) => {
       if (label.id !== action.payload.id) return label;
-      const { width, height } = action.payload;
+      const { width, height, id } = action.payload;
 
       return {
         ...label,
@@ -94,6 +110,16 @@ const reducer = (state: State, action: Action) => {
       return {
         ...label,
         content: action.payload.content,
+      };
+    });
+  }
+  if (action.type === actionTypes.CHANGE_TIME) {
+    const copyOfArray = state.slice();
+    return copyOfArray.map((label) => {
+      if (label.id !== action.payload.id) return label;
+      return {
+        ...label,
+        time: { ...label.time, ...action.payload.time },
       };
     });
   }

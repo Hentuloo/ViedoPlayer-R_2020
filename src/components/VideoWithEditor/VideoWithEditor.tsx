@@ -65,6 +65,18 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
     });
   };
 
+  const changeTime = (
+    id: number,
+    time: {
+      from?: number;
+      to?: number;
+    },
+  ) => {
+    dispatch({
+      type: actionTypes.CHANGE_TIME,
+      payload: { time, id },
+    });
+  };
   const changeContent = (id: number, content: string) => {
     dispatch({
       type: actionTypes.CHANGE_CONTENT,
@@ -85,8 +97,10 @@ const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
           }}
           render={(duration, currentTime) => (
             <Timelines
+              labels={labels}
               duration={duration}
               currentTime={currentTime}
+              onChange={changeTime}
             />
           )}
         />

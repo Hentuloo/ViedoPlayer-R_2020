@@ -9,3 +9,15 @@ export interface DraggableMoveResponse {
   left: number;
   top: number;
 }
+export interface ClientXY {
+  clientX: number;
+  clientY: number;
+}
+export interface Target {
+  target: HTMLElement;
+}
+
+export type DraggableEvent = MouseEvent &
+  TouchEvent &
+  ClientXY &
+  Target;
