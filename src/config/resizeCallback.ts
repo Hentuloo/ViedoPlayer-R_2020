@@ -14,6 +14,8 @@ export const resizeCallback = <T extends HTMLElement = HTMLElement>(
   const up$ = merge(
     fromEvent<HTMLElementEvent<T>>(el, 'mouseup'),
     fromEvent<HTMLElementEvent<T>>(el, 'touchend'),
+    fromEvent<HTMLElementEvent<T>>(el, 'mouseleave'),
+    fromEvent<HTMLElementEvent<T>>(el, 'touchleave'),
   );
 
   const getElementOffsets = (event: any) => {
@@ -25,6 +27,7 @@ export const resizeCallback = <T extends HTMLElement = HTMLElement>(
     map(getElementOffsets),
     switchMap(([startWidth, startHeight]) =>
       up$.pipe(
+        filter(({ target }) => target === el),
         map(getElementOffsets),
         filter(
           ([width, height]) =>

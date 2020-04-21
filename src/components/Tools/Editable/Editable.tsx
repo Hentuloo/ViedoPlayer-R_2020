@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 
 import { useToolPosition } from '../utils/useToolPosition';
 import Controllers from './Controllers';
@@ -7,8 +7,12 @@ import { getComputedTranslateXY } from 'config/utils';
 import draggable from 'components/draggable/draggable';
 import ToolWrapper from '../utils/Wrapper';
 import { useDispatch } from 'react-redux';
-import { changeToolCord } from 'store/actions/toolsActions';
+import {
+  changeToolCord,
+  changeToolSize,
+} from 'store/actions/toolsActions';
 import { EditableToolComponent } from '../types';
+import { resizeCallback } from 'config/resizeCallback';
 
 const StyledController = styled(Controllers)`
   opacity: 1;
@@ -18,8 +22,11 @@ const StyledController = styled(Controllers)`
     opacity: 0;
   }
 `;
+interface WrapperInterface {
+  editMode: boolean;
+}
 
-export const StyledWrapper = styled(ToolWrapper)`
+export const StyledWrapper = styled(ToolWrapper)<WrapperInterface>`
   pointer-events: all;
   user-select: none;
   cursor: grab;
@@ -32,7 +39,22 @@ export const StyledWrapper = styled(ToolWrapper)`
   &:hover {
     ${StyledController} {
       opacity: 1;
+      transition: opacity 0.4s ease;
     }
+
+    ${({ editMode }) =>
+      !editMode &&
+      css`
+        resize: none;
+      `};
+
+    ${({ editMode }) =>
+      editMode &&
+      css`
+        cursor: auto;
+        overflow: auto;
+        resize: both;
+      `};
   }
 `;
 
@@ -48,6 +70,48 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
   const [editMode, setEditMode] = useState(false);
 
   useEffect(() => {
+    // resize logic (changetoolsize)
+    const el = ref.current;
+    if (!el || !parentRef) return;
+
+    const sub = resizeCallback(el, (w, h) => {
+      const { offsetWidth, offsetHeight } = parentRef;
+      //transform to percents by parent wrapper
+      let width = Number(((w / offsetWidth) * 100).toFixed(2));
+      let height = Number(((h / offsetHeight) * 100).toFixed(2));
+
+      //set max size
+      width = width >= 50 ? 50 : width;
+      height = height >= 50 ? 50 : height;
+
+      el.style.width = `${width}%`;
+      el.style.height = `${height}%`;
+
+      dispatch(changeToolSize(id, width, height));
+    });
+    if (!sub) return;
+    return () => sub.unsubscribe();
+  }, [ref.current]);
+
+  useEffect(() => {
+    // On page resize set new max size
+    const el = ref.current;
+    if (!el || !parentRef) return;
+
+    const setMaxSize = () => {
+      const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
+
+      el.style.maxWidth = `${(offsetWidth / 2).toFixed(2)}px `;
+      el.style.maxHeight = `${(offsetHeight / 2).toFixed(2)}px`;
+    };
+    setMaxSize();
+
+    window.addEventListener('resize', setMaxSize);
+    return () => window.removeEventListener('resize', setMaxSize);
+  }, [ref.current]);
+
+  useEffect(() => {
+    // draggable logic
     const el = ref.current;
     if (!el || !parentRef) return;
     const sub = draggable(el, {
@@ -55,13 +119,12 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
       active: !editMode,
       sourceNode: true,
       onDrop: () => {
-        if (!parentRef) return;
+        if (!parentRef || editMode) return;
         const { x, y } = getComputedTranslateXY(el);
         const { offsetWidth, offsetHeight } = parentRef;
 
         const percentX = (x / offsetWidth) * 100;
         const percentY = (y / offsetHeight) * 100;
-
         dispatch(changeToolCord(id, { x: percentX, y: percentY }));
       },
     });
@@ -81,6 +144,7 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
         width: cord.width,
         height: cord.height,
       }}
+      editMode={editMode}
     >
       {render(editMode, handleChangeEditMode)}
       <StyledController

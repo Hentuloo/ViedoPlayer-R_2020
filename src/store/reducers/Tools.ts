@@ -72,13 +72,25 @@ export default (
 
     case types.TOOL_CHANGE_SIZE: {
       const { id, width, height } = action.payload;
+      const currentCords = state[id].cord;
+
+      //prevent when element is out of parent (after resize)
+      const left =
+        currentCords.left + width > 100
+          ? 100 - width
+          : currentCords.left;
+      const top =
+        currentCords.top + height > 100
+          ? 100 - height
+          : currentCords.top;
 
       return {
         ...state,
         [id]: {
           ...state[id],
           cord: {
-            ...state[id].cord,
+            left,
+            top,
             width,
             height,
           },

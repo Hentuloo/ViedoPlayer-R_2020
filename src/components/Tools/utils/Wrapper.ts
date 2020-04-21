@@ -10,22 +10,21 @@ const ToolWrapper = styled.div<ToolWrapperCord>`
   position: absolute;
   display: grid;
   width: ${({ size }) => `${size.width}%`};
-  min-height: ${({ size }) => `${size.height}%`};
+  height: ${({ size }) => `${size.height}%`};
   background-color: ${({ theme }) => theme.color.black[0]};
   resize: both;
-  font-size: 9px;
+  font-size: 8px;
   ${({ theme }) => theme.mediaQuery.sm} {
-    font-size: 13px;
+    font-size: 12px;
   }
   ${({ theme }) => theme.mediaQuery.md} {
-    width: ${({ size }) => `${size.width}%`};
-    font-size: 17px;
+    font-size: 15px;
   }
   ${({ theme }) => theme.mediaQuery.lg} {
     font-size: 20px;
   }
   ${({ theme }) => theme.mediaQuery.vlg} {
-    font-size: 25px;
+    font-size: 22px;
   }
 `;
 

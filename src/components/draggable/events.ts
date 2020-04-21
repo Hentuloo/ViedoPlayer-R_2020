@@ -1,5 +1,5 @@
 import { fromEvent, merge } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { map, filter } from 'rxjs/operators';
 
 const createMouseEventStream = (eventName: string) => (el: any) =>
   fromEvent(el, eventName);
@@ -17,6 +17,7 @@ export const touchup$ = createMouseEventStream('touchend');
 const standardizeEvents = map((ev: any) => {
   if (ev.clientX) return ev;
   ev.type === 'touchmove' && ev.preventDefault();
+  if (!ev.touches && !ev.changedTouches) return null;
   const touch = ev.touches[0] || ev.changedTouches[0];
   ev.clientX = touch.clientX;
   ev.clientY = touch.clientY;
@@ -24,15 +25,27 @@ const standardizeEvents = map((ev: any) => {
 });
 
 export const down$ = (el: any) =>
-  merge(mousedown$(el), touchdown$(el)).pipe(standardizeEvents);
+  merge(mousedown$(el), touchdown$(el)).pipe(
+    standardizeEvents,
+    filter((ev) => ev !== null),
+  );
 
 export const move$ = (el: any) =>
-  merge(mousemove$(el), touchemove$(el)).pipe(standardizeEvents);
+  merge(mousemove$(el), touchemove$(el)).pipe(
+    standardizeEvents,
+    filter((ev) => ev !== null),
+  );
 
 export const leave$ = (el: any) =>
-  merge(mouseleave$(el), touchleave$(el)).pipe(standardizeEvents);
+  merge(mouseleave$(el), touchleave$(el)).pipe(
+    standardizeEvents,
+    filter((ev) => ev !== null),
+  );
 export const up$ = (el: any) =>
-  merge(mouseup$(el), touchup$(el)).pipe(standardizeEvents);
+  merge(mouseup$(el), touchup$(el)).pipe(
+    standardizeEvents,
+    filter((ev) => ev !== null),
+  );
 
 export const combined = (el: any) => ({
   down$: down$(el),
