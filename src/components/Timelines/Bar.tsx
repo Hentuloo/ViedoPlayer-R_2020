@@ -30,7 +30,7 @@ const Bar: React.SFC<BarProps> = ({ from, to, duration, id }) => {
     fromRight?: boolean,
   ) => {
     const newTime = Number(((duration * percents) / 100).toFixed(2));
-    console.log(newTime);
+
     fromRight
       ? dispatch(changeToolTime(id, { to: newTime }))
       : dispatch(changeToolTime(id, { from: newTime }));
@@ -43,21 +43,25 @@ const Bar: React.SFC<BarProps> = ({ from, to, duration, id }) => {
     }
   }, [duration, ref.current]);
 
-  console.log(from, to);
-  if (from === undefined || to === undefined) return null;
+  if (from === undefined || to === undefined || !duration)
+    return null;
+
   const startPercent = Number(((from / duration) * 100).toFixed(2));
   const endPercent = Number(((to / duration) * 100).toFixed(2));
+
   return (
     <Wrapper ref={ref}>
       <Cursor
         parentRef={ref}
         onChange={handleChangeCursor}
-        precents={startPercent}
+        percents={startPercent}
+        maxPercents={endPercent}
       />
       <Cursor
         parentRef={ref}
         onChange={handleChangeCursor}
-        precents={endPercent}
+        percents={endPercent}
+        maxPercents={startPercent}
         fromRight
       />
     </Wrapper>

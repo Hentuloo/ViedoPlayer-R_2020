@@ -3,10 +3,6 @@ import styled, { css } from 'styled-components';
 import gsap from 'gsap';
 import draggable from 'components/draggable/draggable';
 
-interface WrapperProps {
-  fromRight: boolean;
-}
-
 const GrayBar = styled.div`
   position: absolute;
   width: 100%;
@@ -15,7 +11,13 @@ const GrayBar = styled.div`
   top: 0%;
   background-color: ${({ theme }) => theme.color.gray[0]};
 `;
-const StyledCursor = styled.div`
+
+interface StyledCursorProps {
+  fromRight: boolean;
+  smallCursor: boolean;
+}
+
+const StyledCursor = styled.div<StyledCursorProps>`
   position: absolute;
   height: 100%;
   width: 70px;
@@ -34,44 +36,63 @@ const StyledCursor = styled.div`
     transform: translate(-50%, 0%);
     pointer-events: none;
   }
+
+  ${({ smallCursor }) =>
+    smallCursor &&
+    css`
+      width: 10px;
+      right: -5px;
+    `}
+
+  ${({ fromRight, smallCursor }) =>
+    fromRight &&
+    css`
+      right: auto;
+      left: -35px;
+      ${() =>
+        smallCursor &&
+        css`
+          left: -5px;
+        `}
+    `}
 `;
 
+interface WrapperProps {
+  fromRight: boolean;
+}
 const Wrapper = styled.div<WrapperProps>`
   position: absolute;
   width: 100%;
   height: 100%;
-  background-color: green;
   right: 100%;
   transform: translate(10%, 0px);
   pointer-events: none;
+
   &:active {
     z-index: 11;
   }
-
   ${({ fromRight }) =>
     fromRight &&
     css`
       right: auto;
       left: 0%;
       transform: translate(20%, 0px);
-      ${StyledCursor} {
-        rigth: auto;
-        left: -35px;
-      }
     `}
 `;
 
 export interface CursorProps {
   parentRef: React.RefObject<HTMLElement>;
-  precents: number;
+  percents: number;
+  maxPercents: number;
   fromRight?: boolean;
-  onChange: (precents: number, fromRight?: boolean) => void;
+  onChange: (percents: number, fromRight?: boolean) => void;
 }
 
 const Cursor: React.SFC<CursorProps> = ({
   fromRight = false,
   onChange,
-  precents,
+  percents,
+  maxPercents,
 }) => {
   const wrapperRef = useRef<HTMLDivElement>(null);
 
@@ -79,10 +100,12 @@ const Cursor: React.SFC<CursorProps> = ({
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const left = (wrapper.offsetWidth * precents) / 100;
+    const left = Number(
+      ((wrapper.offsetWidth * percents) / 100).toFixed(2),
+    );
 
     gsap.set(wrapper, { x: left });
-  }, [precents]);
+  }, [percents]);
 
   useEffect(() => {
     //Set draggable and on-change callback
@@ -92,8 +115,13 @@ const Cursor: React.SFC<CursorProps> = ({
     const sub = draggable(wrapper, {
       axisY: false,
       subscribe: ({ left, width }) => {
-        const precents = Number(((left / width) * 100).toFixed(2));
-        if (precents < 0 || precents > 99.6) return;
+        const percents = Number(((left / width) * 100).toFixed(2));
+
+        // check if cursor is near second cursor
+        if (fromRight && percents - 1 < maxPercents) return;
+        if (!fromRight && percents + 1 > maxPercents) return;
+        // check if cursor is in the end
+        if (percents < 0 || percents > 99.6) return;
 
         gsap.set(wrapper, { x: left });
       },
@@ -101,20 +129,23 @@ const Cursor: React.SFC<CursorProps> = ({
         const { left } = wrapper.getBoundingClientRect();
 
         const dividend = ((left - 50) / wrapper.offsetWidth) * 100;
-        const precent = Number(
+        const percent = Number(
           Math.abs(Math.floor(dividend)).toFixed(0),
         );
 
-        onChange(fromRight ? precent : 100 - precent, fromRight);
+        onChange(fromRight ? percent : 100 - percent, fromRight);
       },
     });
 
     return () => sub.unsubscribe();
-  }, []);
+  }, [maxPercents]);
 
   return (
     <Wrapper ref={wrapperRef} fromRight={fromRight}>
-      <StyledCursor></StyledCursor>
+      <StyledCursor
+        fromRight={fromRight}
+        smallCursor={Math.abs(percents - maxPercents) < 5}
+      ></StyledCursor>
       <GrayBar></GrayBar>
     </Wrapper>
   );
