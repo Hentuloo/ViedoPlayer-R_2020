@@ -1,15 +1,8 @@
 import { useEffect, useRef } from 'react';
 import gsap from 'gsap';
 
-export interface LabelPositionCord {
-  left: number;
-  top: number;
-}
-
-export const useLabelPrecentagePosition = <
-  T extends {} = HTMLElement
->(
-  { left, top }: LabelPositionCord,
+export const useToolPosition = <T extends {} = HTMLElement>(
+  { left, top }: { left: number; top: number },
   parentRef: HTMLElement | null,
 ) => {
   const cords = useRef({ left, top });

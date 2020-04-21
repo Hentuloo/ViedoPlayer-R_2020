@@ -2,7 +2,7 @@ import React from 'react';
 import styled from 'styled-components';
 
 import NavigationTemplate from 'templates/NavigationTemplate';
-import VideoWithEditor from 'components/VideoWithEditor/VideoWithEditor';
+import VideoWithEditor from 'components/VideoWithEditor';
 
 const Wrapper = styled.div`
   display: grid;

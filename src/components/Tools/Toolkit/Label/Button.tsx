@@ -8,7 +8,7 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.black[1]};
   z-index: 10;
 `;
-const Button = styled.button`
+const ButtonElement = styled.button`
   width: 100%;
   height: 70px;
   margin: 0px auto;
@@ -16,21 +16,20 @@ const Button = styled.button`
   background-color: ${({ theme }) => theme.color.black[0]};
   color: ${({ theme }) => theme.color.red[1]};
   cursor: grab;
+  font-size: ${({ theme }) => theme.fs.s};
 
   &:active {
     cursor: grabbing;
   }
 `;
 
-const Label = forwardRef(function label(
+export const Button = forwardRef(function label(
   props,
   ref?: React.Ref<HTMLButtonElement>,
 ) {
   return (
     <Wrapper {...props}>
-      <Button ref={ref}>Dodaj zakładkę</Button>
+      <ButtonElement ref={ref}>Dodaj zakładkę</ButtonElement>
     </Wrapper>
   );
 });
-
-export default Label;

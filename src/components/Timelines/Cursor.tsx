@@ -65,7 +65,6 @@ export interface CursorProps {
   parentRef: React.RefObject<HTMLElement>;
   precents: number;
   fromRight?: boolean;
-
   onChange: (precents: number, fromRight?: boolean) => void;
 }
 
@@ -81,6 +80,7 @@ const Cursor: React.SFC<CursorProps> = ({
     if (!wrapper) return;
 
     const left = (wrapper.offsetWidth * precents) / 100;
+
     gsap.set(wrapper, { x: left });
   }, [precents]);
 

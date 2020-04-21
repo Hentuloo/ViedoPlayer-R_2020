@@ -1,25 +1,46 @@
-import React from 'react';
+import React, { useEffect, useRef } from 'react';
 import styled from 'styled-components';
-import { useTool, NewItemCallback } from './useTool';
-import { defaultLabel } from 'components/VideoWithEditor/config';
-import Label from './Tools/Label';
+import { addToolDraggable } from './addToolDraggable';
+import { Button as LabelButton } from 'components/Tools/Toolkit/Label/Button';
+import { useDispatch } from 'react-redux';
+import { toolsByTypes } from 'components/Tools/Toolkit/defaults';
+import { ToolsNames } from 'components/Tools/Toolkit/types';
+import { addTool } from 'store/actions/toolsActions';
 
 const Wrapper = styled.aside``;
 
 export interface ToolBarProps {
   wrapper: React.RefObject<HTMLElement>;
-  addLabel: NewItemCallback;
 }
 
-const ToolBar = ({ addLabel, wrapper, ...props }: ToolBarProps) => {
-  const labelRef = useTool<HTMLButtonElement>(wrapper, addLabel, {
-    width: defaultLabel.cord.width,
-    height: defaultLabel.cord.height,
-  });
+const ToolBar = ({ wrapper, ...props }: ToolBarProps) => {
+  const dispatch = useDispatch();
+
+  const labelRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    const label = labelRef.current;
+    if (!label) return;
+
+    const labelWidth = toolsByTypes[ToolsNames.LABEL].cord.width;
+    const labelHeight = toolsByTypes[ToolsNames.LABEL].cord.height;
+
+    const sub = addToolDraggable(
+      label,
+      {
+        wrapper,
+        width: labelWidth,
+        height: labelHeight,
+      },
+      (x, y) => dispatch(addTool(ToolsNames.LABEL, x, y)),
+    );
+
+    return () => sub && sub.unsubscribe();
+  }, []);
 
   return (
     <Wrapper {...props}>
-      <Label ref={labelRef} />
+      <LabelButton ref={labelRef} />
     </Wrapper>
   );
 };

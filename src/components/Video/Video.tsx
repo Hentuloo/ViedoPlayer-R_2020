@@ -5,11 +5,7 @@ import styled from 'styled-components';
 import { MemomizedPlayButton } from './PlayButton';
 import { MemomizedProgressBar } from './ProgressBar';
 import ErrorRespnse from './ErrorResponse';
-import Labels from 'components/LabelsPanel/LabelsPanel';
-import {
-  LabelInterface,
-  LabelsEvents,
-} from 'components/LabelsPanel/types';
+import Tools from 'components/Tools/Tools';
 
 export const Wrapper = styled.div`
   position: relative;
@@ -35,14 +31,13 @@ export const StyledPlayButton = styled(MemomizedPlayButton)`
 `;
 
 export interface VideoProps {
-  labels?: LabelInterface[];
-  labelsEvents?: LabelsEvents;
+  editable?: boolean;
   render?: (duration: number, currentTime: number) => ReactElement;
 }
 
 const Video = forwardRef(
   (
-    { labels, labelsEvents, render, ...props }: VideoProps,
+    { render, editable, ...props }: VideoProps,
     ref: Ref<HTMLDivElement>,
   ) => {
     const [video, state, controls] = useVideo(
@@ -77,7 +72,7 @@ const Video = forwardRef(
               setNewTime={handleSetVideoTime}
             />
           </Controllers>
-          <Labels labels={labels} labelsEvents={labelsEvents} />
+          <Tools editable={editable} />
         </Wrapper>
         {render && render(duration, time)}
       </>

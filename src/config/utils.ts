@@ -21,18 +21,6 @@ export const mouseIsOnElement = (
   );
 };
 
-export const getCordsPrecentsInsideWrapper = (
-  cords: { x: number; y: number },
-  {
-    offsetWidth,
-    offsetHeight,
-  }: { offsetWidth: number; offsetHeight: number },
-) => {
-  const x = (cords.x / offsetWidth) * 100;
-  const y = (cords.y / offsetHeight) * 100;
-  return { x, y };
-};
-
 export const getComputedTranslateXY = (obj: HTMLElement) => {
   const cord = { x: 0, y: 0 };
   const style = getComputedStyle(obj);

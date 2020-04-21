@@ -1,8 +1,8 @@
 import React from 'react';
 import styled from 'styled-components';
 import Timeline from './Timeline';
-import { LabelInterface } from 'components/LabelsPanel/types';
-import { OnChangeCursorTimeWithId } from './types';
+import { getTimelinesAsArray } from 'store/selectors/getTimelinesAsArray';
+import { useSelector } from 'react-redux';
 
 const Wrapper = styled.div`
   grid-column: 1/-2;
@@ -16,30 +16,26 @@ const Wrapper = styled.div`
 export interface TimelinesProps {
   duration: number;
   currentTime: number;
-  labels: LabelInterface[];
-  onChange: OnChangeCursorTimeWithId;
 }
 
 const Timelines: React.SFC<TimelinesProps> = ({
   duration,
   currentTime,
-  labels,
-  onChange,
 }) => {
-  const labelsTimes = JSON.stringify(labels.map(({ time }) => time));
+  const timelines = useSelector(getTimelinesAsArray());
   return (
     <Wrapper>
-      {labels.map(({ id, time: { from, to }, content }) => (
+      {timelines.map(({ id, from, to }) => (
         <Timeline
           key={id}
           duration={duration}
-          content={content}
-          from={from}
-          to={to}
-          onChange={(props) => onChange(id, props)}
+          content={'siema'}
+          id={id}
+          from={from === null ? undefined : from}
+          to={to === null ? undefined : to}
         />
       ))}
-      {labelsTimes}
+      {JSON.stringify(timelines)}
     </Wrapper>
   );
 };

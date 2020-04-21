@@ -27,6 +27,7 @@ export const getCordsInsideOverlapElement = (
     left: xPerecentage - elementWidthPercent / 2,
     top: yPercentage - elementHeightPercent / 2,
   };
+
   const leftEdge = xPerecentage < elementWidthPercent;
   const rightEdge = xPerecentage > 100 - elementWidthPercent;
   const topEdge = yPercentage < elementHeightPercent;

@@ -1,12 +1,12 @@
-import { css } from 'styled-components';
+import styled from 'styled-components';
 
-export interface LabelWrapperCord {
+export interface ToolWrapperCord {
   size: {
     width: number;
     height: number;
   };
 }
-export default css<LabelWrapperCord>`
+const ToolWrapper = styled.div<ToolWrapperCord>`
   position: absolute;
   display: grid;
   width: ${({ size }) => `${size.width}%`};
@@ -28,3 +28,5 @@ export default css<LabelWrapperCord>`
     font-size: 25px;
   }
 `;
+
+export default ToolWrapper;

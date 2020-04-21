@@ -1,4 +1,6 @@
+import React from 'react';
 import styled from 'styled-components';
+import { LabelStatic } from '../types';
 
 const LabelContent = styled.div`
   display: grid;
@@ -11,5 +13,10 @@ const LabelContent = styled.div`
   align-items: center;
   color: ${({ theme }) => theme.color.red[1]};
 `;
-
-export default LabelContent;
+export const Static: React.SFC<LabelStatic> = ({
+  tool: {
+    data: { content },
+  },
+}) => {
+  return <LabelContent>{content}</LabelContent>;
+};

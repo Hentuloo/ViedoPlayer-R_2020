@@ -1,7 +1,10 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import Context from './Context';
-import { useResizeCallback } from 'hooks/useResizeCallback';
+import { resizeCallback } from 'config/resizeCallback';
+import { useDispatch } from 'react-redux';
+import { changeToolSize } from 'store/actions/toolsActions';
+import { IdType } from 'store/actions/types';
+import { changeLabelToolContent } from 'store/actions/toolkitAction';
 
 interface TextareaI {
   editMode?: boolean;
@@ -37,21 +40,45 @@ export const TextareaElement = styled.textarea<TextareaI>`
 
 export interface TextAreaProps {
   parentRef: React.RefObject<HTMLDivElement>;
+  id: IdType;
+  content: string;
+  editMode: boolean;
 }
 
-const TextArea: React.SFC<TextAreaProps> = ({ parentRef }) => {
-  const {
-    handleChangeLabelSize,
-    handleChangeContent,
-    editModeFlag,
-    label: { content },
-  } = useContext(Context);
-  const ref = useResizeCallback<HTMLTextAreaElement>(
-    handleChangeLabelSize,
-  );
+const TextArea: React.SFC<TextAreaProps> = ({
+  parentRef,
+  id,
+  content,
+  editMode,
+}) => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState<string>(content);
+  const ref = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
+    // On text area resize
+    const el = ref.current;
+    const parent = parentRef.current;
+    if (!el || !parent) return;
+
+    const sub = resizeCallback<HTMLTextAreaElement>(el, (w, h) => {
+      const { offsetWidth, offsetHeight } = parent;
+      //transform to percents by parent wrapper
+      let width = Number(((w / offsetWidth) * 100).toFixed(2));
+      let height = Number(((h / offsetHeight) * 100).toFixed(2));
+
+      //set max size
+      width = width >= 50 ? 50 : width;
+      height = height >= 50 ? 50 : height;
+
+      dispatch(changeToolSize(id, width, height));
+    });
+    if (!sub) return;
+    return () => sub.unsubscribe();
+  }, []);
+
+  useEffect(() => {
+    // On page resize
     const el = ref.current;
     const parent = parentRef.current;
     if (!el || !parent) return;
@@ -74,15 +101,15 @@ const TextArea: React.SFC<TextAreaProps> = ({ parentRef }) => {
   }: React.ChangeEvent<HTMLTextAreaElement>) => setValue(value);
 
   useEffect(() => {
-    if (!editModeFlag && content !== value) {
-      handleChangeContent(value);
+    if (!editMode && content !== value) {
+      dispatch(changeLabelToolContent(id, value));
     }
-  }, [editModeFlag]);
+  }, [editMode]);
 
   return (
     <TextareaElement
       ref={ref}
-      editMode={editModeFlag}
+      editMode={editMode}
       name="video-label"
       onChange={handleChangeInput}
       value={value}
