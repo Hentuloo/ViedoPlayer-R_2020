@@ -27,7 +27,7 @@ const theme = {
     xxxl: '2.3em',
     large: '2.8em',
   },
-  fw: [400],
+  fw: [400, 700],
   ff: [`'Roboto', sans-serif`],
 };
 

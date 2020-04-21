@@ -25,17 +25,16 @@ const Timelines: React.SFC<TimelinesProps> = ({
   const timelines = useSelector(getTimelinesAsArray());
   return (
     <Wrapper>
-      {timelines.map(({ id, from, to }) => (
+      {timelines.map(({ id, from, data, to }) => (
         <Timeline
           key={id}
           duration={duration}
-          content={'siema'}
+          content={data.content}
           id={id}
           from={from === null ? undefined : from}
           to={to === null ? undefined : to}
         />
       ))}
-      {JSON.stringify(timelines)}
     </Wrapper>
   );
 };

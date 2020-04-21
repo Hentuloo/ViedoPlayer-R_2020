@@ -5,16 +5,30 @@ import { IdType } from 'store/actions/types';
 
 const Wrapper = styled.div`
   position: relative;
+  width: 99%;
   grid-column: 2/-1;
   height: 40px;
   background-color: ${({ theme }) => theme.color.black[1]};
+  ${({ theme }) => theme.mediaQuery.md} {
+    width: 100%;
+  }
 `;
 const Title = styled.div`
   position: absolute;
-  top: 50%;
+  max-width: 85%;
+  max-height: 50%;
+  top: 0%;
   left: 50%;
-  transform: translate(-50%, -50%);
+  transform: translate(-50%, 50%);
   color: ${({ theme }) => theme.color.white[0]};
+  z-index: 30;
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0.4;
+  letter-spacing: 4px;
+  line-height: 20px;
+  font-size: ${({ theme }) => theme.fs.s};
+  font-weight: ${({ theme }) => theme.fw[0]};
 `;
 
 export interface TimelineProps {
@@ -34,7 +48,7 @@ const Timeline: React.SFC<TimelineProps> = ({
 }) => {
   return (
     <Wrapper>
-      <Title>{content}</Title>
+      <Title>{content.slice(0, 16)}</Title>
       <Bar from={from} to={to} id={id} duration={duration}></Bar>
     </Wrapper>
   );
