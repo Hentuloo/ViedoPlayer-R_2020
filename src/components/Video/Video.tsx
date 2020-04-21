@@ -72,7 +72,7 @@ const Video = forwardRef(
               setNewTime={handleSetVideoTime}
             />
           </Controllers>
-          <Tools editable={editable} />
+          <Tools editable={editable} currentTime={time} />
         </Wrapper>
         {render && render(duration, time)}
       </>
