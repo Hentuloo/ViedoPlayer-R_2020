@@ -4,7 +4,7 @@ const theme = {
     white: ['rgb(255, 255, 255)', 'rgba(225, 225, 225, 1)'],
     black: [
       'rgba(58, 55, 55, 1)',
-      'rgba(74, 66, 66, 0.5)',
+      'rgb(54, 53, 53)',
       'rgba(50, 48, 48, 1)',
     ],
     gray: ['rgb(119, 119, 119)'],
@@ -21,6 +21,8 @@ const theme = {
     lg: '@media (min-width: 1024px)',
     vlg: '@media (min-width: 1494px)',
     mobileKeyboard: ` @media screen and (min-device-aspect-ratio: 1/1) and (min-aspect-ratio: 1/1) and (max-width: 768px)`,
+    mobileLandscape:
+      '@media (max-width: 768px) and (orientation: landscape)',
   },
   fs: {
     mini: '0.5em',

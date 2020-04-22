@@ -8,10 +8,22 @@ import { ToolsNames } from 'components/Tools/Toolkit/types';
 import { addTool } from 'store/actions/toolsActions';
 
 const Wrapper = styled.aside`
+  position: fixed;
+  bottom: 0%;
+  left: 50%;
+  width: 100%;
   padding: 14px 0px;
   background-color: ${({ theme }) => theme.color.black[1]};
   align-self: flex-start;
-  min-height: 60%;
+  transform: translate(-50%, 0%);
+  z-index: 20;
+
+  ${({ theme }) => theme.mediaQuery.md} {
+    position: relative;
+    left: 0%;
+    min-height: 60%;
+    transform: translate(0%, 0%);
+  }
 `;
 
 export interface ToolBarProps {

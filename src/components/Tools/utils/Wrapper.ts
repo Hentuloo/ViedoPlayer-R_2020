@@ -20,7 +20,7 @@ const ToolWrapper = styled.div<ToolWrapperCord>`
     font-size: 15px;
   }
   ${({ theme }) => theme.mediaQuery.lg} {
-    font-size: 20px;
+    font-size: 18px;
   }
   ${({ theme }) => theme.mediaQuery.vlg} {
     font-size: 22px;

@@ -10,11 +10,17 @@ const VideoWrapper = styled.div``;
 const StyledTimelines = styled(Timelines)``;
 const Wrapper = styled.div`
   display: grid;
-  grid-column-gap: 40px;
+  grid-column-gap: 20px;
+  margin-top: 80px;
   ${({ theme }) => theme.mediaQuery.md} {
     grid-template-columns: 1fr 25%;
   }
   ${({ theme }) => theme.mediaQuery.lg} {
+    width: 100%;
+    grid-template-columns: 1fr 23%;
+    grid-column-gap: 50px;
+  }
+  ${({ theme }) => theme.mediaQuery.vlg} {
     grid-template-columns: 1fr 20%;
     grid-column-gap: 100px;
   }
@@ -22,11 +28,13 @@ const Wrapper = styled.div`
 
 export interface IVideoWithEditorProps {}
 
-const VideoWithEditor: React.FC<IVideoWithEditorProps> = () => {
+const VideoWithEditor: React.FC<IVideoWithEditorProps> = ({
+  ...props
+}) => {
   const videoWrapperRef = useRef<HTMLDivElement>(null);
 
   return (
-    <Wrapper>
+    <Wrapper {...props}>
       <VideoWrapper>
         <StyledVideo
           editable

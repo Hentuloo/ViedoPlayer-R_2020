@@ -18,6 +18,9 @@ const ListWrapper = styled.ul`
   ${({ theme }) => theme.mediaQuery.md} {
     margin: 10px 20px;
   }
+  ${({ theme }) => theme.mediaQuery.mobileLandscape} {
+    display: none;
+  }
 `;
 
 export interface NavigationProps {}

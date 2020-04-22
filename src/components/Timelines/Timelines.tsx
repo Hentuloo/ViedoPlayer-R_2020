@@ -10,7 +10,7 @@ interface WrapperProps {
 
 const Wrapper = styled.div<WrapperProps>`
   display: grid;
-  height: 200px;
+  max-height: 200px;
   width: calc(100% - 10% - 55px);
   align-content: flex-start;
   grid-row-gap: 10px;
@@ -26,6 +26,9 @@ const Wrapper = styled.div<WrapperProps>`
       padding-right: 8px;
       overflow-y: scroll;
     `}
+  ${({ theme }) => theme.mediaQuery.vlg} {
+    height: 200px;
+  }
 `;
 
 export interface TimelinesProps {

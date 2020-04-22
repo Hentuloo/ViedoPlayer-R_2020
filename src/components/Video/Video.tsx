@@ -30,6 +30,10 @@ export const Controllers = styled.div`
   left: 50%;
   transform: translate(-50%, 50%);
   background-color: ${({ theme }) => theme.color.black[2]};
+  ${({ theme }) => theme.mediaQuery.mobileLandscape} {
+    opacity: 0;
+    transform: translate(-50%, 0%);
+  }
 `;
 export const StyledPlayButton = styled(MemomizedPlayButton)`
   padding: 6px 4px 6px 0px;

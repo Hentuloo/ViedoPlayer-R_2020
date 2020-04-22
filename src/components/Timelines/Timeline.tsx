@@ -20,7 +20,7 @@ const Title = styled.div`
   left: 50%;
   transform: translate(-50%, 50%);
   color: ${({ theme }) => theme.color.white[1]};
-  z-index: 30;
+  z-index: 20;
   overflow: hidden;
   pointer-events: none;
   opacity: 0.5;

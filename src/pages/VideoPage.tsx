@@ -17,6 +17,12 @@ const Wrapper = styled.div`
   ${({ theme }) => theme.mediaQuery.vlg} {
     max-width: 900px;
   }
+  ${({ theme }) => theme.mediaQuery.mobileLandscape} {
+    max-height: 95%;
+    max-width: 92%;
+    top: 5%;
+    width: auto;
+  }
 `;
 
 function VideoPage() {
