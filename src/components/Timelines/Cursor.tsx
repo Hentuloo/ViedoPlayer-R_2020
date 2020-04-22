@@ -9,7 +9,7 @@ const GrayBar = styled.div`
   height: 100%;
   left: 0%;
   top: 0%;
-  background-color: ${({ theme }) => theme.color.gray[0]};
+  background-color: ${({ theme }) => theme.color.black[2]};
 `;
 
 interface StyledCursorProps {
@@ -31,7 +31,7 @@ const StyledCursor = styled.div<StyledCursorProps>`
     position: absolute;
     width: 2px;
     height: 100%;
-    background-color: ${({ theme }) => theme.color.black[0]};
+    background-color: ${({ theme }) => theme.color.white[1]};
     left: 50%;
     transform: translate(-50%, 0%);
     pointer-events: none;

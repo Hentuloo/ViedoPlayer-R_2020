@@ -1,1 +1,1 @@
-export const progressBarHeight = 40;
+export const progressBarHeight = 20;

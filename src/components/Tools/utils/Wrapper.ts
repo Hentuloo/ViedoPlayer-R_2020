@@ -11,7 +11,6 @@ const ToolWrapper = styled.div<ToolWrapperCord>`
   display: grid;
   width: ${({ size }) => `${size.width}%`};
   height: ${({ size }) => `${size.height}%`};
-  background-color: ${({ theme }) => theme.color.black[0]};
   resize: both;
   font-size: 8px;
   ${({ theme }) => theme.mediaQuery.sm} {

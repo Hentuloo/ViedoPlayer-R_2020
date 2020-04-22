@@ -9,7 +9,7 @@ import { IdType } from 'store/actions/types';
 const Wrapper = styled.div`
   position: relative;
   height: 100%;
-  background-color: ${({ theme }) => theme.color.red[0]};
+  background-color: ${({ theme }) => theme.color.brand[0]};
   z-index: 10;
   overflow: hidden;
 `;

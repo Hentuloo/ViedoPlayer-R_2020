@@ -1,10 +1,18 @@
 const theme = {
   color: {
-    brand: ['rgb(255, 146, 23)', 'rgb(255, 157, 47)'],
-    white: ['rgb(255, 255, 255)'],
-    black: ['#2D2D2D', 'rgba(74, 66, 66, 0.5)'],
+    brand: ['rgba(73, 127, 149, 1)', 'rgba(58, 107, 126, 1)'],
+    white: ['rgb(255, 255, 255)', 'rgba(225, 225, 225, 1)'],
+    black: [
+      'rgba(58, 55, 55, 1)',
+      'rgba(74, 66, 66, 0.5)',
+      'rgba(50, 48, 48, 1)',
+    ],
     gray: ['rgb(119, 119, 119)'],
     red: ['rgb(193, 36, 36)', 'rgb(211, 86, 86)'],
+    gradients: [
+      'linear-gradient(180deg, #618FA3 0%, #487292 0.01%, #232829 33.85%)',
+      'linear-gradient(180deg, rgba(50, 48, 48, 0) 41.67%, #323030 100%);',
+    ],
   },
   mediaQuery: {
     xs: '@media (min-width: 0px)',

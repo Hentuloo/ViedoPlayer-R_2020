@@ -5,7 +5,7 @@ const Wrapper = styled.div`
   position: relative;
   width: 80%;
   margin: 0px auto;
-  background-color: ${({ theme }) => theme.color.black[1]};
+  background-color: ${({ theme }) => theme.color.black[2]};
   z-index: 10;
 `;
 const ButtonElement = styled.button`
@@ -13,10 +13,10 @@ const ButtonElement = styled.button`
   height: 70px;
   margin: 0px auto;
   border: none;
-  background-color: ${({ theme }) => theme.color.black[0]};
-  color: ${({ theme }) => theme.color.red[1]};
-  cursor: grab;
+  background-color: ${({ theme }) => theme.color.black[2]};
+  color: ${({ theme }) => theme.color.brand[1]};
   font-size: ${({ theme }) => theme.fs.s};
+  cursor: grab;
 
   &:active {
     cursor: grabbing;

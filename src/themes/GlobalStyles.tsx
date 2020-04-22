@@ -13,7 +13,8 @@ body {
     font-family:${({ theme }) => theme.ff[0]};
     font-weight: ${({ theme }) => theme.fw[0]};
     font-size: ${({ theme }) => theme.fs.m};
-    color:  ${({ theme }) => theme.color.black[0]};  
+    color:  ${({ theme }) => theme.color.black[0]}; 
+    background: ${({ theme }) => theme.color.gradients[0]}; 
 
     ${({ theme }) => theme.mediaQuery.md}{
          font-size: 1.4rem;

@@ -1,16 +1,28 @@
 import React from 'react';
-import styled from 'styled-components';
+import styled, { css } from 'styled-components';
 import Timeline from './Timeline';
 import { getTimelinesAsArray } from 'store/selectors/getTimelinesAsArray';
 import { useSelector } from 'react-redux';
 
-const Wrapper = styled.div`
+interface WrapperProps {
+  scrollY: boolean;
+}
+
+const Wrapper = styled.div<WrapperProps>`
   grid-column: 1/-2;
   display: grid;
-  grid-template-columns: 55px 1fr;
+  height: 200px;
+  align-content: flex-start;
+  grid-template-columns: 1fr;
   grid-row-gap: 10px;
   padding-top: 5px;
   user-select: none;
+
+  ${({ scrollY }) =>
+    scrollY &&
+    css`
+      overflow-y: scroll;
+    `}
 `;
 
 export interface TimelinesProps {
@@ -21,11 +33,12 @@ export interface TimelinesProps {
 const Timelines: React.SFC<TimelinesProps> = ({
   duration,
   currentTime,
+  ...props
 }) => {
   const timelines = useSelector(getTimelinesAsArray());
   return (
-    <Wrapper>
-      {timelines.map(({ id, from, data, to }) => (
+    <Wrapper scrollY={timelines.length > 5} {...props}>
+      {timelines.reverse().map(({ id, from, data, to }) => (
         <Timeline
           key={id}
           duration={duration}

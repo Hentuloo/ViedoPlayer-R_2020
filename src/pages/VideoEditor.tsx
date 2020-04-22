@@ -6,17 +6,22 @@ import VideoWithEditor from 'components/VideoWithEditor';
 
 const Wrapper = styled.div`
   display: grid;
+  width: 90%;
   max-width: 1200px;
-  height: 120vh;
+  min-height: 100vh;
+  align-items: center;
   margin: 0px auto;
   color: ${({ theme }) => theme.color.brand[0]};
+
+  ${({ theme }) => theme.mediaQuery.md} {
+    width: 85%;
+  }
 `;
 
 function VideoEditor() {
   return (
     <NavigationTemplate>
       <Wrapper>
-        <header>Tu można dodawać zakładki do filmu</header>
         <VideoWithEditor />
       </Wrapper>
     </NavigationTemplate>

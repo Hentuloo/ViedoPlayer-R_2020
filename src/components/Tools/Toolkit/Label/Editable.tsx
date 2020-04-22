@@ -15,7 +15,8 @@ const LabelContent = styled.div`
   align-items: center;
   pointer-events: none;
   user-select: none;
-  color: ${({ theme }) => theme.color.red[1]};
+  background-color: ${({ theme }) => theme.color.black[2]};
+  color: ${({ theme }) => theme.color.brand[1]};
 `;
 
 export const Editable: React.FC<LabelEditable> = ({

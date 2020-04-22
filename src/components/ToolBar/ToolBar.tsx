@@ -7,7 +7,12 @@ import { toolsByTypes } from 'components/Tools/Toolkit/defaults';
 import { ToolsNames } from 'components/Tools/Toolkit/types';
 import { addTool } from 'store/actions/toolsActions';
 
-const Wrapper = styled.aside``;
+const Wrapper = styled.aside`
+  padding: 14px 0px;
+  background-color: ${({ theme }) => theme.color.black[1]};
+  align-self: flex-start;
+  min-height: 60%;
+`;
 
 export interface ToolBarProps {
   wrapper: React.RefObject<HTMLElement>;

@@ -9,6 +9,8 @@ import Tools from 'components/Tools/Tools';
 
 export const Wrapper = styled.div`
   position: relative;
+  background-color: black;
+  box-shadow: 0px 0px 60px #000000;
 `;
 export const VideoWrapper = styled.div`
   position: relative;
@@ -21,9 +23,13 @@ export const Controllers = styled.div`
   position: absolute;
   display: grid;
   grid-template-columns: 55px 1fr;
-  height: 40px;
-  width: 100%;
+  height: 50px;
+  width: 90%;
+  justify-content: center;
   bottom: 0%;
+  left: 50%;
+  transform: translate(-50%, 50%);
+  background-color: ${({ theme }) => theme.color.black[2]};
 `;
 export const StyledPlayButton = styled(MemomizedPlayButton)`
   padding: 6px 4px 6px 0px;

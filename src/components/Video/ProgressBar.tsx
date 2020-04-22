@@ -7,7 +7,7 @@ export const TooltipTime = styled.div`
   bottom: 110%;
   left: 0%;
   padding: 4px 6px;
-  background-color: ${({ theme }) => theme.color.black[1]};
+  background-color: ${({ theme }) => theme.color.black[2]};
   color: ${({ theme }) => theme.color.white[0]};
   transform: translate(10px, 0px);
   opacity: 0;
@@ -29,7 +29,7 @@ export const BarWrapper = styled.div`
   width: 100%;
   height: 100%;
   overflow: hidden;
-  background-color: ${({ theme }) => theme.color.black[1]};
+
   pointer-events: none;
 `;
 export const Bar = styled.div`
@@ -38,7 +38,7 @@ export const Bar = styled.div`
   height: 100%;
   left: 0%;
   top: 0%;
-  background-color: ${({ theme }) => theme.color.red[0]};
+  background-color: ${({ theme }) => theme.color.brand[1]};
   transform: translate(-100%, 0px);
 `;
 

@@ -6,9 +6,9 @@ import { IdType } from 'store/actions/types';
 const Wrapper = styled.div`
   position: relative;
   width: 99%;
-  grid-column: 2/-1;
+  grid-column: 1/-1;
   height: 40px;
-  background-color: ${({ theme }) => theme.color.black[1]};
+
   ${({ theme }) => theme.mediaQuery.md} {
     width: 100%;
   }
@@ -20,11 +20,11 @@ const Title = styled.div`
   top: 0%;
   left: 50%;
   transform: translate(-50%, 50%);
-  color: ${({ theme }) => theme.color.white[0]};
+  color: ${({ theme }) => theme.color.white[1]};
   z-index: 30;
   overflow: hidden;
   pointer-events: none;
-  opacity: 0.4;
+  opacity: 0.5;
   letter-spacing: 4px;
   line-height: 20px;
   font-size: ${({ theme }) => theme.fs.s};
