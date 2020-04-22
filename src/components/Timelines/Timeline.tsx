@@ -6,7 +6,6 @@ import { IdType } from 'store/actions/types';
 const Wrapper = styled.div`
   position: relative;
   width: 99%;
-  grid-column: 1/-1;
   height: 40px;
 
   ${({ theme }) => theme.mediaQuery.md} {

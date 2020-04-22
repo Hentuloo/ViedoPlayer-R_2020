@@ -49,7 +49,7 @@ const Video = forwardRef(
     const [video, state, controls] = useVideo(
       <VideoElement src="http://techslides.com/demos/sample-videos/small.mp4" />,
     );
-    const { paused, error, time, duration } = state;
+    const { paused, error, time, duration, buffered } = state;
 
     const handleTogglePause = () => {
       paused ? controls.play() : controls.pause();
@@ -58,7 +58,7 @@ const Video = forwardRef(
     const handleSetVideoTime = (time: number) => {
       controls.seek(time);
     };
-
+    const loaded = buffered.length !== 0;
     if (error) return <ErrorRespnse />;
 
     return (
@@ -67,6 +67,7 @@ const Video = forwardRef(
           <VideoWrapper onClick={handleTogglePause}>
             {video}
           </VideoWrapper>
+          {loaded && <Tools editable={editable} currentTime={time} />}
           <Controllers>
             <StyledPlayButton
               status={paused}
@@ -78,9 +79,8 @@ const Video = forwardRef(
               setNewTime={handleSetVideoTime}
             />
           </Controllers>
-          <Tools editable={editable} currentTime={time} />
         </Wrapper>
-        {render && render(duration, time)}
+        {render && loaded && render(duration, time)}
       </>
     );
   },

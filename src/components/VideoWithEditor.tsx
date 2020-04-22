@@ -7,11 +7,7 @@ import Timelines from './Timelines/Timelines';
 
 const StyledVideo = styled(Video)``;
 const VideoWrapper = styled.div``;
-const StyledTimelines = styled(Timelines)`
-  width: calc(100% - 10% - 55px);
-  margin-left: calc(55px + 5%);
-  margin-top: 50px;
-`;
+const StyledTimelines = styled(Timelines)``;
 const Wrapper = styled.div`
   display: grid;
   grid-column-gap: 40px;

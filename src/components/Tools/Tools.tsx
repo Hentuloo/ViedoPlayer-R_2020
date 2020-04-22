@@ -12,7 +12,7 @@ export const Wrapper = styled.div`
   left: 0%;
   top: 0%;
   width: 100%;
-  height: calc(100% - 25px);
+  height: calc(100% - 24px);
   pointer-events: none;
 `;
 

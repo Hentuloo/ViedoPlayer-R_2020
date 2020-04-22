@@ -9,18 +9,21 @@ interface WrapperProps {
 }
 
 const Wrapper = styled.div<WrapperProps>`
-  grid-column: 1/-2;
   display: grid;
   height: 200px;
+  width: calc(100% - 10% - 55px);
   align-content: flex-start;
-  grid-template-columns: 1fr;
   grid-row-gap: 10px;
   padding-top: 5px;
+  margin-left: calc(55px + 5%);
+  margin-top: 50px;
   user-select: none;
 
   ${({ scrollY }) =>
     scrollY &&
     css`
+      width: calc(100% - 10% - 30px);
+      padding-right: 8px;
       overflow-y: scroll;
     `}
 `;
@@ -37,7 +40,7 @@ const Timelines: React.SFC<TimelinesProps> = ({
 }) => {
   const timelines = useSelector(getTimelinesAsArray());
   return (
-    <Wrapper scrollY={timelines.length > 5} {...props}>
+    <Wrapper scrollY={timelines.length >= 5} {...props}>
       {timelines.reverse().map(({ id, from, data, to }) => (
         <Timeline
           key={id}
