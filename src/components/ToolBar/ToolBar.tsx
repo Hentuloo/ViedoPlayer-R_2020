@@ -10,12 +10,11 @@ import { addTool } from 'store/actions/toolsActions';
 const Wrapper = styled.aside`
   position: fixed;
   bottom: 0%;
-  left: 50%;
+  left: 0%;
   width: 100%;
   padding: 14px 0px;
   background-color: ${({ theme }) => theme.color.black[1]};
   align-self: flex-start;
-  transform: translate(-50%, 0%);
   z-index: 20;
 
   ${({ theme }) => theme.mediaQuery.md} {
