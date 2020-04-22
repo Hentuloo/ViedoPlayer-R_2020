@@ -2,6 +2,7 @@ import React, { useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 import gsap from 'gsap';
 import draggable from 'components/draggable/draggable';
+import { getComputedTranslateXY } from 'config/utils';
 
 const GrayBar = styled.div`
   position: absolute;
@@ -116,7 +117,6 @@ const Cursor: React.SFC<CursorProps> = ({
       axisY: false,
       subscribe: ({ left, width }) => {
         const percents = Number(((left / width) * 100).toFixed(2));
-
         // check if cursor is near second cursor
         if (fromRight && percents - 1 < maxPercents) return;
         if (!fromRight && percents + 1 > maxPercents) return;
@@ -126,14 +126,11 @@ const Cursor: React.SFC<CursorProps> = ({
         gsap.set(wrapper, { x: left });
       },
       onDrop: () => {
-        const { left } = wrapper.getBoundingClientRect();
-
-        const dividend = ((left - 50) / wrapper.offsetWidth) * 100;
-        const percent = Number(
-          Math.abs(Math.floor(dividend)).toFixed(0),
+        const { x } = getComputedTranslateXY(wrapper);
+        const dividend = Number(
+          ((Math.abs(x) / wrapper.offsetWidth) * 100).toFixed(2),
         );
-
-        onChange(fromRight ? percent : 100 - percent, fromRight);
+        onChange(dividend, fromRight);
       },
     });
 
