@@ -6,8 +6,17 @@ import { useDispatch } from 'react-redux';
 import { toolsByTypes } from 'components/Tools/Toolkit/defaults';
 import { ToolsNames } from 'components/Tools/Toolkit/types';
 import { addTool } from 'store/actions/toolsActions';
+import Input from './Input';
 
 const Wrapper = styled.aside`
+  ${({ theme }) => theme.mediaQuery.md} {
+    display: grid;
+    grid-template-rows: auto 1fr;
+    align-content: flex-start;
+    grid-row-gap: 20px;
+  }
+`;
+const Tools = styled.div`
   position: fixed;
   bottom: 0%;
   left: 0%;
@@ -16,12 +25,9 @@ const Wrapper = styled.aside`
   background-color: ${({ theme }) => theme.color.black[1]};
   align-self: flex-start;
   z-index: 20;
-
   ${({ theme }) => theme.mediaQuery.md} {
     position: relative;
-    left: 0%;
     min-height: 60%;
-    transform: translate(0%, 0%);
   }
 `;
 
@@ -52,11 +58,14 @@ const ToolBar = ({ wrapper, ...props }: ToolBarProps) => {
     );
 
     return () => sub && sub.unsubscribe();
-  }, []);
+  }, [wrapper]);
 
   return (
     <Wrapper {...props}>
-      <LabelButton ref={labelRef} />
+      <Input />
+      <Tools>
+        <LabelButton ref={labelRef} />
+      </Tools>
     </Wrapper>
   );
 };

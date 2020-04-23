@@ -21,8 +21,7 @@ export const addToolDraggable = <E extends HTMLElement>(
   { wrapper, width, height }: UseToolOptions,
   callback: (x: number, y: number) => void,
 ) => {
-  const videoWrapper = wrapper.current;
-  if (!videoWrapper || !tool) return;
+  console.log(wrapper);
 
   const resetAnimation = () => {
     const tl = gsap.timeline();
@@ -35,6 +34,9 @@ export const addToolDraggable = <E extends HTMLElement>(
     clientY,
     clientX,
   }: DraggableEvent) => {
+    const videoWrapper = wrapper.current;
+    if (!videoWrapper || !tool) return;
+
     const isToolInside = mouseIsOnElement(
       { clientY, clientX },
       videoWrapper,

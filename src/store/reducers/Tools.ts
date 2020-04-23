@@ -34,6 +34,10 @@ export default (
       return copy;
     }
 
+    case types.CHANGE_VIDEO_URL: {
+      return {};
+    }
+
     case types.TOOL_ADD: {
       const { type, x, y } = action.payload;
       const id = Object.keys(state).length;

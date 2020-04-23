@@ -1,7 +1,7 @@
 import React from 'react';
 import styled, { css } from 'styled-components';
 import Timeline from './Timeline';
-import { getTimelinesAsArray } from 'store/selectors/getTimelinesAsArray';
+import { getTimelinesAsArray } from 'store/selectors/toolsSelectors';
 import { useSelector } from 'react-redux';
 
 interface WrapperProps {

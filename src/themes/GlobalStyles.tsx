@@ -67,5 +67,8 @@ ul {
         display:none;
     }
 }
+html > div[style] {
+  display: none !important;
+}
 
 `;

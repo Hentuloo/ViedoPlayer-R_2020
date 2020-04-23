@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import EditableTool from './Editable/Editable';
 import StaticTool from './Static/Static';
 import { useSelector } from 'react-redux';
-import { getToolsAsArray } from 'store/selectors/getToolsAsArray';
+import { getToolsAsArray } from 'store/selectors/toolsSelectors';
 import Tool from './Toolkit/Tool';
 import gsap from 'gsap';
 

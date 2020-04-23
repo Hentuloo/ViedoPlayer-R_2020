@@ -69,6 +69,7 @@ const createHTMLMediaHook = (tag: 'audio' | 'video') => {
       };
     };
 
+    const onLoadStart = () => setState({ error: false });
     const onError = () => setState({ error: true });
     const onPlay = () => setState({ paused: false });
     const onPause = () => setState({ paused: true });
@@ -247,9 +248,11 @@ const createHTMLMediaHook = (tag: 'audio' | 'video') => {
         controls.play();
       }
       el.addEventListener('error', onError);
+      el.addEventListener('loadstart', onLoadStart);
 
       return () => {
         el.removeEventListener('error', onError);
+        el.removeEventListener('loadstart', onLoadStart);
       };
     }, [props.src]);
 

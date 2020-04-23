@@ -35,6 +35,7 @@ const Bar: React.SFC<BarProps> = ({ from, to, duration, id }) => {
       ? dispatch(changeToolTime(id, { to: newTime }))
       : dispatch(changeToolTime(id, { from: newTime }));
   };
+
   useEffect(() => {
     if (!duration) return;
     if (from === undefined || to === undefined) {

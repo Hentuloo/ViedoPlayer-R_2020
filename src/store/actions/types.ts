@@ -1,9 +1,10 @@
 import { ToolsIntefaces } from 'components/Tools/Toolkit/types';
 import { ToolActions } from './toolsActions';
 import { ToolkinActions } from './toolkitAction';
+import { VideoActions } from './videoActions';
 
 // types and actions
-export type Action = ToolActions | ToolkinActions;
+export type Action = ToolActions | ToolkinActions | VideoActions;
 export enum types {
   //General tool types
   TOOL_ADD,
@@ -13,6 +14,8 @@ export enum types {
   TOOL_CHANGE_CONTENT,
   //Toolkit types
   TOOL_LABEL_CHANGE_CONTENT,
+  //Video types
+  CHANGE_VIDEO_URL,
 }
 
 // Tool fields

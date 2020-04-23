@@ -8,3 +8,8 @@ export const getTimelinesAsArray = () => (store: StoreType) => {
     data: store.tools[key].data,
   }));
 };
+
+export const getToolsAsArray = () => (store: StoreType) => {
+  const keys = Object.keys(store.tools);
+  return keys.map((key) => ({ ...store.tools[key], id: key }));
+};
