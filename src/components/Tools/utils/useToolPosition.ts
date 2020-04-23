@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useCallback } from 'react';
 import gsap from 'gsap';
 
 export const useToolPosition = <T extends {} = HTMLElement>(
@@ -7,7 +7,7 @@ export const useToolPosition = <T extends {} = HTMLElement>(
 ) => {
   const ref = useRef<T>(null);
 
-  const updatePosition = () => {
+  const updatePosition = useCallback(() => {
     if (!ref.current || !parentRef) return;
 
     const { offsetWidth, offsetHeight } = parentRef;
@@ -17,17 +17,17 @@ export const useToolPosition = <T extends {} = HTMLElement>(
       x,
       y,
     });
-  };
+  }, [left, top, parentRef]);
 
   useEffect(() => {
     updatePosition();
-  }, [left, top, ref.current]);
+  }, [left, top, ref, updatePosition]);
 
   useEffect(() => {
     if (!ref.current || !parentRef) return;
     window.addEventListener('resize', updatePosition);
     return () => window.removeEventListener('resize', updatePosition);
-  }, [parentRef, left, top]);
+  }, [parentRef, left, top, updatePosition]);
 
   return ref;
 };

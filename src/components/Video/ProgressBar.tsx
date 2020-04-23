@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, memo } from 'react';
+import React, { useRef, useEffect, memo, useCallback } from 'react';
 import styled from 'styled-components';
 import gsap from 'gsap';
 
@@ -58,15 +58,18 @@ const ProgressBar: React.SFC<ProgressBarProps> = ({
   const wrapperRef = useRef<HTMLDivElement>(null);
   const tooltipRef = useRef<HTMLDivElement>(null);
 
-  const getBarTime = (offsetX: number): number | string => {
-    if (!wrapperRef.current) return 0;
-    const barWidth = wrapperRef.current.clientWidth;
+  const getBarTime = useCallback(
+    (offsetX: number): number | string => {
+      if (!wrapperRef.current) return 0;
+      const barWidth = wrapperRef.current.clientWidth;
 
-    const percent = (offsetX / barWidth) * 100;
-    const time = ((duration * percent) / 100).toFixed(2);
+      const percent = (offsetX / barWidth) * 100;
+      const time = ((duration * percent) / 100).toFixed(2);
 
-    return time;
-  };
+      return time;
+    },
+    [duration],
+  );
 
   useEffect(() => {
     if (!barRef || currentTime === 0) return;
@@ -76,7 +79,7 @@ const ProgressBar: React.SFC<ProgressBarProps> = ({
       duration: 0.3,
       x: `-${progressPercent}%`,
     });
-  }, [currentTime]);
+  }, [currentTime, duration]);
 
   useEffect(() => {
     const wrapper = wrapperRef.current;
@@ -97,7 +100,7 @@ const ProgressBar: React.SFC<ProgressBarProps> = ({
       if (!wrapper) return;
       wrapper.removeEventListener('mousemove', handleBarMove);
     };
-  }, [duration]);
+  }, [duration, getBarTime]);
 
   const handleSetNewTime = (e: React.MouseEvent) => {
     if (!tooltipRef.current) return;

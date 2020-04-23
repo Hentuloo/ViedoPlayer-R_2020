@@ -64,7 +64,7 @@ const TextArea: React.SFC<TextAreaProps> = ({
     if (!editMode && content !== value) {
       dispatch(changeLabelToolContent(id, value));
     }
-  }, [editMode]);
+  }, [editMode, content, dispatch, id, value]);
 
   return (
     <TextareaElement

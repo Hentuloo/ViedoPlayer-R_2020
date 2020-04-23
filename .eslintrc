@@ -10,8 +10,9 @@
     "ecmaVersion": 2018,
     "sourceType": "module"
   },
+  "plugins": ["react-hooks"],
   "rules": {
-    "react-hooks/exhaustive-deps": 0,
+    "react-hooks/exhaustive-deps": "warn",
     "react/display-name": 0,
     "@typescript-eslint/no-empty-function": 0,
     "react/jsx-closing-tag-location": 0,

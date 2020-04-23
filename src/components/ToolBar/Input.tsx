@@ -1,9 +1,4 @@
-import React, {
-  useEffect,
-  useRef,
-  useState,
-  ChangeEvent,
-} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import styled from 'styled-components';
 import { useSelector, useDispatch } from 'react-redux';
 import { getVideoUrl } from 'store/selectors/videoSelectors';
@@ -40,7 +35,7 @@ const Input: React.SFC<InputProps> = () => {
     debounceSearch$.current.subscribe((value: string) =>
       dispatch(changeVideoUrl(value)),
     );
-  }, []);
+  }, [dispatch]);
 
   const changeInput = (e: React.FormEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget;

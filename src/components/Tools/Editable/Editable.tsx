@@ -91,7 +91,7 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
     });
     if (!sub) return;
     return () => sub.unsubscribe();
-  }, [ref.current]);
+  }, [ref, dispatch, id, parentRef]);
 
   useEffect(() => {
     // On page resize set new max size
@@ -108,7 +108,7 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
 
     window.addEventListener('resize', setMaxSize);
     return () => window.removeEventListener('resize', setMaxSize);
-  }, [ref.current]);
+  }, [ref, parentRef]);
 
   useEffect(() => {
     // draggable logic
@@ -130,7 +130,7 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
     });
 
     return () => sub.unsubscribe();
-  }, [editMode, ref.current]);
+  }, [editMode, ref, dispatch, id, parentRef]);
 
   const handleChangeEditMode = (flag: boolean) => {
     setEditMode(flag);

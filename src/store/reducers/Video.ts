@@ -2,7 +2,7 @@ import { Action, types } from 'store/actions/types';
 
 const initState = {
   url:
-    'https://megawrzuta.pl/files/68a91f1b4d4a97e2b5887fb9d057d768.mp4',
+    'https://intro-video123.s3.eu-central-1.amazonaws.com/Best+No+Text+Intro+Template+Free+Download+%23105+(2).mp4',
 };
 export interface VideoState {
   url: string;

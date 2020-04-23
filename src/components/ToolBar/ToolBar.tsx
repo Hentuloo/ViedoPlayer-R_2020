@@ -58,7 +58,7 @@ const ToolBar = ({ wrapper, ...props }: ToolBarProps) => {
     );
 
     return () => sub && sub.unsubscribe();
-  }, [wrapper]);
+  }, [wrapper, dispatch]);
 
   return (
     <Wrapper {...props}>

@@ -42,7 +42,7 @@ const Bar: React.SFC<BarProps> = ({ from, to, duration, id }) => {
       const newTimeTo = Number((duration / 4).toFixed(2));
       dispatch(changeToolTime(id, { from: 0, to: newTimeTo }));
     }
-  }, [duration, ref.current]);
+  }, [duration, ref, dispatch, from, to, id]);
 
   if (from === undefined || to === undefined || !duration)
     return null;

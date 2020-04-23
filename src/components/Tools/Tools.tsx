@@ -43,7 +43,7 @@ const ToolsContainer: React.SFC<ToolsContainerProps> = ({
         gsap.set(node, { opacity: 0 });
       }
     });
-  }, [currentTime]);
+  }, [currentTime, editable, tools]);
 
   return (
     <Wrapper ref={ref}>

@@ -135,7 +135,7 @@ const Cursor: React.SFC<CursorProps> = ({
     });
 
     return () => sub.unsubscribe();
-  }, [maxPercents]);
+  }, [maxPercents, fromRight, onChange]);
 
   return (
     <Wrapper ref={wrapperRef} fromRight={fromRight}>
