@@ -8,6 +8,7 @@ export type Action = ToolActions | ToolkinActions | VideoActions;
 export enum types {
   //General tool types
   TOOL_ADD,
+  TOOL_REMOVE,
   TOOL_CHANGE_CORDS,
   TOOL_CHANGE_SIZE,
   TOOL_CHANGE_TIME,

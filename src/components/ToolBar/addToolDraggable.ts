@@ -21,8 +21,6 @@ export const addToolDraggable = <E extends HTMLElement>(
   { wrapper, width, height }: UseToolOptions,
   callback: (x: number, y: number) => void,
 ) => {
-  console.log(wrapper);
-
   const resetAnimation = () => {
     const tl = gsap.timeline();
     tl.to(tool, { duration: 0.2, opacity: 0, scale: 0.7 })

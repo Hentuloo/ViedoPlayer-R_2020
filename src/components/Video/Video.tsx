@@ -83,7 +83,7 @@ const Video = forwardRef(
         </>
       );
     const loaded = buffered.length !== 0;
-    console.log(buffered);
+
     return (
       <>
         <Wrapper ref={ref} {...props}>

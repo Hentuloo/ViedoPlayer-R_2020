@@ -5,7 +5,8 @@ export type ToolActions =
   | AddToolAction
   | ChangeCordsToolAction
   | ChangeSizeAction
-  | ChangeTimeAction;
+  | ChangeTimeAction
+  | RemoveToolAction;
 
 interface AddToolAction {
   type: types.TOOL_ADD;
@@ -18,6 +19,15 @@ export const addTool = (
 ): AddToolAction => ({
   type: types.TOOL_ADD,
   payload: { type, x, y },
+});
+
+interface RemoveToolAction {
+  type: types.TOOL_REMOVE;
+  payload: IdType;
+}
+export const removeTool = (id: IdType): RemoveToolAction => ({
+  type: types.TOOL_REMOVE,
+  payload: id,
 });
 
 interface ChangeCordsToolAction {

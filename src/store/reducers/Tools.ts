@@ -106,6 +106,13 @@ export default (
       };
     }
 
+    case types.TOOL_REMOVE: {
+      const id = action.payload;
+      const newState = { ...state };
+      delete newState[id];
+      return newState;
+    }
+
     case types.TOOL_CHANGE_SIZE: {
       const { id, width, height } = action.payload;
       const currentCords = state[id].cord;
