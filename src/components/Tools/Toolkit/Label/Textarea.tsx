@@ -1,8 +1,6 @@
 import React, { useRef, useState, useEffect } from 'react';
 import styled, { css } from 'styled-components';
-import { resizeCallback } from 'config/resizeCallback';
 import { useDispatch } from 'react-redux';
-import { changeToolSize } from 'store/actions/toolsActions';
 import { IdType } from 'store/actions/types';
 import { changeLabelToolContent } from 'store/actions/toolkitAction';
 
