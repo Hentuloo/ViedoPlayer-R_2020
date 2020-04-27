@@ -1,4 +1,5 @@
 import { Action, types } from 'store/actions/types';
+import produce, { Draft } from 'immer';
 
 const initState = {
   url:
@@ -8,12 +9,15 @@ export interface VideoState {
   url: string;
 }
 
-export default (state = initState, action: Action): VideoState => {
-  switch (action.type) {
-    case types.CHANGE_VIDEO_URL: {
-      return { ...state, url: action.payload };
+export default produce(
+  (draft: Draft<VideoState> = initState, action: Action) => {
+    switch (action.type) {
+      case types.CHANGE_VIDEO_URL: {
+        draft.url = action.payload;
+        break;
+      }
+      default:
+        return draft;
     }
-    default:
-      return state;
-  }
-};
+  },
+);
