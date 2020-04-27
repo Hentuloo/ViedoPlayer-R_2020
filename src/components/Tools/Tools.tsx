@@ -4,7 +4,7 @@ import EditableTool from './Editable/Editable';
 import StaticTool from './Static/Static';
 import { useSelector } from 'react-redux';
 import { getToolsAsArray } from 'store/selectors/toolsSelectors';
-import Tool from './Toolkit/Tool';
+import Tool from 'components/Toolkit/Tool';
 import gsap from 'gsap';
 
 export const Wrapper = styled.div`
@@ -14,6 +14,7 @@ export const Wrapper = styled.div`
   width: 100%;
   height: calc(100% - 24px);
   pointer-events: none;
+  overflow: hidden;
 `;
 
 export type ToolsContainerProps = {

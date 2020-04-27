@@ -1,5 +1,5 @@
 import { types, Action, ToolsState } from 'store/actions/types';
-import { toolsByTypes } from 'components/Tools/Toolkit/defaults';
+import { toolsByTypes } from 'components/Toolkit/defaults';
 import produce, { Draft } from 'immer';
 import defaultState from './ToolsDefaultState';
 

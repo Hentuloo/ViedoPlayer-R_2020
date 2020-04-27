@@ -1,12 +1,14 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useCallback } from 'react';
 import styled from 'styled-components';
 import { addToolDraggable } from './addToolDraggable';
-import { Button as LabelButton } from 'components/Tools/Toolkit/Label/Button';
 import { useDispatch } from 'react-redux';
-import { toolsByTypes } from 'components/Tools/Toolkit/defaults';
-import { ToolsNames } from 'components/Tools/Toolkit/types';
+import { toolsByTypes } from 'components/Toolkit/defaults';
+import { ToolsNames } from 'components/Toolkit/types';
 import { addTool } from 'store/actions/toolsActions';
 import Input from './Input';
+
+import { Button as LabelButton } from 'components/Toolkit/Label/Button';
+import { Button as LinkButton } from 'components/Toolkit/Link/Button';
 
 const Wrapper = styled.aside`
   ${({ theme }) => theme.mediaQuery.md} {
@@ -39,32 +41,44 @@ const ToolBar = ({ wrapper, ...props }: ToolBarProps) => {
   const dispatch = useDispatch();
 
   const labelRef = useRef<HTMLButtonElement>(null);
+  const linkRef = useRef<HTMLButtonElement>(null);
+
+  const bindTool = useCallback(
+    (
+      ref: React.RefObject<HTMLButtonElement>,
+      ToolName: ToolsNames,
+    ) => {
+      const tool = ref.current;
+      if (!tool) return;
+      return addToolDraggable(
+        tool,
+        {
+          wrapper,
+          width: toolsByTypes[ToolName].cord.width,
+          height: toolsByTypes[ToolName].cord.height,
+        },
+        (x, y) => dispatch(addTool(ToolName, x, y)),
+      );
+    },
+    [wrapper, dispatch],
+  );
 
   useEffect(() => {
-    const label = labelRef.current;
-    if (!label) return;
+    const labelSub = bindTool(labelRef, ToolsNames.LABEL);
+    const linkSub = bindTool(linkRef, ToolsNames.LINK);
 
-    const labelWidth = toolsByTypes[ToolsNames.LABEL].cord.width;
-    const labelHeight = toolsByTypes[ToolsNames.LABEL].cord.height;
-
-    const sub = addToolDraggable(
-      label,
-      {
-        wrapper,
-        width: labelWidth,
-        height: labelHeight,
-      },
-      (x, y) => dispatch(addTool(ToolsNames.LABEL, x, y)),
-    );
-
-    return () => sub && sub.unsubscribe();
-  }, [wrapper, dispatch]);
+    return () => {
+      labelSub && labelSub.unsubscribe();
+      linkSub && linkSub.unsubscribe();
+    };
+  }, [bindTool, linkRef, labelRef]);
 
   return (
     <Wrapper {...props}>
       <Input />
       <Tools>
         <LabelButton ref={labelRef} />
+        <LinkButton ref={linkRef} />
       </Tools>
     </Wrapper>
   );

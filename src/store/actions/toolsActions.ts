@@ -1,4 +1,4 @@
-import { ToolsNames } from 'components/Tools/Toolkit/types';
+import { ToolsNames } from 'components/Toolkit/types';
 import { IdType, types } from './types';
 
 export type ToolActions =

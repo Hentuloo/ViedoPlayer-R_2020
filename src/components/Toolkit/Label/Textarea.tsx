@@ -44,7 +44,7 @@ export interface TextAreaProps {
   parentRef: React.RefObject<HTMLDivElement>;
   id: IdType;
   content: string;
-  editMode: boolean;
+  editMode?: boolean;
 }
 
 const TextArea: React.SFC<TextAreaProps> = ({

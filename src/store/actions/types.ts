@@ -1,4 +1,4 @@
-import { ToolsIntefaces } from 'components/Tools/Toolkit/types';
+import { ToolsIntefaces } from 'components/Toolkit/types';
 import { ToolActions } from './toolsActions';
 import { ToolkinActions } from './toolkitAction';
 import { VideoActions } from './videoActions';

@@ -20,4 +20,21 @@ export const toolsByTypes: ToolsByTypes = {
       content: 'Your label, type something here!',
     },
   },
+  [ToolsNames.LINK]: {
+    cord: {
+      width: 18,
+      height: 13,
+      left: 0,
+      top: 0,
+    },
+    time: {
+      from: null,
+      to: null,
+    },
+    data: {
+      type: ToolsNames.LABEL,
+      content: 'Your link',
+      url: 'https://stoic-engelbart-eb60f0.netlify.app',
+    },
+  },
 };

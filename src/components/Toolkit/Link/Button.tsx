@@ -5,18 +5,18 @@ const Wrapper = styled.div`
   position: relative;
   width: 80%;
   margin: 0px auto;
-  background-color: ${({ theme }) => theme.color.black[2]};
   z-index: 10;
 `;
 const ButtonElement = styled.button`
   width: 100%;
-  height: 70px;
+  height: 60px;
   margin: 0px auto;
   border: none;
-  background-color: ${({ theme }) => theme.color.black[2]};
-  color: ${({ theme }) => theme.color.brand[1]};
   font-size: ${({ theme }) => theme.fs.s};
+  color: ${({ theme }) => theme.color.white[1]};
+  background-color: transparent;
   cursor: grab;
+  text-decoration: underline;
 
   &:active {
     cursor: grabbing;
@@ -29,7 +29,7 @@ export const Button = forwardRef(function label(
 ) {
   return (
     <Wrapper {...props}>
-      <ButtonElement ref={ref}>Dodaj zakładkę</ButtonElement>
+      <ButtonElement ref={ref}>Dodaj Link</ButtonElement>
     </Wrapper>
   );
 });
