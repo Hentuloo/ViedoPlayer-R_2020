@@ -127,7 +127,8 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
 
   const updateMobeableCord = useCallback(() => {
     const moveable = moveableRef.current;
-    if (!moveable || !moveable.updateRect) return;
+
+    if (!moveable) return;
     const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
     moveable.updateRect();
     moveable.bounds = {
@@ -170,8 +171,20 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
       .on('rotateEnd', onRotateEnd);
 
     moveableRef.current = sub;
-    return () => sub.destroy();
-  }, [editMode, onDragEnd, onResizeEnd, onRotateEnd, parentRef, ref]);
+    updateMobeableCord();
+    return () => {
+      sub.destroy();
+      moveableRef.current = null;
+    };
+  }, [
+    editMode,
+    onDragEnd,
+    onResizeEnd,
+    onRotateEnd,
+    parentRef,
+    ref,
+    updateMobeableCord,
+  ]);
 
   useEffect(() => {
     updateMobeableCord();
