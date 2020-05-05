@@ -14,11 +14,16 @@ import { useDispatch } from 'react-redux';
 import {
   changeToolCord,
   changeToolSize,
+  changeToolRotation,
 } from 'store/actions/toolsActions';
 import { EditableToolComponent } from '../types';
 
 import transformable from 'components/Transformable';
-import Moveable, { OnResizeEnd, OnDragEnd } from 'moveable';
+import Moveable, {
+  OnResizeEnd,
+  OnDragEnd,
+  OnRotateEnd,
+} from 'moveable';
 
 const StyledController = styled(Controllers)`
   opacity: 1;
@@ -91,6 +96,14 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
     [dispatch, id, parentRef],
   );
 
+  const onRotateEnd = useCallback(
+    ({ target }: OnRotateEnd) => {
+      const { z } = getComputedTranslateXY(target);
+      dispatch(changeToolRotation(id, z));
+    },
+    [dispatch, id],
+  );
+
   const onResizeEnd = useCallback(
     ({ target }: OnResizeEnd) => {
       const { clientWidth, clientHeight } = target;
@@ -143,11 +156,12 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
       snappable: true,
     })
       .on('dragEnd', onDragEnd)
-      .on('resizeEnd', onResizeEnd);
+      .on('resizeEnd', onResizeEnd)
+      .on('rotateEnd', onRotateEnd);
 
     moveableRef.current = sub;
     return () => sub.destroy();
-  }, [editMode, onDragEnd, onResizeEnd, parentRef, ref]);
+  }, [editMode, onDragEnd, onResizeEnd, onRotateEnd, parentRef, ref]);
 
   useEffect(() => {
     updateMobeableCord();

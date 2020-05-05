@@ -10,6 +10,7 @@ export const toolsByTypes: ToolsByTypes = {
       height: 20,
       left: 0,
       top: 0,
+      rotation: 0,
     },
     time: {
       from: null,
@@ -26,6 +27,7 @@ export const toolsByTypes: ToolsByTypes = {
       height: 13,
       left: 0,
       top: 0,
+      rotation: 0,
     },
     time: {
       from: null,

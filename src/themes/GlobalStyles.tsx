@@ -74,6 +74,7 @@ html > div[style] {
     pointer-events:all;
     .moveable-line{
     display:none;
+    will-change: transform;
     }
     .moveable-line.moveable-rotation-line{
     display:block;

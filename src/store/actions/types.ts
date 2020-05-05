@@ -17,6 +17,7 @@ export enum types {
   TOOL_LABEL_CHANGE_CONTENT,
   //Video types
   CHANGE_VIDEO_URL,
+  TOOL_CHANGE_ROTATION,
 }
 
 // Tool fields
@@ -25,6 +26,7 @@ export interface Cords {
   top: number;
   width: number;
   height: number;
+  rotation: number;
 }
 export interface ToolCords {
   cord: Cords;

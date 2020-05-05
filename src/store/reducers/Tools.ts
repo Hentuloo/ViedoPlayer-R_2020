@@ -45,6 +45,12 @@ export default produce(
         break;
       }
 
+      case types.TOOL_CHANGE_ROTATION: {
+        const { id, rotation } = action.payload;
+        draft[id].cord.rotation = rotation;
+        break;
+      }
+
       case types.TOOL_REMOVE: {
         const id = action.payload;
         delete draft[id];
@@ -66,6 +72,7 @@ export default produce(
             : currentCords.top;
 
         const newCords = {
+          ...currentCords,
           left,
           top,
           width,

@@ -5,6 +5,7 @@ export default {
       top: 19.609638554216865,
       width: 18.72,
       height: 16.39,
+      rotation: 0,
     },
     time: {
       from: 3.56,
@@ -21,6 +22,7 @@ export default {
       top: 0,
       width: 12.82,
       height: 12.53,
+      rotation: 0,
     },
     time: {
       from: 0,
@@ -37,6 +39,7 @@ export default {
       top: 74.46000000000001,
       width: 28.46,
       height: 25.54,
+      rotation: 0,
     },
     time: {
       from: 8.2,

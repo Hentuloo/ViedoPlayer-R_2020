@@ -23,21 +23,29 @@ export const transformable: GenerateMoveable = (
 
   moveable
     .on('dragStart', ({ target, set }) => {
-      const { x, y, z } = getComputedTranslateXY(
-        target as HTMLElement,
-      );
+      const { x, y, z } = getComputedTranslateXY(target);
       set([x, y, z]);
     })
-    .on('drag', ({ target, translate }) => {
-      const [x, y, z] = translate;
-      target.style.transform = `translate(${x}px, ${y}px) rotate(${z}deg)`;
+    .on('drag', ({ target, transform }) => {
+      target.style.transform = transform;
+    })
+    .on('rotateStart', ({ set }) => {
+      const { z } = getComputedTranslateXY(target);
+      set(z);
     })
     .on('rotate', ({ target, transform }) => {
       target.style.transform = transform;
     })
-    .on('resize', ({ target, width, height }) => {
+    .on('resizeStart', ({ dragStart, setOrigin }) => {
+      setOrigin(['%', '%']);
+      const { x, y, z } = getComputedTranslateXY(target);
+      dragStart && dragStart.set([x, y, z]);
+    })
+    .on('resize', ({ target, width, height, drag }) => {
       target.style.width = `${width}px`;
       target.style.height = `${height}px`;
+      const [x, y, z] = drag.beforeTranslate;
+      target.style.transform = `translate(${x}px, ${y}px) rotate(${z}deg)`;
     });
 
   return moveable;

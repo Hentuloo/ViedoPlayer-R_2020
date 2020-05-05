@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import { Cords } from 'store/actions/types';
 
 export const useToolPosition = <T extends HTMLElement = HTMLElement>(
-  { left, top, width, height }: Cords,
+  { left, top, width, height, rotation }: Cords,
   parentRef: HTMLElement | null,
 ) => {
   const ref = useRef<T>(null);
@@ -21,8 +21,8 @@ export const useToolPosition = <T extends HTMLElement = HTMLElement>(
     const { offsetWidth, offsetHeight } = parentRef;
     const x = (offsetWidth * left) / 100;
     const y = (offsetHeight * top) / 100;
-    el.style.transform = `translate(${x}px, ${y}px) rotate(${0}deg)`;
-  }, [left, top, parentRef]);
+    el.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
+  }, [left, top, rotation, parentRef]);
 
   useEffect(() => {
     updatePosition();

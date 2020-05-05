@@ -6,7 +6,20 @@ export type ToolActions =
   | ChangeCordsToolAction
   | ChangeSizeAction
   | ChangeTimeAction
-  | RemoveToolAction;
+  | RemoveToolAction
+  | ChangeRotationToolAction;
+
+interface ChangeRotationToolAction {
+  type: types.TOOL_CHANGE_ROTATION;
+  payload: { id: IdType; rotation: number };
+}
+export const changeToolRotation = (
+  id: IdType,
+  rotation: number,
+): ChangeRotationToolAction => ({
+  type: types.TOOL_CHANGE_ROTATION,
+  payload: { id, rotation },
+});
 
 interface AddToolAction {
   type: types.TOOL_ADD;
