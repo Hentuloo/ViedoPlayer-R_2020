@@ -70,5 +70,20 @@ ul {
 html > div[style] {
   display: none !important;
 }
+.transformable-box{
+    pointer-events:all;
+    .moveable-line{
+    display:none;
+    }
+    .moveable-line.moveable-rotation-line{
+    display:block;
+    }
+    .moveable-control{
+    width: calc(10 * var(--zoompx)) !important;
+    height: calc(10 * var(--zoompx)) !important;
+    margin-top: calc(-5 * var(--zoompx)) !important;
+    margin-left: calc(-5 * var(--zoompx)) !important;
+    }
+}
 
 `;

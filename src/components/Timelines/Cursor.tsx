@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 import gsap from 'gsap';
-import draggable from 'components/draggable/draggable';
 import { getComputedTranslateXY } from 'config/utils';
+import transformable from 'components/Transformable';
+import { OnDrag, OnDragEnd } from 'moveable';
 
 const GrayBar = styled.div`
   position: absolute;
@@ -108,34 +109,48 @@ const Cursor: React.SFC<CursorProps> = ({
     gsap.set(wrapper, { x: left });
   }, [percents]);
 
+  const onDrag = useCallback(
+    ({ target, translate }: OnDrag) => {
+      const [x] = translate;
+      const { clientWidth } = target;
+      const percents = Number(((x / clientWidth) * 100).toFixed(2));
+      // check if cursor is near second cursor
+      if (fromRight && percents - 1 < maxPercents) return;
+      if (!fromRight && percents + 1 > maxPercents) return;
+      // check if cursor is in the ends
+      if (percents < 0 || percents > 99.6) return;
+
+      target.style.transform = `translateX(${x}px)`;
+    },
+    [fromRight, maxPercents],
+  );
+
+  const onDragEnd = useCallback(
+    ({ target }: OnDragEnd) => {
+      const { x } = getComputedTranslateXY(target);
+      const { offsetWidth } = target as HTMLElement;
+      const dividend = Number(
+        ((Math.abs(x) / offsetWidth) * 100).toFixed(2),
+      );
+      onChange(dividend, fromRight);
+    },
+    [fromRight, onChange],
+  );
+
   useEffect(() => {
-    //Set draggable and on-change callback
+    //Set draggable
     const wrapper = wrapperRef.current;
     if (!wrapper) return;
 
-    const sub = draggable(wrapper, {
-      axisY: false,
-      subscribe: ({ left, width }) => {
-        const percents = Number(((left / width) * 100).toFixed(2));
-        // check if cursor is near second cursor
-        if (fromRight && percents - 1 < maxPercents) return;
-        if (!fromRight && percents + 1 > maxPercents) return;
-        // check if cursor is in the end
-        if (percents < 0 || percents > 99.6) return;
+    const sub = transformable(wrapper, { draggable: true })
+      //disable default draggable
+      .off('drag')
+      //set my own draggable
+      .on('drag', onDrag)
+      .on('dragEnd', onDragEnd);
 
-        gsap.set(wrapper, { x: left });
-      },
-      onDrop: () => {
-        const { x } = getComputedTranslateXY(wrapper);
-        const dividend = Number(
-          ((Math.abs(x) / wrapper.offsetWidth) * 100).toFixed(2),
-        );
-        onChange(dividend, fromRight);
-      },
-    });
-
-    return () => sub.unsubscribe();
-  }, [maxPercents, fromRight, onChange]);
+    return () => sub.destroy();
+  }, [onDrag, onDragEnd]);
 
   return (
     <Wrapper ref={wrapperRef} fromRight={fromRight}>

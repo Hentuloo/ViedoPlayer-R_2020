@@ -21,14 +21,7 @@ const Static: React.FC<StaticToolComponent> = ({
   );
 
   return (
-    <StyledWrapper
-      ref={ref}
-      {...props}
-      size={{
-        width: cord.width,
-        height: cord.height,
-      }}
-    >
+    <StyledWrapper ref={ref} {...props}>
       {render()}
     </StyledWrapper>
   );

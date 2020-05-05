@@ -20,8 +20,14 @@ export enum types {
 }
 
 // Tool fields
+export interface Cords {
+  left: number;
+  top: number;
+  width: number;
+  height: number;
+}
 export interface ToolCords {
-  cord: { left: number; top: number; width: number; height: number };
+  cord: Cords;
 }
 export interface ToolTime {
   time: {

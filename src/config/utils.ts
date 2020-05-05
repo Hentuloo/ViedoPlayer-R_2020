@@ -21,8 +21,10 @@ export const mouseIsOnElement = (
   );
 };
 
-export const getComputedTranslateXY = (obj: HTMLElement) => {
-  const cord = { x: 0, y: 0 };
+export const getComputedTranslateXY = (
+  obj: HTMLElement | SVGElement,
+) => {
+  const cord = { x: 0, y: 0, z: 0 };
   const style = getComputedStyle(obj);
   const transform = style.transform || style.webkitTransform;
 
@@ -30,8 +32,13 @@ export const getComputedTranslateXY = (obj: HTMLElement) => {
 
   mat = transform.match(/^matrix\((.+)\)$/);
   if (mat) {
-    cord.x = Number(parseFloat(mat[1].split(', ')[4]).toFixed(2));
-    cord.y = Number(parseFloat(mat[1].split(', ')[5]).toFixed(2));
+    const values = mat[1].split(', ');
+    cord.z = Math.round(
+      Math.atan2(Number(values[1]), Number(values[0])) *
+        (180 / Math.PI),
+    );
+    cord.x = Number(parseFloat(values[4]).toFixed(2));
+    cord.y = Number(parseFloat(values[5]).toFixed(2));
   }
 
   return { ...cord };

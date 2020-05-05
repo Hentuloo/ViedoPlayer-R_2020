@@ -1,9 +1,9 @@
 import { mouseIsOnElement } from 'config/utils';
 import { getCordsInsideOverlapElement } from './utils';
 
-import draggable from 'components/draggable/draggable';
 import gsap from 'gsap';
-import { DraggableEvent } from 'components/draggable/types';
+import { OnDragEnd } from 'moveable';
+import transformable from 'components/Transformable';
 
 export interface CallbackArguments {
   x: number;
@@ -31,7 +31,7 @@ export const addToolDraggable = <E extends HTMLElement>(
   const addToolWhenDropedOnVideo = ({
     clientY,
     clientX,
-  }: DraggableEvent) => {
+  }: OnDragEnd) => {
     const videoWrapper = wrapper.current;
     if (!videoWrapper || !tool) return;
 
@@ -51,11 +51,9 @@ export const addToolDraggable = <E extends HTMLElement>(
     callback(left, top);
   };
 
-  const unSub = draggable(tool, {
-    onDrop: (e) => {
-      resetAnimation();
-      addToolWhenDropedOnVideo(e);
-    },
+  const unSub = transformable(tool).on('dragEnd', (e) => {
+    resetAnimation();
+    addToolWhenDropedOnVideo(e);
   });
 
   return unSub;

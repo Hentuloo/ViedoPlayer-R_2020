@@ -1,22 +1,27 @@
 import { useEffect, useRef, useCallback } from 'react';
-import gsap from 'gsap';
+import { Cords } from 'store/actions/types';
 
-export const useToolPosition = <T extends {} = HTMLElement>(
-  { left, top }: { left: number; top: number },
+export const useToolPosition = <T extends HTMLElement = HTMLElement>(
+  { left, top, width, height }: Cords,
   parentRef: HTMLElement | null,
 ) => {
   const ref = useRef<T>(null);
 
+  const updateSize = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    el.style.width = `${width}%`;
+    el.style.height = `${height}%`;
+  }, [height, width]);
+
   const updatePosition = useCallback(() => {
-    if (!ref.current || !parentRef) return;
+    const el = ref.current;
+    if (!el || !parentRef) return;
 
     const { offsetWidth, offsetHeight } = parentRef;
     const x = (offsetWidth * left) / 100;
     const y = (offsetHeight * top) / 100;
-    gsap.set(ref.current, {
-      x,
-      y,
-    });
+    el.style.transform = `translate(${x}px, ${y}px) rotate(${0}deg)`;
   }, [left, top, parentRef]);
 
   useEffect(() => {
@@ -28,6 +33,10 @@ export const useToolPosition = <T extends {} = HTMLElement>(
     window.addEventListener('resize', updatePosition);
     return () => window.removeEventListener('resize', updatePosition);
   }, [parentRef, left, top, updatePosition]);
+
+  useEffect(() => {
+    updateSize();
+  }, [updateSize]);
 
   return ref;
 };

@@ -68,8 +68,8 @@ const ToolBar = ({ wrapper, ...props }: ToolBarProps) => {
     const linkSub = bindTool(linkRef, ToolsNames.LINK);
 
     return () => {
-      labelSub && labelSub.unsubscribe();
-      linkSub && linkSub.unsubscribe();
+      labelSub && labelSub.destroy();
+      linkSub && linkSub.destroy();
     };
   }, [bindTool, linkRef, labelRef]);
 

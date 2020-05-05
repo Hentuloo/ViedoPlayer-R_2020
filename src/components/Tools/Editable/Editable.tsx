@@ -1,10 +1,14 @@
-import React, { useEffect, useState } from 'react';
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+} from 'react';
 import styled, { css } from 'styled-components';
 
 import { useToolPosition } from '../utils/useToolPosition';
 import Controllers from './Controllers';
 import { getComputedTranslateXY } from 'config/utils';
-import draggable from 'components/draggable/draggable';
 import ToolWrapper from '../utils/Wrapper';
 import { useDispatch } from 'react-redux';
 import {
@@ -12,7 +16,9 @@ import {
   changeToolSize,
 } from 'store/actions/toolsActions';
 import { EditableToolComponent } from '../types';
-import { resizeCallback } from 'config/resizeCallback';
+
+import transformable from 'components/Transformable';
+import Moveable, { OnResizeEnd, OnDragEnd } from 'moveable';
 
 const StyledController = styled(Controllers)`
   opacity: 1;
@@ -64,34 +70,50 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
   render,
   ...props
 }) => {
+  const moveableRef = useRef<Moveable | null>(null);
   const { cord, id } = tool;
   const dispatch = useDispatch();
   const ref = useToolPosition<HTMLDivElement>(cord, parentRef);
   const [editMode, setEditMode] = useState(false);
 
-  useEffect(() => {
-    // resize logic (changetoolsize)
-    const el = ref.current;
-    if (!el || !parentRef) return;
+  const handleChangeEditMode = (flag: boolean) => {
+    setEditMode(flag);
+  };
 
-    const sub = resizeCallback(el, (w, h) => {
-      const { offsetWidth, offsetHeight } = parentRef;
-      //transform to percents by parent wrapper
-      let width = Number(((w / offsetWidth) * 100).toFixed(2));
-      let height = Number(((h / offsetHeight) * 100).toFixed(2));
+  const onDragEnd = useCallback(
+    ({ target }: OnDragEnd) => {
+      const { x, y } = getComputedTranslateXY(target);
+      const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
+      const percentX = (x / offsetWidth) * 100;
+      const percentY = (y / offsetHeight) * 100;
+      dispatch(changeToolCord(id, { x: percentX, y: percentY }));
+    },
+    [dispatch, id, parentRef],
+  );
 
-      //set max size
-      width = width >= 50 ? 50 : width;
-      height = height >= 50 ? 50 : height;
+  const onResizeEnd = useCallback(
+    ({ target }: OnResizeEnd) => {
+      const { clientWidth, clientHeight } = target;
+      const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
+      const width = ((clientWidth / offsetWidth) * 100).toFixed(2);
+      const height = ((clientHeight / offsetHeight) * 100).toFixed(2);
+      dispatch(changeToolSize(id, Number(width), Number(height)));
+    },
+    [dispatch, id, parentRef],
+  );
 
-      el.style.width = `${width}%`;
-      el.style.height = `${height}%`;
-
-      dispatch(changeToolSize(id, width, height));
-    });
-    if (!sub) return;
-    return () => sub.unsubscribe();
-  }, [ref, dispatch, id, parentRef]);
+  const updateMobeableCord = useCallback(() => {
+    const moveable = moveableRef.current;
+    if (!moveable) return;
+    const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
+    moveable.updateRect();
+    moveable.bounds = {
+      left: 0,
+      top: 0,
+      right: offsetWidth,
+      bottom: offsetHeight,
+    };
+  }, [parentRef]);
 
   useEffect(() => {
     // On page resize set new max size
@@ -100,52 +122,39 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
 
     const setMaxSize = () => {
       const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
-
       el.style.maxWidth = `${(offsetWidth / 2).toFixed(2)}px `;
       el.style.maxHeight = `${(offsetHeight / 2).toFixed(2)}px`;
+      updateMobeableCord();
     };
     setMaxSize();
 
     window.addEventListener('resize', setMaxSize);
     return () => window.removeEventListener('resize', setMaxSize);
-  }, [ref, parentRef]);
+  }, [ref, parentRef, updateMobeableCord]);
 
   useEffect(() => {
-    // draggable logic
+    // connect with transformable
     const el = ref.current;
-    if (!el || !parentRef) return;
-    const sub = draggable(el, {
-      overlapElement: parentRef,
-      active: !editMode,
-      sourceNode: true,
-      onDrop: () => {
-        if (!parentRef || editMode) return;
-        const { x, y } = getComputedTranslateXY(el);
-        const { offsetWidth, offsetHeight } = parentRef;
+    if (!el || !parentRef || editMode === true) return;
 
-        const percentX = (x / offsetWidth) * 100;
-        const percentY = (y / offsetHeight) * 100;
-        dispatch(changeToolCord(id, { x: percentX, y: percentY }));
-      },
-    });
+    const sub = transformable(el, {
+      resizable: true,
+      rotatable: true,
+      snappable: true,
+    })
+      .on('dragEnd', onDragEnd)
+      .on('resizeEnd', onResizeEnd);
 
-    return () => sub.unsubscribe();
-  }, [editMode, ref, dispatch, id, parentRef]);
+    moveableRef.current = sub;
+    return () => sub.destroy();
+  }, [editMode, onDragEnd, onResizeEnd, parentRef, ref]);
 
-  const handleChangeEditMode = (flag: boolean) => {
-    setEditMode(flag);
-  };
+  useEffect(() => {
+    updateMobeableCord();
+  }, [updateMobeableCord]);
 
   return (
-    <StyledWrapper
-      ref={ref}
-      {...props}
-      size={{
-        width: cord.width,
-        height: cord.height,
-      }}
-      editMode={editMode}
-    >
+    <StyledWrapper ref={ref} {...props} editMode={editMode}>
       {render(editMode, handleChangeEditMode)}
       <StyledController
         editMode={editMode}
