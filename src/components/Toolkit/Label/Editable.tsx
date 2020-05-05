@@ -25,16 +25,10 @@ export const Editable: React.FC<LabelEditable> = ({
     id,
     data: { content },
   },
-  parentRef,
 }) => {
   return (
     <>
-      <Textarea
-        parentRef={parentRef}
-        id={id}
-        content={content}
-        editMode={editMode}
-      />
+      <Textarea id={id} content={content} editMode={editMode} />
       {!editMode && (
         <LabelContent>
           <span>{content}</span>

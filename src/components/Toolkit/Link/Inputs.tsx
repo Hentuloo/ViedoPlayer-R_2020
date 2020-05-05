@@ -6,7 +6,6 @@ const Wrapper = styled.div`
   position: relative;
   display: grid;
   background-color: ${({ theme }) => theme.color.black[1]};
-  overflow: scroll;
 `;
 
 export interface InputsProps {

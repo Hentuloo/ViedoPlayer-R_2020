@@ -55,17 +55,25 @@ export const changeToolCord = (
   payload: { id, ...precents },
 });
 
+interface ChangeCordsPrpos {
+  width: number;
+  height: number;
+  left: number;
+  top: number;
+}
 interface ChangeSizeAction {
   type: types.TOOL_CHANGE_SIZE;
-  payload: { id: IdType; width: number; height: number };
+  payload: {
+    id: IdType;
+    cords: ChangeCordsPrpos;
+  };
 }
 export const changeToolSize = (
   id: IdType,
-  width: number,
-  height: number,
+  cords: ChangeCordsPrpos,
 ): ChangeSizeAction => ({
   type: types.TOOL_CHANGE_SIZE,
-  payload: { id, width, height },
+  payload: { id, cords },
 });
 
 interface ChangeTimeAction {

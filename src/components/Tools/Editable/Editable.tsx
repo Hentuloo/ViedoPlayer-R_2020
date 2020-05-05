@@ -4,7 +4,7 @@ import React, {
   useRef,
   useCallback,
 } from 'react';
-import styled, { css } from 'styled-components';
+import styled from 'styled-components';
 
 import { useToolPosition } from '../utils/useToolPosition';
 import Controllers from './Controllers';
@@ -24,6 +24,7 @@ import Moveable, {
   OnDragEnd,
   OnRotateEnd,
 } from 'moveable';
+import { progressBarHeight } from 'components/Video/config';
 
 const StyledController = styled(Controllers)`
   opacity: 1;
@@ -52,20 +53,6 @@ export const StyledWrapper = styled(ToolWrapper)<WrapperInterface>`
       opacity: 1;
       transition: opacity 0.4s ease;
     }
-
-    ${({ editMode }) =>
-      !editMode &&
-      css`
-        resize: none;
-      `};
-
-    ${({ editMode }) =>
-      editMode &&
-      css`
-        cursor: auto;
-        overflow: auto;
-        resize: both;
-      `};
   }
 `;
 
@@ -89,8 +76,13 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
     ({ target }: OnDragEnd) => {
       const { x, y } = getComputedTranslateXY(target);
       const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
-      const percentX = (x / offsetWidth) * 100;
-      const percentY = (y / offsetHeight) * 100;
+
+      const percentX = Number(((x / offsetWidth) * 100).toFixed(2));
+      const percentY = Number(
+        ((y / (offsetHeight + progressBarHeight / 2)) * 100).toFixed(
+          2,
+        ),
+      );
       dispatch(changeToolCord(id, { x: percentX, y: percentY }));
     },
     [dispatch, id, parentRef],
@@ -106,18 +98,36 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
 
   const onResizeEnd = useCallback(
     ({ target }: OnResizeEnd) => {
+      const { x, y } = getComputedTranslateXY(target);
+
       const { clientWidth, clientHeight } = target;
       const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
-      const width = ((clientWidth / offsetWidth) * 100).toFixed(2);
-      const height = ((clientHeight / offsetHeight) * 100).toFixed(2);
-      dispatch(changeToolSize(id, Number(width), Number(height)));
+      const width = Number(
+        ((clientWidth / offsetWidth) * 100).toFixed(2),
+      );
+      const height = Number(
+        ((clientHeight / offsetHeight) * 100).toFixed(2),
+      );
+      const left = Number(((x / offsetWidth) * 100).toFixed(2));
+      const top = Number(
+        ((y / (offsetHeight + progressBarHeight / 2)) * 100).toFixed(
+          2,
+        ),
+      );
+      const cords = {
+        width: width,
+        height: height,
+        left,
+        top,
+      };
+      dispatch(changeToolSize(id, cords));
     },
     [dispatch, id, parentRef],
   );
 
   const updateMobeableCord = useCallback(() => {
     const moveable = moveableRef.current;
-    if (!moveable) return;
+    if (!moveable || !moveable.updateRect) return;
     const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
     moveable.updateRect();
     moveable.bounds = {

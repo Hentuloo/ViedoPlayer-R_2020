@@ -14,15 +14,13 @@ export const TextareaElement = styled.textarea<TextareaI>`
   max-height: 100%;
   align-self: stretch;
   border: none;
-  background-color: transparent;
   background-color: ${({ theme }) => theme.color.black[0]};
   color: ${({ theme }) => theme.color.white[0]};
   z-index: -1;
-
-  font-size: 1em;
-  padding-top: 0.7em;
-  padding-right: 0.2em;
+  font-size: 0.8em;
+  padding-right: 0.3em;
   resize: none;
+  overflow: hidden;
 
   ${({ editMode }) =>
     !editMode &&
@@ -30,18 +28,9 @@ export const TextareaElement = styled.textarea<TextareaI>`
       opacity: 0;
       pointer-events: none;
     `};
-
-  ${({ editMode }) =>
-    editMode &&
-    css`
-      cursor: auto;
-      overflow: auto;
-      resize: both;
-    `};
 `;
 
 export interface TextAreaProps {
-  parentRef: React.RefObject<HTMLDivElement>;
   id: IdType;
   content: string;
   editMode?: boolean;

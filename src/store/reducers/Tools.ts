@@ -58,27 +58,14 @@ export default produce(
       }
 
       case types.TOOL_CHANGE_SIZE: {
-        const { id, width, height } = action.payload;
+        const { id, cords: newCords } = action.payload;
         const currentCords = draft[id].cord;
 
-        //prevent when element is out of parent (after resize)
-        const left =
-          currentCords.left + width > 100
-            ? 100 - width
-            : currentCords.left;
-        const top =
-          currentCords.top + height > 100
-            ? 100 - height
-            : currentCords.top;
-
-        const newCords = {
+        const cords = {
           ...currentCords,
-          left,
-          top,
-          width,
-          height,
+          ...newCords,
         };
-        draft[id].cord = newCords;
+        draft[id].cord = cords;
         break;
       }
 

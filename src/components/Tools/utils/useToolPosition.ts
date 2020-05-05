@@ -7,12 +7,19 @@ export const useToolPosition = <T extends HTMLElement = HTMLElement>(
 ) => {
   const ref = useRef<T>(null);
 
-  const updateSize = useCallback(() => {
+  const updateToolSize = useCallback(() => {
     const el = ref.current;
     if (!el) return;
     el.style.width = `${width}%`;
     el.style.height = `${height}%`;
   }, [height, width]);
+
+  const updateToolFontSize = useCallback(() => {
+    const el = ref.current;
+    if (!parentRef || !el) return;
+    const relFontsize = parentRef.clientWidth * 0.03;
+    el.style.fontSize = relFontsize + 'px';
+  }, [parentRef]);
 
   const updatePosition = useCallback(() => {
     const el = ref.current;
@@ -20,23 +27,30 @@ export const useToolPosition = <T extends HTMLElement = HTMLElement>(
 
     const { offsetWidth, offsetHeight } = parentRef;
     const x = (offsetWidth * left) / 100;
-    const y = (offsetHeight * top) / 100;
+    const y = ((offsetHeight + 10) * top) / 100;
     el.style.transform = `translate(${x}px, ${y}px) rotate(${rotation}deg)`;
-  }, [left, top, rotation, parentRef]);
+  }, [left, parentRef, rotation, top]);
 
-  useEffect(() => {
+  const onResize = useCallback(() => {
+    updateToolSize();
+    updateToolFontSize();
     updatePosition();
-  }, [left, top, ref, updatePosition]);
+  }, [updatePosition, updateToolFontSize, updateToolSize]);
 
   useEffect(() => {
     if (!ref.current || !parentRef) return;
-    window.addEventListener('resize', updatePosition);
-    return () => window.removeEventListener('resize', updatePosition);
-  }, [parentRef, left, top, updatePosition]);
+
+    window.addEventListener('resize', onResize);
+    return () => window.removeEventListener('resize', onResize);
+  }, [parentRef, left, top, updatePosition, onResize]);
 
   useEffect(() => {
-    updateSize();
-  }, [updateSize]);
+    onResize();
+  }, [left, top, ref, onResize]);
+
+  useEffect(() => {
+    updateToolSize();
+  }, [updateToolSize]);
 
   return ref;
 };
