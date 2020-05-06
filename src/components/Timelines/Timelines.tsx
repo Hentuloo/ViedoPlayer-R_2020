@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useCallback } from 'react';
 import styled, { css } from 'styled-components';
 
 import { getTimelinesAsArray } from 'store/selectors/toolsSelectors';
@@ -39,9 +39,9 @@ const Wrapper = styled.div<WrapperProps>`
       padding-right: 8px;
       overflow-y: scroll;
     `}
-  ${({ theme }) => theme.mediaQuery.vlg} {
+  /* ${({ theme }) => theme.mediaQuery.vlg} {
     height: 200px;
-  }
+  } */
 `;
 
 export interface TimelinesProps {
@@ -58,7 +58,7 @@ const Timelines: React.SFC<TimelinesProps> = ({
   const timeCursorRef = useRef<HTMLDivElement>(null);
   const wrapperRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
+  const updateTimeCursorPosition = useCallback(() => {
     const bar = timeCursorRef.current;
     const wrapper = wrapperRef.current;
     if (!bar || !wrapper || currentTime === 0) return;
@@ -73,6 +73,13 @@ const Timelines: React.SFC<TimelinesProps> = ({
       x: x,
     });
   }, [currentTime, duration]);
+
+  useEffect(() => {
+    updateTimeCursorPosition();
+    window.addEventListener('resize', updateTimeCursorPosition);
+    return () =>
+      window.removeEventListener('resize', updateTimeCursorPosition);
+  }, [updateTimeCursorPosition]);
 
   return (
     <Wrapper

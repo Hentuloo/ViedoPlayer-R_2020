@@ -1,27 +1,27 @@
 export default {
   '0': {
     cord: {
-      left: 19.721794871794874,
-      top: 19.609638554216865,
-      width: 18.72,
-      height: 16.39,
-      rotation: 0,
+      left: 65.49,
+      top: 38.22,
+      width: 21.77,
+      height: 19.22,
+      rotation: -54,
     },
     time: {
-      from: 3.56,
-      to: 8.19,
+      from: 4.57,
+      to: 13.64,
     },
     data: {
       type: 0,
-      content: 'Some sample video',
+      content: '+ Possibility to rotate tools',
     },
   },
   '1': {
     cord: {
-      left: 0,
-      top: 0,
-      width: 12.82,
-      height: 12.53,
+      left: 1.02,
+      top: 1.89,
+      width: 22.59,
+      height: 22.46,
       rotation: 0,
     },
     time: {
@@ -30,20 +30,20 @@ export default {
     },
     data: {
       type: 0,
-      content: 'Hello!',
+      content: '+Responsive text',
     },
   },
   '2': {
     cord: {
-      left: 71.53999999999999,
-      top: 74.46000000000001,
-      width: 28.46,
-      height: 25.54,
+      left: 49.6,
+      top: 87.38,
+      width: 50,
+      height: 9.77,
       rotation: 0,
     },
     time: {
-      from: 8.2,
-      to: 13.98,
+      from: 7.64,
+      to: 12.44,
     },
     data: {
       type: 0,

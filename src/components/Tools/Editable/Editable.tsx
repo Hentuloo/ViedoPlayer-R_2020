@@ -12,18 +12,13 @@ import { getComputedTranslateXY } from 'config/utils';
 import ToolWrapper from '../utils/Wrapper';
 import { useDispatch } from 'react-redux';
 import {
-  changeToolCord,
   changeToolSize,
   changeToolRotation,
 } from 'store/actions/toolsActions';
 import { EditableToolComponent } from '../types';
 
 import transformable from 'components/Transformable';
-import Moveable, {
-  OnResizeEnd,
-  OnDragEnd,
-  OnRotateEnd,
-} from 'moveable';
+import Moveable, { OnRotateEnd } from 'moveable';
 import { progressBarHeight } from 'components/Video/config';
 
 const StyledController = styled(Controllers)`
@@ -72,21 +67,31 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
     setEditMode(flag);
   };
 
-  const onDragEnd = useCallback(
-    ({ target }: OnDragEnd) => {
-      const { x, y } = getComputedTranslateXY(target);
-      const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
+  const caculateNewCords = useCallback(() => {
+    const el = ref.current;
+    if (!el) return;
+    const { x, y } = getComputedTranslateXY(el);
 
-      const percentX = Number(((x / offsetWidth) * 100).toFixed(2));
-      const percentY = Number(
-        ((y / (offsetHeight + progressBarHeight / 2)) * 100).toFixed(
-          2,
-        ),
-      );
-      dispatch(changeToolCord(id, { x: percentX, y: percentY }));
-    },
-    [dispatch, id, parentRef],
-  );
+    const { clientWidth, clientHeight } = el;
+    const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
+    const width = Number(
+      ((clientWidth / offsetWidth) * 100).toFixed(2),
+    );
+    const height = Number(
+      ((clientHeight / offsetHeight) * 100).toFixed(2),
+    );
+    const left = Number(((x / offsetWidth) * 100).toFixed(2));
+    const top = Number(
+      ((y / (offsetHeight + progressBarHeight / 2)) * 100).toFixed(2),
+    );
+    const cords = {
+      width: width,
+      height: height,
+      left,
+      top,
+    };
+    dispatch(changeToolSize(id, cords));
+  }, [dispatch, id, parentRef, ref]);
 
   const onRotateEnd = useCallback(
     ({ target }: OnRotateEnd) => {
@@ -94,35 +99,6 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
       dispatch(changeToolRotation(id, z));
     },
     [dispatch, id],
-  );
-
-  const onResizeEnd = useCallback(
-    ({ target }: OnResizeEnd) => {
-      const { x, y } = getComputedTranslateXY(target);
-
-      const { clientWidth, clientHeight } = target;
-      const { offsetWidth, offsetHeight } = parentRef as HTMLElement;
-      const width = Number(
-        ((clientWidth / offsetWidth) * 100).toFixed(2),
-      );
-      const height = Number(
-        ((clientHeight / offsetHeight) * 100).toFixed(2),
-      );
-      const left = Number(((x / offsetWidth) * 100).toFixed(2));
-      const top = Number(
-        ((y / (offsetHeight + progressBarHeight / 2)) * 100).toFixed(
-          2,
-        ),
-      );
-      const cords = {
-        width: width,
-        height: height,
-        left,
-        top,
-      };
-      dispatch(changeToolSize(id, cords));
-    },
-    [dispatch, id, parentRef],
   );
 
   const updateMobeableCord = useCallback(() => {
@@ -166,8 +142,8 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
       rotatable: true,
       snappable: true,
     })
-      .on('dragEnd', onDragEnd)
-      .on('resizeEnd', onResizeEnd)
+      .on('dragEnd', caculateNewCords)
+      .on('resizeEnd', caculateNewCords)
       .on('rotateEnd', onRotateEnd);
 
     moveableRef.current = sub;
@@ -177,9 +153,8 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
       moveableRef.current = null;
     };
   }, [
+    caculateNewCords,
     editMode,
-    onDragEnd,
-    onResizeEnd,
     onRotateEnd,
     parentRef,
     ref,

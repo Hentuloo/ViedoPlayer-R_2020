@@ -22,6 +22,10 @@ const Wrapper = styled.div`
   background-color: ${({ theme }) => theme.color.brand[0]};
   z-index: 10;
   overflow: hidden;
+  &:active {
+    cursor: grabbing;
+    z-index: 10;
+  }
   & ~ .${TransformableControllerClass} {
     z-index: 20;
     .moveable-control {
@@ -87,6 +91,28 @@ const Bar: React.SFC<BarProps> = ({
       bottom: offsetHeight,
     };
   }, [wrapperRef]);
+  const updateBarCords = useCallback(() => {
+    const wrapper = wrapperRef.current;
+    const bar = barRef.current;
+    const transformable = transformableRef.current;
+    if (
+      !wrapper ||
+      !bar ||
+      !transformable ||
+      endPercent === null ||
+      startPercent === null
+    )
+      return;
+
+    const { clientWidth } = wrapper;
+
+    const widthPercent = endPercent - startPercent;
+    const width = (clientWidth * widthPercent) / 100;
+    const left = (clientWidth * startPercent) / 100;
+
+    bar.style.width = width + 'px';
+    bar.style.transform = `translate(${left}px,0px)`;
+  }, [endPercent, startPercent, wrapperRef]);
 
   const calculateNewTime = useCallback(() => {
     const wrapper = wrapperRef.current;
@@ -132,37 +158,23 @@ const Bar: React.SFC<BarProps> = ({
       .on('dragEnd', calculateNewTime);
 
     transformableRef.current = sub;
-    updateTransformableCord();
+
     return () => {
       transformableRef.current = null;
       sub.destroy();
     };
-  }, [calculateNewTime, updateTransformableCord]);
+  }, [calculateNewTime]);
 
   useEffect(() => {
     //update sizes
-    const wrapper = wrapperRef.current;
-    const bar = barRef.current;
-    const transformable = transformableRef.current;
-    if (
-      !wrapper ||
-      !bar ||
-      !transformable ||
-      endPercent === null ||
-      startPercent === null
-    )
-      return;
-
-    const { clientWidth } = wrapper;
-
-    const widthPercent = endPercent - startPercent;
-    const width = (clientWidth * widthPercent) / 100;
-    const left = (clientWidth * startPercent) / 100;
-
-    bar.style.width = width + 'px';
-    bar.style.transform = `translate(${left}px,0px)`;
-    updateTransformableCord();
-  }, [startPercent, endPercent, wrapperRef, updateTransformableCord]);
+    const updateSizes = () => {
+      updateBarCords();
+      updateTransformableCord();
+    };
+    updateSizes();
+    window.addEventListener('resize', updateSizes);
+    return () => window.removeEventListener('resize', updateSizes);
+  }, [updateBarCords, updateTransformableCord]);
 
   return <Wrapper ref={barRef}></Wrapper>;
 };

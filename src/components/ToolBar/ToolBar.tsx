@@ -26,7 +26,7 @@ const Tools = styled.div`
   padding: 14px 0px;
   background-color: ${({ theme }) => theme.color.black[1]};
   align-self: flex-start;
-  z-index: 20;
+  z-index: 70;
   ${({ theme }) => theme.mediaQuery.md} {
     position: relative;
     min-height: 60%;

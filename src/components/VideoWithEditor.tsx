@@ -12,6 +12,7 @@ const Wrapper = styled.div`
   display: grid;
   grid-column-gap: 20px;
   margin-top: 80px;
+  padding-bottom: 200px;
   ${({ theme }) => theme.mediaQuery.md} {
     grid-template-columns: 1fr 25%;
   }
