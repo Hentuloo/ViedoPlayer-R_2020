@@ -34,13 +34,15 @@ const ToolsContainer: React.SFC<ToolsContainerProps> = ({
     //show/hide elements on time
     const toolsNodes = toolsRefs.current;
     if (toolsNodes.length === 0) return;
+    tools.forEach((tool, index) => {
+      const { from, to } = tool.time;
+      if (typeof from !== 'number' || typeof to !== 'number') return;
 
-    toolsNodes.forEach((node, index) => {
-      const { from, to } = tools[index].time;
-      if (from === null || to === null) return;
       const IsInsideTimePeriod =
         from <= currentTime && to >= currentTime;
-      gsap.set(node, { opacity: IsInsideTimePeriod ? 1 : 0 });
+      gsap.set(toolsNodes[index], {
+        opacity: IsInsideTimePeriod ? 1 : 0,
+      });
     });
   }, [currentTime, editable, tools]);
 

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import styled from 'styled-components';
 import Bar from './Bar';
 import { IdType } from 'store/actions/types';
@@ -7,6 +7,8 @@ const Wrapper = styled.div`
   position: relative;
   width: 99%;
   height: 40px;
+  background-color: ${({ theme }) => theme.color.black[2]};
+  overflow: hidden;
 
   ${({ theme }) => theme.mediaQuery.md} {
     width: 100%;
@@ -45,10 +47,17 @@ const Timeline: React.SFC<TimelineProps> = ({
   id,
   duration,
 }) => {
+  const ref = useRef<HTMLDivElement>(null);
   return (
-    <Wrapper>
+    <Wrapper ref={ref}>
       <Title>{content.slice(0, 16)}</Title>
-      <Bar from={from} to={to} id={id} duration={duration}></Bar>
+      <Bar
+        wrapperRef={ref}
+        from={from}
+        to={to}
+        id={id}
+        duration={duration}
+      ></Bar>
     </Wrapper>
   );
 };
