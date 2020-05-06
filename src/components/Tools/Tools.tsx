@@ -28,53 +28,56 @@ const ToolsContainer: React.SFC<ToolsContainerProps> = ({
 }) => {
   const tools = useSelector(getToolsAsArray());
   const ref = useRef<HTMLDivElement>(null);
+  const toolsRefs = useRef<HTMLDivElement[]>([]);
 
   useEffect(() => {
-    if (editable) return;
-    const wrapper = ref.current;
-    if (!wrapper) return;
-    const toolsNodes = [...wrapper.children];
+    //show/hide elements on time
+    const toolsNodes = toolsRefs.current;
+    if (toolsNodes.length === 0) return;
+
     toolsNodes.forEach((node, index) => {
       const { from, to } = tools[index].time;
-      if (from === null && to === null) return;
-      //@ts-ignore
-      if (from < currentTime && to > currentTime) {
-        gsap.set(node, { opacity: 1 });
-      } else {
-        gsap.set(node, { opacity: 0 });
-      }
+      if (from === null || to === null) return;
+      const IsInsideTimePeriod =
+        from <= currentTime && to >= currentTime;
+      gsap.set(node, { opacity: IsInsideTimePeriod ? 1 : 0 });
     });
   }, [currentTime, editable, tools]);
 
   return (
     <Wrapper ref={ref}>
-      {tools.map((tool) =>
-        editable ? (
-          <EditableTool
-            key={tool.id}
-            parentRef={ref}
-            tool={tool}
-            render={(editMode, changeEditMode) => (
-              <Tool
-                editable
-                tool={tool}
-                parentRef={ref}
-                editMode={editMode}
-                changeEditMode={changeEditMode}
-              />
-            )}
-          />
-        ) : (
-          <StaticTool
-            key={tool.id}
-            parentRef={ref}
-            tool={tool}
-            render={() => (
-              <Tool editable={false} tool={tool} parentRef={ref} />
-            )}
-          />
-        ),
-      )}
+      {tools.map((tool, index) => (
+        <div
+          ref={(ref: HTMLDivElement) =>
+            (toolsRefs.current[index] = ref)
+          }
+          key={tool.id}
+        >
+          {editable ? (
+            <EditableTool
+              parentRef={ref}
+              tool={tool}
+              render={(editMode, changeEditMode) => (
+                <Tool
+                  editable
+                  tool={tool}
+                  parentRef={ref}
+                  editMode={editMode}
+                  changeEditMode={changeEditMode}
+                />
+              )}
+            />
+          ) : (
+            <StaticTool
+              parentRef={ref}
+              tool={tool}
+              render={() => (
+                <Tool editable={false} tool={tool} parentRef={ref} />
+              )}
+            />
+          )}
+        </div>
+      ))}
     </Wrapper>
   );
 };

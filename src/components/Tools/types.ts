@@ -1,7 +1,6 @@
-import { IdType, ToolInterfaceWithId } from 'store/actions/types';
+import { ToolInterfaceWithId } from 'store/actions/types';
 
 interface Component {
-  key: IdType;
   tool: ToolInterfaceWithId;
   parentRef: React.RefObject<HTMLDivElement>;
 }
