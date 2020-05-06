@@ -23,7 +23,7 @@ const Wrapper = styled.div`
 const StyledVideoWithEditor = styled(VideoWithEditor)`
   margin: 100px auto 30px;
   ${({ theme }) => theme.mediaQuery.vlg} {
-    margin: 0px auto;
+    margin: 130px auto 0px;
   }
 `;
 

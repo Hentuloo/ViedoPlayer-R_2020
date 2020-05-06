@@ -18,10 +18,12 @@ const TransformableControllerClass = 'TransformableControllerClass';
 
 const Wrapper = styled.div`
   position: relative;
+  width: 0px;
   height: 100%;
   background-color: ${({ theme }) => theme.color.brand[0]};
   z-index: 10;
   overflow: hidden;
+  cursor: grab;
   &:active {
     cursor: grabbing;
     z-index: 10;
@@ -132,15 +134,6 @@ const Bar: React.SFC<BarProps> = ({
 
     dispatch(changeToolTime(id, { from, to }));
   }, [dispatch, duration, id, wrapperRef]);
-
-  useEffect(() => {
-    //set default times (here i know duration)
-    if (!duration) return;
-    if (from === undefined || to === undefined) {
-      const newTimeTo = Number((duration / 4).toFixed(2));
-      dispatch(changeToolTime(id, { from: 0, to: newTimeTo }));
-    }
-  }, [duration, dispatch, from, to, id]);
 
   useEffect(() => {
     //Set draggable
