@@ -1,22 +1,34 @@
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 import styled, { css } from 'styled-components';
 
 import { getTimelinesAsArray } from 'store/selectors/toolsSelectors';
 import { useSelector } from 'react-redux';
 import TimelineElement from './TimelineElement';
+import { buttonsWrapperWidth } from './config';
+import gsap from 'gsap';
+
+const TimeCursor = styled.div`
+  position: absolute;
+  width: 2px;
+  height: 100%;
+  left: calc(${buttonsWrapperWidth}px - 1px);
+  background-color: ${({ theme }) => theme.color.black[3]};
+  z-index: 50;
+  opacity: 1;
+  pointer-events: none;
+`;
 
 interface WrapperProps {
   scrollY: boolean;
 }
-
 const Wrapper = styled.div<WrapperProps>`
+  position: relative;
   display: grid;
   max-height: 200px;
 
   width: calc(100% - 10%);
   align-content: flex-start;
   grid-row-gap: 10px;
-  padding-top: 5px;
   margin-left: 5%;
   margin-top: 50px;
   user-select: none;
@@ -39,11 +51,36 @@ export interface TimelinesProps {
 
 const Timelines: React.SFC<TimelinesProps> = ({
   duration,
+  currentTime,
   ...props
 }) => {
   const timelines = useSelector(getTimelinesAsArray());
+  const timeCursorRef = useRef<HTMLDivElement>(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const bar = timeCursorRef.current;
+    const wrapper = wrapperRef.current;
+    if (!bar || !wrapper || currentTime === 0) return;
+
+    const progressPercent = (currentTime / duration) * 100;
+    const { clientWidth } = wrapper;
+    const x =
+      ((clientWidth - buttonsWrapperWidth) * progressPercent) / 100;
+
+    gsap.to(bar, {
+      duration: 0.3,
+      x: x,
+    });
+  }, [currentTime, duration]);
+
   return (
-    <Wrapper scrollY={timelines.length >= 5} {...props}>
+    <Wrapper
+      ref={wrapperRef}
+      scrollY={timelines.length >= 5}
+      {...props}
+    >
+      <TimeCursor ref={timeCursorRef} />
       {timelines.reverse().map(({ id, from, data, to }) => (
         <TimelineElement
           key={id}

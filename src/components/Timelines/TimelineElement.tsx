@@ -3,10 +3,11 @@ import styled from 'styled-components';
 import Timeline from './Timeline';
 import DeleteButton from './DeleteButton';
 import { IdType } from 'store/actions/types';
+import { buttonsWrapperWidth } from './config';
 
 const Wrapper = styled.div`
   display: grid;
-  grid-template-columns: 55px 1fr;
+  grid-template-columns: ${buttonsWrapperWidth}px 1fr;
 `;
 
 export interface TimelineElementProps {

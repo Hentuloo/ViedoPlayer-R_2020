@@ -23,6 +23,7 @@ const Wrapper = styled.div`
   z-index: 10;
   overflow: hidden;
   & ~ .${TransformableControllerClass} {
+    z-index: 20;
     .moveable-control {
       width: 2px;
       height: 46px;
@@ -31,6 +32,7 @@ const Wrapper = styled.div`
       border-radius: 0;
       border: 0;
       background-color: ${({ theme }) => theme.color.white[0]};
+
       &::after {
         content: '';
         position: absolute;
