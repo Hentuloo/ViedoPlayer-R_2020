@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import styled from 'styled-components';
 import { IdType } from 'store/actions/types';
 import { useDispatch } from 'react-redux';
@@ -20,14 +20,13 @@ export interface DeleteButtonProps {
 const DeleteButton: React.FC<DeleteButtonProps> = ({
   toolId,
   content,
-  ...props
 }) => {
   const dispatch = useDispatch();
   const handleClick = () => {
     dispatch(removeTool(toolId));
   };
   return (
-    <Wrapper {...props} title="Delete" onClick={handleClick}>
+    <Wrapper title="Delete" onClick={handleClick}>
       <span className="sr-only">
         Delete tool: `&quot;`{content}`&quot;`
       </span>
@@ -36,4 +35,4 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
   );
 };
 
-export default DeleteButton;
+export default memo(DeleteButton);

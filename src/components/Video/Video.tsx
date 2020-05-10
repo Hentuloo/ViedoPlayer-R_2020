@@ -1,4 +1,9 @@
-import React, { ReactElement, forwardRef, Ref } from 'react';
+import React, {
+  ReactElement,
+  forwardRef,
+  Ref,
+  useCallback,
+} from 'react';
 import useVideo from 'hooks/useVideo';
 import styled, { css } from 'styled-components';
 
@@ -68,13 +73,17 @@ const Video = forwardRef(
     );
     const { paused, error, time, duration, buffered } = state;
 
-    const handleTogglePause = () => {
+    const handleTogglePause = useCallback(() => {
       paused ? controls.play() : controls.pause();
-    };
+    }, [controls, paused]);
 
-    const handleSetVideoTime = (time: number) => {
-      controls.seek(time);
-    };
+    const handleSetVideoTime = useCallback(
+      (time: number) => {
+        controls.seek(time);
+      },
+      [controls],
+    );
+
     if (error)
       return (
         <>

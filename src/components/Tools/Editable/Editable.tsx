@@ -63,9 +63,9 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
   const ref = useToolPosition<HTMLDivElement>(cord, parentRef);
   const [editMode, setEditMode] = useState(false);
 
-  const handleChangeEditMode = (flag: boolean) => {
+  const handleChangeEditMode = useCallback((flag: boolean) => {
     setEditMode(flag);
-  };
+  }, []);
 
   const caculateNewCords = useCallback(() => {
     const el = ref.current;

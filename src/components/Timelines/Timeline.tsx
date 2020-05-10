@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef, memo } from 'react';
 import styled from 'styled-components';
 import Bar from './Bar';
 import { IdType } from 'store/actions/types';
@@ -48,6 +48,7 @@ const Timeline: React.SFC<TimelineProps> = ({
   duration,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
+  console.log('RER');
   return (
     <Wrapper ref={ref}>
       <Title>{content.slice(0, 16)}</Title>
@@ -62,4 +63,4 @@ const Timeline: React.SFC<TimelineProps> = ({
   );
 };
 
-export default Timeline;
+export default memo(Timeline);
