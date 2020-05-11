@@ -17,9 +17,9 @@ import {
 } from 'store/actions/toolsActions';
 import { EditableToolComponent } from '../types';
 
-import transformable from 'components/Transformable';
 import Moveable, { OnRotateEnd } from 'moveable';
 import { progressBarHeight } from 'components/Video/config';
+import { CustomMoveable } from 'components/CustomMoveable';
 
 const StyledController = styled(Controllers)`
   opacity: 1;
@@ -137,11 +137,7 @@ const EditableLabelWrapper: React.SFC<EditableToolComponent> = ({
     const el = ref.current;
     if (!el || !parentRef || editMode === true) return;
 
-    const sub = transformable(el, {
-      resizable: true,
-      rotatable: true,
-      snappable: true,
-    })
+    const sub = CustomMoveable.createWithEvents(el, {})
       .on('dragEnd', caculateNewCords)
       .on('resizeEnd', caculateNewCords)
       .on('rotateEnd', onRotateEnd);

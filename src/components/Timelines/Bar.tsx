@@ -10,9 +10,10 @@ import styled from 'styled-components';
 import { useDispatch } from 'react-redux';
 import { changeToolTime } from 'store/actions/toolsActions';
 import { IdType } from 'store/actions/types';
-import transformable from 'components/Transformable';
+
 import Moveable from 'moveable';
 import { getComputedTranslateXY } from 'config/utils';
+import { CustomMoveable } from 'components/CustomMoveable';
 
 const TransformableControllerClass = 'TransformableControllerClass';
 
@@ -140,7 +141,7 @@ const Bar: React.SFC<BarProps> = ({
     const bar = barRef.current;
     if (!bar) return;
 
-    const sub = transformable(bar, {
+    const sub = CustomMoveable.createWithEvents(bar, {
       draggable: true,
       resizable: true,
       snappable: true,

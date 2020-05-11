@@ -3,7 +3,7 @@ import { getCordsInsideOverlapElement } from './utils';
 
 import gsap from 'gsap';
 import { OnDragEnd } from 'moveable';
-import transformable from 'components/Transformable';
+import { CustomMoveable } from 'components/CustomMoveable';
 
 export interface CallbackArguments {
   x: number;
@@ -51,7 +51,10 @@ export const addToolDraggable = <E extends HTMLElement>(
     callback(left, top);
   };
 
-  const unSub = transformable(tool).on('dragEnd', (e) => {
+  const unSub = CustomMoveable.createWithEvents(tool, {
+    resizable: false,
+    rotatable: false,
+  }).on('dragEnd', (e) => {
     resetAnimation();
     addToolWhenDropedOnVideo(e);
   });
