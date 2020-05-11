@@ -48,7 +48,6 @@ const Timeline: React.SFC<TimelineProps> = ({
   duration,
 }) => {
   const ref = useRef<HTMLDivElement>(null);
-  console.log('RER');
   return (
     <Wrapper ref={ref}>
       <Title>{content.slice(0, 16)}</Title>

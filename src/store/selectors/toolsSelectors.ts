@@ -1,15 +1,17 @@
 import { StoreType } from 'store';
 
 export const getTimelinesAsArray = () => (store: StoreType) => {
-  const keys = Object.keys(store.tools);
+  const { items } = store.tools;
+  const keys = Object.keys(items);
   return keys.map((key) => ({
-    ...store.tools[key].time,
+    ...items[key].time,
     id: key,
-    data: store.tools[key].data,
+    data: items[key].data,
   }));
 };
 
 export const getToolsAsArray = () => (store: StoreType) => {
-  const keys = Object.keys(store.tools);
-  return keys.map((key) => ({ ...store.tools[key], id: key }));
+  const { items } = store.tools;
+  const keys = Object.keys(items);
+  return keys.map((key) => ({ ...items[key], id: key }));
 };

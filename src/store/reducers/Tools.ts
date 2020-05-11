@@ -10,7 +10,7 @@ export default produce(
     switch (action.type) {
       case types.TOOL_LABEL_CHANGE_CONTENT: {
         const { id, content } = action.payload;
-        draft[id].data.content = content;
+        draft.items[id].data.content = content;
         break;
       }
 
@@ -20,7 +20,7 @@ export default produce(
 
       case types.TOOL_ADD: {
         const { type, x, y } = action.payload;
-        const id = Object.keys(draft).length;
+        const id = draft.lastIndex + 1;
 
         const newTool = {
           ...toolsByTypes[type],
@@ -34,44 +34,45 @@ export default produce(
             type,
           },
         };
-        draft[id] = newTool;
+        draft.items[id] = newTool;
+        draft.lastIndex = id;
         break;
       }
 
       case types.TOOL_CHANGE_CORDS: {
         const { id, x, y } = action.payload;
-        draft[id].cord.left = x;
-        draft[id].cord.top = y;
+        draft.items[id].cord.left = x;
+        draft.items[id].cord.top = y;
         break;
       }
 
       case types.TOOL_CHANGE_ROTATION: {
         const { id, rotation } = action.payload;
-        draft[id].cord.rotation = rotation;
+        draft.items[id].cord.rotation = rotation;
         break;
       }
 
       case types.TOOL_REMOVE: {
         const id = action.payload;
-        delete draft[id];
+        delete draft.items[id];
         break;
       }
 
       case types.TOOL_CHANGE_SIZE: {
         const { id, cords: newCords } = action.payload;
-        const currentCords = draft[id].cord;
+        const currentCords = draft.items[id].cord;
 
         const cords = {
           ...currentCords,
           ...newCords,
         };
-        draft[id].cord = cords;
+        draft.items[id].cord = cords;
         break;
       }
 
       case types.TOOL_CHANGE_TIME: {
         const { id, time } = action.payload;
-        draft[id].time = { ...draft[id].time, ...time };
+        draft.items[id].time = { ...draft.items[id].time, ...time };
         break;
       }
       default:

@@ -48,5 +48,8 @@ export interface ToolInterfaceWithId extends ToolInterface {
 
 export type IdType = number | string;
 export type ToolsState = {
-  [key in IdType]: ToolInterface;
+  lastIndex: number;
+  items: {
+    [key in IdType]: ToolInterface;
+  };
 };
