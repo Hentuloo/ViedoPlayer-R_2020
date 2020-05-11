@@ -26,7 +26,11 @@ const DeleteButton: React.FC<DeleteButtonProps> = ({
     dispatch(removeTool(toolId));
   };
   return (
-    <Wrapper title="Delete" onClick={handleClick}>
+    <Wrapper
+      title="Delete"
+      onClick={handleClick}
+      data-testid="delete-tool"
+    >
       <span className="sr-only">
         Delete tool: `&quot;`{content}`&quot;`
       </span>

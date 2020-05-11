@@ -3,23 +3,6 @@ export default {
   items: {
     '0': {
       cord: {
-        left: 65.49,
-        top: 38.22,
-        width: 21.77,
-        height: 19.22,
-        rotation: -54,
-      },
-      time: {
-        from: 4.57,
-        to: 13.64,
-      },
-      data: {
-        type: 0,
-        content: '+ Possibility to rotate tools',
-      },
-    },
-    '1': {
-      cord: {
         left: 1.02,
         top: 1.89,
         width: 22.59,
@@ -33,6 +16,23 @@ export default {
       data: {
         type: 0,
         content: '+Responsive text',
+      },
+    },
+    '1': {
+      cord: {
+        left: 65.49,
+        top: 38.22,
+        width: 21.77,
+        height: 19.22,
+        rotation: -54,
+      },
+      time: {
+        from: 4.57,
+        to: 13.64,
+      },
+      data: {
+        type: 0,
+        content: '+ Possibility to rotate tools',
       },
     },
     '2': {

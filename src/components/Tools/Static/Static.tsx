@@ -21,7 +21,7 @@ const Static: React.FC<StaticToolComponent> = ({
   );
 
   return (
-    <StyledWrapper ref={ref} {...props}>
+    <StyledWrapper ref={ref} data-testid="static-tool" {...props}>
       {render()}
     </StyledWrapper>
   );
