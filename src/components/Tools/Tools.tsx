@@ -41,6 +41,7 @@ const ToolsContainer: React.SFC<ToolsContainerProps> = ({
         if (!showTool) return null;
         return editable ? (
           <EditableTool
+            data-test-id="tool-editable"
             key={tool.id}
             parentRef={ref}
             tool={tool}
@@ -56,6 +57,7 @@ const ToolsContainer: React.SFC<ToolsContainerProps> = ({
           />
         ) : (
           <StaticTool
+            data-test-id="tool-static"
             key={tool.id}
             parentRef={ref}
             tool={tool}

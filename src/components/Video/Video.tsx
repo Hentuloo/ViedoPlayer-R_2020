@@ -69,7 +69,7 @@ const Video = forwardRef(
     const url = useSelector(getVideoUrl());
 
     const [video, state, controls] = useVideo(
-      <VideoElement src={url} />,
+      <VideoElement src={url} data-test-id="video-player" />,
     );
     const { paused, error, time, duration, buffered } = state;
 

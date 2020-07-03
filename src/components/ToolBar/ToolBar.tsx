@@ -77,8 +77,14 @@ const ToolBar = ({ wrapper, ...props }: ToolBarProps) => {
     <Wrapper {...props}>
       <Input />
       <Tools>
-        <LabelButton ref={labelRef} />
-        <LinkButton ref={linkRef} />
+        <LabelButton
+          data-test-id="button_new-label-tool"
+          ref={labelRef}
+        />
+        <LinkButton
+          data-test-id="button_new-link-tool"
+          ref={linkRef}
+        />
       </Tools>
     </Wrapper>
   );
