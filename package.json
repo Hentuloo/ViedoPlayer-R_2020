@@ -15,7 +15,7 @@
     "@types/styled-components": "^5.0.1",
     "eslint-plugin-react-hooks": "0.0.0-d7382b6c4",
     "gsap": "^3.2.6",
-    "immer": "^6.0.3",
+    "immer": "^9.0.6",
     "moveable": "^0.17.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
